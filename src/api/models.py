@@ -3,17 +3,136 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    # Datos del Usuario
+    id_user = db.Column(db.Integer, primary_key=True) 
+    name = db.Column(db.String(60), unique=False, nullable=False)
+    last_name = db.Column(db.String(60), unique=False, nullable=False)
+    #se puede obtener token con username o con email
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(80), unique=False, nullable=False)
+    username = db.Column(db.String(60), unique=True, nullable=False)
+    password = db.Column(db.String(120), unique=False, nullable=False)
+    user_type = db.Column(db.ENUM('cliente', 'hotel', 'admin', name='user_type_enum'), nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
 
+    # faltan las foreign keys, van acá
+
     def __repr__(self):
-        return f'<User {self.email}>'
+        # ver como agregar también el username
+        return f'<User {self.email}>' 
 
     def serialize(self):
         return {
-            "id": self.id,
+            "id_user": self.id_user,
+            "name": self.name,
+            "last_name": self.last_name,
             "email": self.email,
-            # do not serialize the password, its a security breach
+            "username": self.username,
+            "user_type": self.user_type,
+            "is_active": self.is_active,
+        }
+
+
+class Hotel(db.Model):
+    # Datos del Hotel
+    id_hotel = db.Column(db.Integer, primary_key=True) 
+    name = db.Column(db.String(60), unique=False, nullable=False)
+    location = db.Column(db.String(120), unique=False, nullable=False)
+    country = db.Column(db.String(20), unique=False, nullable=False)
+    description = db.Column(db.String(500), unique=False, nullable=False)
+    is_active = db.Column(db.Boolean(), unique=False, nullable=False)
+
+    # faltan las foreign keys, van acá
+
+    def __repr__(self):
+        return f'<Hotel {self.id_hotel}>' 
+
+    def serialize(self):
+        return {
+            "id_hotel": self.id_hotel,
+            "name": self.name,
+            "location": self.location,
+            "country": self.country,
+            "description": self.description,
+            "is_active": self.is_active
+        }
+
+class Hotel_Admin_Package(db.Model):
+    # Datos de los Paquetes de pago por usuario hotel
+    id_admin_package = db.Column(db.Integer, primary_key=True) 
+    package_name = db.Column(db.ENUM('básico', 'prioritario', name='package_name_enum'), nullable=False)
+    description = db.Column(db.String(120), unique=False, nullable=False)
+    price = db.Column(db.Integer(5), unique=False, nullable=False)
+
+    # faltan las foreign keys, van acá
+
+    def __repr__(self):
+        return f'<Hotel_Admin_Package {self.id_admin_package}>' 
+
+    def serialize(self):
+        return {
+            "id_admin_package": self.id_admin_package,
+            "package_name": self.package_name,
+            "description": self.description,
+            "price": self.price
+        }
+
+class Stay_Package(db.Model):
+    # Datos de los Paquetes de estadia a ofrecer a usuarios clientes
+    id_hotel_package = db.Column(db.Integer, primary_key=True) 
+    hotel_package_name = db.Column(db.String(20), nullable=False) 
+    description = db.Column(db.String(500), unique=False, nullable=False)
+    price = db.Column(db.Integer(5), unique=False, nullable=False)
+    start_date = db.Column(db.Date, nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
+
+    # faltan las foreign keys, van acá
+
+    def __repr__(self):
+        return f'<Stay_Package {self.id_hotel_package}>' 
+
+    def serialize(self):
+        return {
+            "id_hotel_package": self.id_hotel_package,
+            "hotel_package_name": self.hotel_package_name,
+            "description": self.description,
+            "price": self.price,
+            "start_date": self.start_date,
+            "end_date": self.end_date,
+        }
+
+class Reservation(db.Model):
+    # Datos por cada Reservación
+    id_reservation = db.Column(db.Integer, primary_key=True)
+    # Día para el que se reservó para ir
+    reservation_date = db.Column(db.Date, nullable=False)
+    reservation_payment = db.Column(db.Integer, nullable=False)
+
+    # faltan las foreign keys, van acá
+
+    def __repr__(self):
+        return f'<Reservation {self.id_reservation}>' 
+
+    def serialize(self):
+        return {
+            "id_reservation": self.id_reservation,
+            "reservation_date": self.reservation_date,
+            "reservation_payment": self.reservation_payment,
+        }
+
+class Payment(db.Model):
+    # Datos de los pagos 
+    id_payment = db.Column(db.Integer, primary_key=True)
+    total_amount = db.Column(db.Integer, nullable=False)
+    payment_date = db.Column(db.Date, nullable=False)
+
+    # faltan las foreign keys, van acá
+
+    def __repr__(self):
+        return f'<Reservation {self.id_reservation}>' 
+
+    def serialize(self):
+        return {
+            "id_reservation": self.id_reservation,
+            "reservation_date": self.reservation_date,
+            "total_payment": self.total_payment,
         }
