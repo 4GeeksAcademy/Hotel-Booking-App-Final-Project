@@ -11,13 +11,14 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     username = db.Column(db.String(60), unique=True, nullable=False)
     password = db.Column(db.String(120), unique=False, nullable=False)
-    user_type = db.Column(db.ENUM('cliente', 'hotel', 'admin', name='user_type_enum'), nullable=False)
+    user_type = db.Column(db.Enum('cliente', 'hotel', 'admin', name='user_type_enum'), nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
-    #Foreign keys
-    user_favorites = db.relationship("Favorites", back_populates = "user", lazy = True)
-    user_stay_history = db.relationship("Stay_History", back_populates = "user", lazy = True)
-
+    
     # faltan las foreign keys, van acá
+    #Foreign keys
+    favorites = db.relationship("Favorites", back_populates = "user", lazy = True)
+    stay_history = db.relationship("Stay_History", back_populates = "user", lazy = True)
+
 
     def __repr__(self):
         # ver como agregar también el username
@@ -36,10 +37,10 @@ class User(db.Model):
 
         #Serializar favoritos
     def serialize_favorites(self):
-        return [favorite.serialize() for favorite in self.user_favorites]
+        return [favorite.serialize() for favorite in self.favorites]
     
     def serialize_stay_history(self):
-        return [stay_history.serialize() for stay_history in self.user_stay_history]
+        return [stay_history.serialize() for stay_history in self.stay_history]
 
 
 class Hotel(db.Model):
@@ -52,6 +53,9 @@ class Hotel(db.Model):
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
 
     # faltan las foreign keys, van acá
+    #Foreign Keys
+    favorites = db.relationship("Favorites", back_populates = "hotel", lazy = True)
+    #stay_history = db.relationship("Stay_History", back_populates = "hotel", lazy = True)
 
     def __repr__(self):
         return f'<Hotel {self.id_hotel}>' 
@@ -69,11 +73,14 @@ class Hotel(db.Model):
 class Hotel_Admin_Package(db.Model):
     # Datos de los Paquetes de pago por usuario hotel
     id_admin_package = db.Column(db.Integer, primary_key=True) 
-    package_name = db.Column(db.ENUM('básico', 'prioritario', name='package_name_enum'), nullable=False)
+    package_name = db.Column(db.Enum('básico', 'prioritario', name='package_name_enum'), nullable=False)
     description = db.Column(db.String(120), unique=False, nullable=False)
-    price = db.Column(db.Integer(5), unique=False, nullable=False)
+    price = db.Column(db.Integer, unique=False, nullable=False)
 
     # faltan las foreign keys, van acá
+    #Foreign Keys
+    # favorites = db.relationship("Favorites", back_populates = "hotel", lazy = True)
+    # stay_history = db.relationship("Stay_History", back_populates = "hotel", lazy = True)
 
     def __repr__(self):
         return f'<Hotel_Admin_Package {self.id_admin_package}>' 
@@ -91,11 +98,13 @@ class Stay_Package(db.Model):
     id_hotel_package = db.Column(db.Integer, primary_key=True) 
     hotel_package_name = db.Column(db.String(20), nullable=False) 
     description = db.Column(db.String(500), unique=False, nullable=False)
-    price = db.Column(db.Integer(5), unique=False, nullable=False)
+    price = db.Column(db.Integer, unique=False, nullable=False)
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)
 
     # faltan las foreign keys, van acá
+    #Foreign Keys
+    stay_history = db.relationship("Stay_History", back_populates = "package", lazy = True)
 
     def __repr__(self):
         return f'<Stay_Package {self.id_hotel_package}>' 
@@ -118,6 +127,11 @@ class Reservation(db.Model):
     reservation_payment = db.Column(db.Integer, nullable=False)
 
     # faltan las foreign keys, van acá
+    #Foreign Keys
+    user_reservation = db.Column(db.Integer, db.ForeignKey(User.id_user), nullable=False)
+    user = db.relationship(User)
+
+    stay_history = db.relationship("Stay_History", back_populates = "reservation", lazy = True)
 
     def __repr__(self):
         return f'<Reservation {self.id_reservation}>' 
@@ -136,6 +150,9 @@ class Payment(db.Model):
     payment_date = db.Column(db.Date, nullable=False)
 
     # faltan las foreign keys, van acá
+    #Foreign Keys
+    user_reservation = db.Column(db.Integer, db.ForeignKey(User.id_user), nullable=False)
+    user = db.relationship(User)
 
     def __repr__(self):
         return f'<Reservation {self.id_reservation}>' 
@@ -150,10 +167,11 @@ class Payment(db.Model):
 class Favorites(db.Model):
     #Datos de los hoteles favoritos
     id_favorites = db.Column(db.Integer, primary_key=True)
+    
     #Foreign keys
-    user_favorites = db.Column(db.Integer, db.ForeignKey(User.id), nullable=True)
+    user_favorites = db.Column(db.Integer, db.ForeignKey(User.id_user), nullable=True)
     user = db.relationship(User)
-    hotel_favorites = db.Column(db.Integer, db.ForeignKey(Hotel.id), nullable=True)
+    hotel_favorites = db.Column(db.Integer, db.ForeignKey(Hotel.id_hotel), nullable=True)
     hotel = db.relationship(Hotel)
 
     def __repr__(self):
@@ -169,12 +187,13 @@ class Favorites(db.Model):
 class Stay_History(db.Model):
     #Datos de los historial de estadias
     id_stay_history = db.Column(db.Integer, primary_key=True)
+    
     #Foreign keys
-    user_stay_history = db.Column(db.Integer, db.ForeignKey(User.id), nullable=True)
+    user_stay_history = db.Column(db.Integer, db.ForeignKey(User.id_user), nullable=True)
     user = db.relationship(User)
-    package_stay_history = db.Column(db.Integer, db.ForeignKey(Stay_Package.id), nullable=True)
+    package_stay_history = db.Column(db.Integer, db.ForeignKey(Stay_Package.id_hotel_package), nullable=True)
     package = db.relationship(Stay_Package)
-    reservation_stay_history = db.Column(db.Integer, db.ForeignKey(Reservation.id), nullable=True)
+    reservation_stay_history = db.Column(db.Integer, db.ForeignKey(Reservation.id_reservation), nullable=True)
     reservation = db.relationship(Reservation)
 
     def __repr__(self):
