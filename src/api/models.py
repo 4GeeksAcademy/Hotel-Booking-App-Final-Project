@@ -13,6 +13,9 @@ class User(db.Model):
     password = db.Column(db.String(120), unique=False, nullable=False)
     user_type = db.Column(db.ENUM('cliente', 'hotel', 'admin', name='user_type_enum'), nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
+    #Foreign keys
+    user_favorites = db.relationship("Favorites", back_populates = "user", lazy = True)
+    user_stay_history = db.relationship("Stay_History", back_populates = "user", lazy = True)
 
     # faltan las foreign keys, van acá
 
@@ -30,6 +33,13 @@ class User(db.Model):
             "user_type": self.user_type,
             "is_active": self.is_active,
         }
+
+        #Serializar favoritos
+    def serialize_favorites(self):
+        return [favorite.serialize() for favorite in self.user_favorites]
+    
+    def serialize_stay_history(self):
+        return [stay_history.serialize() for stay_history in self.user_stay_history]
 
 
 class Hotel(db.Model):
@@ -136,3 +146,45 @@ class Payment(db.Model):
             "reservation_date": self.reservation_date,
             "total_payment": self.total_payment,
         }
+
+class Favorites(db.Model):
+    #Datos de los hoteles favoritos
+    id_favorites = db.Column(db.Integer, primary_key=True)
+    #Foreign keys
+    user_favorites = db.Column(db.Integer, db.ForeignKey(User.id), nullable=True)
+    user = db.relationship(User)
+    hotel_favorites = db.Column(db.Integer, db.ForeignKey(Hotel.id), nullable=True)
+    hotel = db.relationship(Hotel)
+
+    def __repr__(self):
+        return '<Favorites %r>' % self.id_favorites
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "User": self.user_favorites.serialize(),
+            "Hotel": self.hotel_favorites.serialize()
+        }
+
+class Stay_History(db.Model):
+    #Datos de los historial de estadias
+    id_stay_history = db.Column(db.Integer, primary_key=True)
+    #Foreign keys
+    user_stay_history = db.Column(db.Integer, db.ForeignKey(User.id), nullable=True)
+    user = db.relationship(User)
+    package_stay_history = db.Column(db.Integer, db.ForeignKey(Stay_Package.id), nullable=True)
+    package = db.relationship(Stay_Package)
+    reservation_stay_history = db.Column(db.Integer, db.ForeignKey(Reservation.id), nullable=True)
+    reservation = db.relationship(Reservation)
+
+    def __repr__(self):
+        return '<Stay_History %r>' % self.id_stay_history
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "User": self.user_stay_history.serialize(),
+            "Paquete": self.package_stay_history.serialize(),
+            "Fecha de reserva": self.reservation_stay_history.serialize()
+        }
+
