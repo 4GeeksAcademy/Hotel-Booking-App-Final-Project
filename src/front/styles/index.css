@@ -1,3 +1,28 @@
-/* 
-    General Styles used on every website (Don't Repeat Yourself)
-*/
+/* Fuente del Proyecto */
+.FontDesign{
+    font-family: "Doppio One", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+/* CSS DEL SIGN UP */
+.btndashboard-signup {
+    background-color: #6c757d;
+    color: #ffffff;
+    border-radius: 50rem;
+    padding: 0.5rem 1.5rem;
+    text-decoration: none;
+    margin-right: 10px;
+}
+.btndashboard-signup:hover {
+    color: #ffffff;
+}
+.btnlogin-signup {
+    background-color: #30728A;
+    border-color: #30728A;
+    color: #ffffff;
+    border-radius: 50rem;
+    padding: 0.5rem 1.5rem;
+    text-decoration: none;
+}
