@@ -1,10 +1,18 @@
-import React, { Component } from "react";
+import React from "react";
+import { Link } from "react-router-dom";  
+import "../../styles/footer.css";
 
 export const Footer = () => (
 	<footer className="footer mt-auto py-3 text-center">
-		<p>
-			Made with <i className="fa fa-heart text-danger" /> by{" "}
-			<a href="http://www.4geeksacademy.com">4Geeks Academy</a>
-		</p>
+		<div className="footer-content">
+			<p className="contact-title">
+				{}
+				<Link to="/contact" className="contact-link">
+					Contact Us
+				</Link>
+			</p>
+			<p className="contact-email">soporte@sereniahoteleles.com</p>
+			<p className="app-name">Hotel Booking App</p>
+		</div>
 	</footer>
 );
