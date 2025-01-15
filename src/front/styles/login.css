@@ -1,0 +1,46 @@
+#welcomePageTitleLogin{
+    font-size:48px;
+    font-weight: bold;
+    Color: rgb(0,0,0)
+}
+
+#sereniaPageTitleLogin{
+    font-size:48px;
+    font-weight:bold; 
+    color:#30728A;
+}
+
+#loginMessage{
+    font-weight:bold; 
+    color:#B9B9B9;
+}
+
+#loginInputData {
+    min-width:400px;
+    border:solid; 
+    border-radius: 20px; 
+    border-width:2px;
+}
+
+#botonLogin {
+    min-width:230px;
+    max-width:230px;
+    border: none;
+    height: 40px;
+    border-radius: 40px;
+    background-color: #30728A;
+}
+
+#botonForgotPassword {
+    min-width:230px;
+    max-width:230px;
+    border: none; 
+    height: 40px;
+    border-radius: 40px; 
+    background-color:#484848;
+}
+
+#customMarginLogin{
+    margin-top: 15vh;
+    padding: 35px;
+}
