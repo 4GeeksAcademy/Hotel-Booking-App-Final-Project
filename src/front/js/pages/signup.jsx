@@ -48,7 +48,7 @@ export const SignUp = () => {
                     <div className="input-group mb-3">
                         <input
                             type="text"
-                            className="form-control"
+                            className="form-control rounded-pill"
                             placeholder="e.g. Maicol"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
@@ -61,7 +61,7 @@ export const SignUp = () => {
                     <div className="input-group mb-3">
                         <input
                             type="text"
-                            className="form-control"
+                            className="form-control rounded-pill"
                             placeholder="e.g. Fernández"
                             value={lastName}
                             onChange={(e) => setLastName(e.target.value)}
@@ -74,7 +74,7 @@ export const SignUp = () => {
                     <div className="input-group mb-3">
                         <input
                             type="email"
-                            className="form-control"
+                            className="form-control rounded-pill"
                             placeholder="e.g. maicol@gmail.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -87,8 +87,8 @@ export const SignUp = () => {
                     <div className="input-group mb-3">
                         <input
                             type="text"
-                            className="form-control"
-                            placeholder="e.g. 67894580"
+                            className="form-control rounded-pill"
+                            placeholder="e.g. Maicol123"
                             value={userName}
                             onChange={(e) => setUserName(e.target.value)}
                             required
@@ -100,7 +100,7 @@ export const SignUp = () => {
                     <div className="input-group mb-3">
                         <input
                             type="password"
-                            className="form-control"
+                            className="form-control rounded-pill"
                             placeholder="e.g. 3456kj20"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -122,7 +122,7 @@ export const SignUp = () => {
                             required
                         />
                         <label className="form-check-label" htmlFor="clientOption">
-                            Client
+                            Client: Book packages.
                         </label>
                     </div>
                     <div className="form-check">
@@ -137,14 +137,15 @@ export const SignUp = () => {
                             required
                         />
                         <label className="form-check-label" htmlFor="hotelOption">
-                            Hotel
+                            Hotel: Publish and manage packages.
                         </label>
                     </div>
 
-                    <div className="d-flex justify-content-between">
-                        <button type="submit" className="btn btn-secondary">Sign Up</button>
-                        <Link to="/" className="btn btn-outline-secondary">Dashboard</Link>
+                    <div>
+                        <button type="submit" className="btn w-75 btn-secondary d-flex align-items-center justify-content-center rounded-pill" style={{ backgroundColor: "#30728A", borderColor: "#30728A", fontWeight: "bold" }}>Sign Up</button>
+                        <Link to="/" className="btn btn-outline-secondary d-flex align-items-center justify-content-center rounded-pill w-75" style={{ fontWeight: "bold" }}>Dashboard</Link>
                     </div>
+
                 </form>
             </div>
 
