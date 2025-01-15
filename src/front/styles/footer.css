@@ -1,39 +1,68 @@
+
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; 
+}
+
+.layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%; 
+}
+
+.main-content {
+    flex-grow: 1; 
+    padding-bottom: 50px; 
+}
+
 .footer {
-	background-color: #40788c; /* Matches the blue tone */
-	padding: 20px 0;
+    background-color: #40788c; 
+    padding: 20px 0;
+    margin-top: auto; 
+    width: 100%;
+    position: relative;
 }
 
 .footer-content {
-	color: #ffffff;
-	font-family: Arial, sans-serif;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
 }
 
 .contact-title {
-	font-weight: bold;
-	font-size: 18px;
+    font-weight: bold;
+    font-size: 18px;
 }
 
 .contact-email {
-	font-weight: bold;
-	font-size: 16px;
+    font-weight: bold;
+    font-size: 16px;
 }
 
 .app-name {
-	font-family: 'Dancing Script', cursive; /* Add cursive font for app name */
-	font-size: 20px;
-	margin-top: 5px;
+    font-family: 'Dancing Script', cursive; 
+    font-size: 20px;
+    margin-top: 5px;
 }
 
-/* src/front/styles/contactUs.css */
+
 
 .contact-us-container {
     padding: 20px;
     max-width: 600px;
-    margin: auto;
+    margin: 100px auto; 
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
 
 .contact-us-container h1 {
     text-align: center;
@@ -84,4 +113,13 @@ button:hover {
     text-align: center;
     font-size: 18px;
     color: green;
+}
+
+.contact-link {
+    color: #FFD700; 
+    text-decoration: none;
+}
+
+.contact-link:hover {
+    color: #FFCC00; 
 }
