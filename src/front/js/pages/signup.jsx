@@ -9,14 +9,14 @@ export const SignUp = () => {
     const [email, setEmail] = useState("");
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
-    const [UserType, setUserType] = useState("");
+    const [userType, setUserType] = useState(""); // Cambié a "userType" para coincidir con el backend
     const [toastMessage, setToastMessage] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Llamada a la acción de registro del Flux Store
-        const message = await actions.signUp(name, lastName, email, phoneNumber, password);
+        // Llamada a la acción de registro del Flux Store con el tipo de usuario
+        const message = await actions.signUp(name, lastName, email, userName, password, userType);
 
         if (message === "Usuario registrado correctamente") {
             setToastMessage({ text: "Usuario registrado correctamente.", type: "success" });
@@ -33,7 +33,15 @@ export const SignUp = () => {
     return (
         <div className="container py-5">
             <div className="col-12 col-md-8 col-lg-6 mx-auto">
-                <h2 className="lobster-regular text-center mb-4">Sign Up</h2>
+
+                {/* Titulo de la Vista */}
+                <div className="d-flex align-items-center justify-content-center" style={{ gap: "10px" }}>
+                    <h2 style={{ fontWeight: "bold" }}>Welcome to</h2>
+                    <h2 style={{ color: "#30728A", fontWeight: "bold" }}>Serenia</h2>
+                </div>
+
+                <h5 className="d-flex align-items-center justify-content-center text-secondary"><strong>Sign Up</strong></h5>
+
                 <form onSubmit={handleSubmit} className="eb-garamond">
                     {/* Pregunta 1 - Registro */}
                     <h5>Name</h5>
@@ -61,9 +69,9 @@ export const SignUp = () => {
                         />
                     </div>
 
-
+                    {/* Pregunta 3 - Registro */}
+                    <h5>Email</h5>
                     <div className="input-group mb-3">
-                        <span className="input-group-text">Email</span>
                         <input
                             type="email"
                             className="form-control"
@@ -74,22 +82,22 @@ export const SignUp = () => {
                         />
                     </div>
 
-
+                    {/* Pregunta 4 - Registro */}
+                    <h5>Username</h5>
                     <div className="input-group mb-3">
-                        <span className="input-group-text">Phone</span>
                         <input
                             type="text"
                             className="form-control"
                             placeholder="e.g. 67894580"
-                            value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            value={userName}
+                            onChange={(e) => setUserName(e.target.value)}
                             required
                         />
                     </div>
 
-
+                    {/* Pregunta 5 - Registro */}
+                    <h5>Password</h5>
                     <div className="input-group mb-3">
-                        <span className="input-group-text">Password</span>
                         <input
                             type="password"
                             className="form-control"
@@ -100,14 +108,45 @@ export const SignUp = () => {
                         />
                     </div>
 
+                    {/* Pregunta 6 - Registro */}
+                    <h5>Purpose of registration</h5>
+                    <div className="form-check">
+                        <input
+                            className="form-check-input"
+                            type="radio"
+                            name="userTypeOptions"
+                            id="clientOption"
+                            value="cliente"
+                            checked={userType === "cliente"}
+                            onChange={(e) => setUserType(e.target.value)}
+                            required
+                        />
+                        <label className="form-check-label" htmlFor="clientOption">
+                            Client
+                        </label>
+                    </div>
+                    <div className="form-check">
+                        <input
+                            className="form-check-input"
+                            type="radio"
+                            name="userTypeOptions"
+                            id="hotelOption"
+                            value="hotel"
+                            checked={userType === "hotel"}
+                            onChange={(e) => setUserType(e.target.value)}
+                            required
+                        />
+                        <label className="form-check-label" htmlFor="hotelOption">
+                            Hotel
+                        </label>
+                    </div>
 
                     <div className="d-flex justify-content-between">
                         <button type="submit" className="btn btn-secondary">Sign Up</button>
-                        <Link to="/" className="btn btn-outline-secondary">Go Back</Link>
+                        <Link to="/" className="btn btn-outline-secondary">Dashboard</Link>
                     </div>
                 </form>
             </div>
-
 
             {toastMessage && (
                 <div className="toast-container position-fixed top-0 end-0 p-3" style={{ zIndex: 1050 }}>
