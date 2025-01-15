@@ -1,0 +1,41 @@
+/* src/front/styles/userProfile.css */
+
+.user-profile {
+    display: flex;
+  }
+  
+  .sidebar {
+    width: 250px;
+    background-color: #f8f9fa;
+    padding: 20px;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar li {
+    margin-bottom: 20px;
+  }
+  
+  .sidebar li a {
+    display: flex;
+    align-items: center;
+    color: #343a40; 
+    font-weight: 500;
+  }
+  
+  .sidebar li a:hover {
+    color: #007bff; 
+  }
+  
+  .content {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  
+  .view h2 {
+    margin-top: 20px;
+  }
+  
