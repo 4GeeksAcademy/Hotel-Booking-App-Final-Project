@@ -31,7 +31,7 @@ export const SignUp = () => {
     };
 
     return (
-        <div className="container py-5">
+        <div className="FontDesign container py-5">
             <div className="col-12 col-md-8 col-lg-6 mx-auto">
 
                 {/* Titulo de la Vista */}
@@ -44,7 +44,7 @@ export const SignUp = () => {
 
                 <form onSubmit={handleSubmit} className="eb-garamond">
                     {/* Pregunta 1 - Registro */}
-                    <h5>Name</h5>
+                    <h5 className="fs-6 mt-4">Name</h5>
                     <div className="input-group mb-3">
                         <input
                             type="text"
@@ -57,7 +57,7 @@ export const SignUp = () => {
                     </div>
 
                     {/* Pregunta 2 - Registro */}
-                    <h5>Last Name</h5>
+                    <h5 className="fs-6 mt-4">Last Name</h5>
                     <div className="input-group mb-3">
                         <input
                             type="text"
@@ -70,7 +70,7 @@ export const SignUp = () => {
                     </div>
 
                     {/* Pregunta 3 - Registro */}
-                    <h5>Email</h5>
+                    <h5 className="fs-6 mt-4">Email</h5>
                     <div className="input-group mb-3">
                         <input
                             type="email"
@@ -83,7 +83,7 @@ export const SignUp = () => {
                     </div>
 
                     {/* Pregunta 4 - Registro */}
-                    <h5>Username</h5>
+                    <h5 className="fs-6 mt-4">Username</h5>
                     <div className="input-group mb-3">
                         <input
                             type="text"
@@ -96,7 +96,7 @@ export const SignUp = () => {
                     </div>
 
                     {/* Pregunta 5 - Registro */}
-                    <h5>Password</h5>
+                    <h5 className="fs-6 mt-4">Password</h5>
                     <div className="input-group mb-3">
                         <input
                             type="password"
@@ -109,7 +109,7 @@ export const SignUp = () => {
                     </div>
 
                     {/* Pregunta 6 - Registro */}
-                    <h5>Purpose of registration</h5>
+                    <h5 className="fs-6 mt-4">Purpose of registration</h5>
                     <div className="form-check">
                         <input
                             className="form-check-input"
@@ -141,13 +141,19 @@ export const SignUp = () => {
                         </label>
                     </div>
 
-                    <div>
-                        <button type="submit" className="btn w-75 btn-secondary d-flex align-items-center justify-content-center rounded-pill" style={{ backgroundColor: "#30728A", borderColor: "#30728A", fontWeight: "bold" }}>Sign Up</button>
-                        <Link to="/" className="btn btn-outline-secondary d-flex align-items-center justify-content-center rounded-pill w-75" style={{ fontWeight: "bold" }}>Dashboard</Link>
+                    <div className="d-flex flex-column align-items-center justify-content-center mt-5">
+                        <button
+                            type="submit"
+                            className="btn w-75 btn-secondary d-flex align-items-center justify-content-center rounded-pill mt-3"
+                            style={{ backgroundColor: "#30728A", borderColor: "#30728A", fontWeight: "bold" }}
+                        >
+                            Sign Up
+                        </button>
                     </div>
 
+
                 </form>
-            </div>
+            </div >
 
             {toastMessage && (
                 <div className="toast-container position-fixed top-0 end-0 p-3" style={{ zIndex: 1050 }}>
@@ -168,6 +174,6 @@ export const SignUp = () => {
                     </div>
                 </div>
             )}
-        </div>
+        </div >
     );
 };

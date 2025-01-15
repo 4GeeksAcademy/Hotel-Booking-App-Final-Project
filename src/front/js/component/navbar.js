@@ -1,10 +1,12 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
 	const location = useLocation();
+	const navigate = useNavigate();
+
 	return (
-		<nav className="navbar navbar-light bg-light">
+		<nav className="navbar navbar-light bg-light FontDesign">
 			<div className="container">
 				<Link to="/">
 					<span className="navbar-brand mb-0 h1">React Boilerplate</span>
@@ -18,13 +20,22 @@ export const Navbar = () => {
 						</Link>
 					)}
 
-					{/* Botón de Login dentro de Vista SignUp */}
+					{/* Botón de regreso al Dashboard (home) dentro de Vista SignUp */}
 					{location.pathname === "/signup" && (
-						<button className="btn btn-secondary">
-							Login
+						<button
+							className="btndashboard-signup"
+							onClick={() => navigate("/")}
+						>
+							Dashboard
 						</button>
 					)}
 
+					{/* Botón de Login dentro de Vista SignUp */}
+					{location.pathname === "/signup" && (
+						<button className="btnlogin-signup" onClick={() => navigate("/login")}>
+							Login
+						</button>
+					)}
 				</div>
 
 			</div>
