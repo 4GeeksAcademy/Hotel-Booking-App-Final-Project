@@ -12,6 +12,12 @@ import injectContext from "./store/appContext";
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 
+// Profile Pages
+import UserProfile from "./pages/profilePages/UserProfile";
+import PersonalInfo from "./pages/profilePages/PersonalInfo";
+import FavoriteHotels from "./pages/profilePages/FavoriteHotels";
+import StayHistory from "./pages/profilePages/StayHistory";
+
 // Create your first component
 const Layout = () => {
     const basename = process.env.BASENAME || "";
@@ -30,7 +36,16 @@ const Layout = () => {
                         <Route element={<SignUp />} path="/signup"/>
                         <Route element={<LoginAccount />} path="/login" />
                         <Route element={<ContactUs />} path="/contact" />
-                        <Route element={<h1>Not found!</h1>} />
+
+                        {/* User Profile Routes */}
+                        <Route element={<UserProfile />} path="/profile">
+                            <Route index element={<PersonalInfo />} />
+                            <Route path="personal-info" element={<PersonalInfo />} />
+                            <Route path="favorite-hotels" element={<FavoriteHotels />} />
+                            <Route path="stay-history" element={<StayHistory />} />
+                        </Route>
+
+                        <Route element={<h1>Not found!</h1>} path="*" />
                     </Routes>
                     <Footer />
                 </ScrollToTop>

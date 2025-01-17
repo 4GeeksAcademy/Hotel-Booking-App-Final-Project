@@ -1,6 +1,6 @@
 /* src/front/styles/userProfile.css */
 
-/* .user-profile {
+.user-profile {
   display: flex;
 }
 
@@ -22,12 +22,16 @@
 .user-profile .sidebar li a {
   display: flex;
   align-items: center;
-  color: #343a40; 
+  color: #343a40;
   font-weight: 500;
 }
 
 .user-profile .sidebar li a:hover {
-  color: #007bff; 
+  color: #007bff;
+}
+
+.user-profile .sidebar li a .fa-icon {
+  margin-right: 10px; /* Adjust the space between icon and text */
 }
 
 .user-profile .content {
@@ -37,4 +41,4 @@
 
 .user-profile .view h2 {
   margin-top: 20px;
-} */
+}
