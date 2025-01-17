@@ -24,7 +24,7 @@ export const LoginAccount = () => {
         e.preventDefault()
         let response = await actions.loginAccount(data.username, data.password)
         //console.log(response)
-        response.msg ? alert(response.msg): navigate("/user")
+        response.msg ? alert(response.msg): navigate("/")
     }
 
     //getting the user values

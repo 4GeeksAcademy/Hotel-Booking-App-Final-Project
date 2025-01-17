@@ -3,6 +3,8 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 import os
 from flask import Flask, request, jsonify, url_for, send_from_directory
+from flask_jwt_extended import JWTManager
+from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
@@ -39,6 +41,14 @@ setup_commands(app)
 
 # Add all endpoints form the API with a "api" prefix
 app.register_blueprint(api, url_prefix='/api')
+
+# Setup the Flask-JWT-Extended extension
+app.config["JWT_SECRET_KEY"] = "AjrkelaIOA90219%&328dsaioj"  
+jwt = JWTManager(app)
+
+#Creacion del bcrypt
+bcrypt = Bcrypt(app)
+app.bcrypt = bcrypt
 
 # Handle/serialize errors like a JSON object
 

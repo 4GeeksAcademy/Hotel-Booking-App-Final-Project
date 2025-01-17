@@ -46,6 +46,38 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				//reset the global store
 				setStore({ demo: demo });
+			},
+			loginAccount: async () => {
+				try{
+					// fetching data from the backend
+					const response = await fetch(process.env.BACKEND_URL + "/api/login", {
+						method: "POST",
+						headers: {
+							"Content-type": "application/json"
+						},
+						body: JSON.stringify({
+							username: username,
+							password: password
+						})
+					})
+					
+					// if (!response.ok){
+					// 	const errorMsg = await response.json()
+					//  	throw new Error(errorMsg.msg)
+					// }
+
+					const data = await response.json()
+					console.log(data)
+					
+					const session_ID = data.token
+					document.cookie = session_ID
+
+					return data;
+					
+				}catch(error){
+					console.log("Error loading message from backend", error)
+					return error
+				}
 			}
 		}
 	};
