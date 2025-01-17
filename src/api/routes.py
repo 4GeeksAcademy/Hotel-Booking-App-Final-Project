@@ -78,10 +78,10 @@ def handle_login():
         return jsonify({"msg": "There was an error. Incorrect username or password"}), 401
     
     access_token = create_access_token(identity=username)
-    
-    return jsonify({"access_token": access_token, "username":user_exists.username, "user_type":user_exists.user_type}), 200
 
-# ENDPOINT DE LA VISTA DEL DASHBOARD
+    return jsonify({"access_token": access_token, "username":user_exists.username, "user_type":user_exists.user_type }), 200
+
+# ENDPOINT DE LA VISTA DEL DASHBOARD QUE MUESTRA HOTELES
 @api.route('/hotels', methods=['GET'])
 def get_hotels():
     try:
@@ -90,4 +90,4 @@ def get_hotels():
 
         return jsonify({"hotels": serialized_hotels}), 200
     except Exception as e:
-        return jsonify({"message": f"Error retrieving hotels: {str(e)}"}), 500
+        return jsonify({"message": f"Error retrieving hotels: {str(e)}"}),500

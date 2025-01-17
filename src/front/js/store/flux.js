@@ -5,6 +5,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			user_session: "",
 			user_type: "",
 			hotels: [],
+			name: null,
 			demo: [
 				{
 					title: "FIRST",
