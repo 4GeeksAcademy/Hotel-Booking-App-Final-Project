@@ -2,6 +2,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			message: null,
+			user_session: "",
+			user_type: "",
 			demo: [
 				{
 					title: "FIRST",
@@ -46,6 +48,38 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				//reset the global store
 				setStore({ demo: demo });
+			},
+			loginAccount: async (username, password) => {
+				try{
+					// fetching data from the backend
+					const response = await fetch(process.env.BACKEND_URL + "api/login", {
+						method: "POST",
+						headers: {
+							"Content-type": "application/json"
+						},
+						body: JSON.stringify({
+							username: username,
+							password: password
+						})
+					})
+					
+					// if (!response.ok){
+					// 	const errorMsg = await response.json()
+					//  	throw new Error(errorMsg.msg)
+					// }
+
+					const data = await response.json()
+					console.log(data)
+					
+					await setStore({user_session:data.access_token})
+					await setStore({user_type:data.user_type})
+
+					return data;
+					
+				}catch(error){
+					console.log("Error loading message from backend", error)
+					return error
+				}
 			},
 
 			signUp: async (name, last_name, email, username, password, user_type) => {
