@@ -3,7 +3,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 from flask import Flask, request, jsonify, url_for, Blueprint, current_app
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
-from api.models import db, User
+from api.models import db, User, Hotel
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
@@ -80,3 +80,14 @@ def handle_login():
     access_token = create_access_token(identity=username)
     
     return jsonify({"access_token": access_token, "username":user_exists.username, "user_type":user_exists.user_type}), 200
+
+# ENDPOINT DE LA VISTA DEL DASHBOARD
+@api.route('/hotels', methods=['GET'])
+def get_hotels():
+    try:
+        hotels = Hotel.query.filter_by(is_active=True).all()
+        serialized_hotels = [hotel.serialize() for hotel in hotels]
+
+        return jsonify({"hotels": serialized_hotels}), 200
+    except Exception as e:
+        return jsonify({"message": f"Error retrieving hotels: {str(e)}"}), 500
