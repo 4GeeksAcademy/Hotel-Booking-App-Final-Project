@@ -4,9 +4,9 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 import os
 from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_jwt_extended import JWTManager
-from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 from flask_swagger import swagger
+from flask_bcrypt import Bcrypt
 from api.utils import APIException, generate_sitemap
 from api.models import db, User, Favorites, Stay_History, Hotel, Hotel_Admin_Package, Payment, Reservation, Stay_Package
 from api.routes import api
