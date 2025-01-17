@@ -2,6 +2,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			message: null,
+			user_session: "",
+			user_type: "",
 			demo: [
 				{
 					title: "FIRST",
@@ -47,10 +49,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				//reset the global store
 				setStore({ demo: demo });
 			},
-			loginAccount: async () => {
+			loginAccount: async (username, password) => {
 				try{
 					// fetching data from the backend
-					const response = await fetch(process.env.BACKEND_URL + "/api/login", {
+					const response = await fetch(process.env.BACKEND_URL + "api/login", {
 						method: "POST",
 						headers: {
 							"Content-type": "application/json"
@@ -69,8 +71,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const data = await response.json()
 					console.log(data)
 					
-					const session_ID = data.token
-					document.cookie = session_ID
+					await setStore({user_session:data.access_token})
+					await setStore({user_type:data.user_type})
 
 					return data;
 					

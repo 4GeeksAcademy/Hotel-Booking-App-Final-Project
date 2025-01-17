@@ -24,7 +24,7 @@ export const LoginAccount = () => {
         e.preventDefault()
         let response = await actions.loginAccount(data.username, data.password)
         //console.log(response)
-        response.msg ? alert(response.msg): navigate("/")
+        store.user_session ? navigate("/") :  alert(response.msg)
     }
 
     //getting the user values
@@ -54,13 +54,13 @@ export const LoginAccount = () => {
         <div className='col-xs-auto container-fluid w-50 border-secondary mt-0' id = "customMarginLogin">
                 <form  onSubmit={loginUserHandling}>
                     <div className="col-xs-auto row mt-4 mb-4 d-flex justify-content-center">
-                        <input type="text" className="col-sm-auto form-control" placeholder="Enter your username" id="loginInputData" name = "username"
+                        <input type="text" className="loginInputData col-sm-auto form-control" placeholder="Enter your username" id="loginInputUser" name = "username"
                             value= {data.username}  onChange={inpuntHandling}/>                            
                             <div class="invalid-feedback"></div>
                     </div>
                     
                     <div className="col-xs-auto row mt-4 mb-4 d-flex justify-content-center">
-                        <input type="password" className="form-control" placeholder="Enter your password" id="loginInputData" name= "password"
+                        <input type="password" className="loginInputData form-control" placeholder="Enter your password" id="loginInputPass" name= "password"
                             value= {data.password}  onChange={inpuntHandling} 
                             />
                             <div class="invalid-feedback"></div>

@@ -15,7 +15,7 @@
     color:#B9B9B9;
 }
 
-#loginInputData {
+.loginInputData {
     min-width:400px;
     border:solid; 
     border-radius: 20px; 

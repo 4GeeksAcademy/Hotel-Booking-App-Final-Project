@@ -46,7 +46,7 @@ def signup():
         last_name=data['last_name'],
         email=data['email'],
         username=data['username'],
-        password=data['password'],  # No ciframos la contraseña aún
+        password=current_app.bcrypt.generate_password_hash(data["password"]).decode('utf-8'),  
         user_type=data['user_type'],
         is_active=True  # Suponiendo que el usuario estará activo por defecto
     )
@@ -67,16 +67,16 @@ def handle_login():
     username = request.json.get("username", None)
     password = request.json.get("password", None)
 
-    user = User.query.filter_by(username = username).first()
+    user_exists = User.query.filter((User.email == username) |  (User.username == username)).first()
 
-    if not user:
+    if not user_exists:
         return jsonify({"msg": "There was an error. Incorrect username or password"}), 401
     
-    valid_password = current_app.bcrypt.check_password_hash(user.password, password)
+    valid_password = current_app.bcrypt.check_password_hash(user_exists.password, password)
 
     if not valid_password:
         return jsonify({"msg": "There was an error. Incorrect username or password"}), 401
     
     access_token = create_access_token(identity=username)
     
-    return jsonify({"token": access_token, "username":user.username}), 200
+    return jsonify({"access_token": access_token, "username":user_exists.username, "user_type":user_exists.user_type}), 200
