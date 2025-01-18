@@ -18,7 +18,11 @@ import PersonalInfo from "./pages/profilePages/PersonalInfo";
 import FavoriteHotels from "./pages/profilePages/FavoriteHotels";
 import StayHistory from "./pages/profilePages/StayHistory";
 
-// Create your first component
+// Hotel Profile Pages
+import HotelPersonalInfo from "./pages/hotelProfilePages/HotelPersonalInfo";  // Updated import
+import Hotels from "./pages/hotelProfilePages/Hotels";  // Updated import
+import Packages from "./pages/hotelProfilePages/Packages";  // Updated import
+
 const Layout = () => {
     const basename = process.env.BASENAME || "";
 
@@ -45,6 +49,12 @@ const Layout = () => {
                             <Route path="stay-history" element={<StayHistory />} />
                         </Route>
 
+                        {/* Hotel Profile Routes */}
+                        <Route element={<HotelPersonalInfo />} path="/hotel-profile/personal-info" />
+                        <Route element={<Hotels />} path="/hotel-profile/hotels" />
+                        <Route element={<Packages />} path="/hotel-profile/packages" />
+
+                        {/* Catch-all Route for 404 */}
                         <Route element={<h1>Not found!</h1>} path="*" />
                     </Routes>
                     <Footer />

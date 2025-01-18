@@ -1,0 +1,33 @@
+.hotel-sidebar {
+    width: 250px;
+    min-height: 100vh;
+    background-color: #40788c;
+    color: #ffffff;
+  }
+  
+  .sidebar-title {
+    font-weight: bold;
+  }
+  
+  .sidebar-link {
+    display: block;
+    color: #ffffff;
+    padding: 10px;
+    text-decoration: none;
+  }
+  
+  .sidebar-link:hover {
+    background-color: #005f73;
+    border-radius: 4px;
+  }
+  
+  .sidebar-link.active {
+    background-color: #005f73;
+    font-weight: bold;
+  }
+  
+  .header {
+    background-color: #40788c;
+    color: white;
+  }
+  
