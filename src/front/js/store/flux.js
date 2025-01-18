@@ -139,7 +139,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 			logOutAccount: async () => {
-				
+				//eliminacion de la data del usuario
 				localStorage.removeItem("user_session")
 				await setStore({ user_type: "" })
 				await setStore({ user_fName: ""})
@@ -147,6 +147,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			},
 			loadUserData: async () => {
+				//generacion de la data del usuario cada vez que refrezca la pagina
 				try {
 					const response = await fetch(process.env.BACKEND_URL + "/api/access", {
 						headers: {

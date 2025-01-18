@@ -98,7 +98,6 @@ def get_hotels():
 @jwt_required()
 def user_logon():
     current_user = get_jwt_identity()
-    print(current_user)
     user = User.query.filter_by(username = current_user).first()
 
     if not user:
