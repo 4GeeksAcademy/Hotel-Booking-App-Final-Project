@@ -28,17 +28,19 @@ export const Navbar = () => {
 						<>
 							{/* Botón de Logout */}
 							{location.pathname === "/" && localStorage.getItem("user_session") && (
-
-								<div class="dropdown">
-								<a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-									<i className="fa-solid fa-circle-user text-light"></i>
-								</a>
-
-								<ul class="dropdown-menu userProfileButton">
-								<li><a className=" text-warning"
-									onClick={handleLogOut} href="#">Logout</a></li>
-								</ul>
+								<div className="navBar Dropdown-Setup">
+									<p>Hola, {store.user_fName}</p>
+									<div class="dropdown">
+										<a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+											<i className="fa-solid fa-circle-user text-light"></i>
+										</a>
+										<ul class="dropdown-menu userProfileButton">
+											<li><a className=" text-warning"
+												onClick={handleLogOut} href="#">Logout</a></li>
+										</ul>
+									</div>
 								</div>
+								
 							)}
 						</>
 					) : (

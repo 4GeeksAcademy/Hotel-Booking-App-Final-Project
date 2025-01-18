@@ -2,7 +2,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			message: null,
-			user_session: "",
+			username: "",
 			user_type: "",
 			user_fName: "",
 			hotels: [],
@@ -72,17 +72,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 					// }
 
 					const data = await response.json()
-					console.log(data)
+					//console.log(data)
 
-					await setStore({ user_session: data.access_token })
-					await setStore({ user_type: data.user_type })
-					await setStore({ user_fName: data.fname})
 					
 					//Seteo de los datos necesarios del usuario
 					localStorage.setItem("user_session", data.access_token)
-					localStorage.setItem("user_type", data.user_type)
-					localStorage.setItem("user_fName", data.fname)
-					localStorage.setItem("username", data.username)
+					await getActions().loadUserData()
 
 					return data;
 
@@ -146,9 +141,36 @@ const getState = ({ getStore, getActions, setStore }) => {
 			logOutAccount: async () => {
 				
 				localStorage.removeItem("user_session")
-				localStorage.removeItem("user_type")
-				localStorage.removeItem("user_fName")
+				await setStore({ user_type: "" })
+				await setStore({ user_fName: ""})
+				await setStore({ username: ""})
 
+			},
+			loadUserData: async () => {
+				try {
+					const response = await fetch(process.env.BACKEND_URL + "/api/access", {
+						headers: {
+							"Authorization": `Bearer ${localStorage.getItem("user_session")}`
+						}
+					})
+					
+					const data = await response.json()
+					console.log(data[1])
+					await setStore({ user_type: data[1].user_type })
+					await setStore({ user_fName: data[1].name})
+					await setStore({ username: data[1].username})
+					
+					if(!data){
+						return -1
+					}
+	
+					//console.log(data)
+					return data[1];
+				}
+				catch(error){
+					console.log(error)
+					return error
+				}
 			}
 		}
 	};
