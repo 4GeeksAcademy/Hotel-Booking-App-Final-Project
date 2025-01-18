@@ -21,7 +21,7 @@ const Sidebar = () => {
             style={{ color: '#ffffff' }}
           >
             <FontAwesomeIcon icon={faUser} className="fa-icon mr-2" />
-            Información Personal
+            Personal Information
           </Link>
         </li>
         <li className="mb-4">
@@ -31,7 +31,7 @@ const Sidebar = () => {
             style={{ color: '#ffffff' }}
           >
             <FontAwesomeIcon icon={faHome} className="fa-icon mr-2" />
-            Hoteles Favoritos
+            Favorite Hotels
           </Link>
         </li>
         <li className="mb-4">
@@ -41,7 +41,7 @@ const Sidebar = () => {
             style={{ color: '#ffffff' }}
           >
             <FontAwesomeIcon icon={faBed} className="fa-icon mr-2" />
-            Historial de Estadías
+            Stay History
           </Link>
         </li>
       </ul>

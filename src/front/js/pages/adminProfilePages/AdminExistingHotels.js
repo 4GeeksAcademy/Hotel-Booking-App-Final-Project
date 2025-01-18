@@ -16,7 +16,7 @@ const AdminExistingHotels = () => {
 
           {/* Hotels Table Section */}
           <div className="card mb-4">
-            <div className="card-header">List of Hotels</div>
+            <div className="card-header">Hotel List</div>
             <div className="card-body">
               <table className="table">
                 <thead>
@@ -37,7 +37,7 @@ const AdminExistingHotels = () => {
                       <button className="btn btn-danger ms-2">Delete</button>
                     </td>
                   </tr>
-                  {/* Add more rows as needed */}
+                  
                 </tbody>
               </table>
             </div>

@@ -8,7 +8,7 @@ import "./HotelSidebar";
 const HotelSidebar = () => {
   return (
     <div className="hotel-sidebar bg-teal">
-      <h4 className="sidebar-title text-white p-3">Perfil de Usuario</h4>
+      <h4 className="sidebar-title text-white p-3">User Profile</h4>
       <ul className="list-unstyled ps-3">
         <li>
           <NavLink
@@ -16,7 +16,7 @@ const HotelSidebar = () => {
             className="sidebar-link"
             activeClassName="active"
           >
-            <i className="fa fa-user me-2"></i> Datos Personales
+            <i className="fa fa-user me-2"></i> Personal Information
           </NavLink>
         </li>
         <li>
@@ -25,7 +25,7 @@ const HotelSidebar = () => {
             className="sidebar-link"
             activeClassName="active"
           >
-            <i className="fa fa-hotel me-2"></i> Hoteles
+            <i className="fa fa-hotel me-2"></i> Hotels
           </NavLink>
         </li>
         <li>
@@ -34,7 +34,7 @@ const HotelSidebar = () => {
             className="sidebar-link"
             activeClassName="active"
           >
-            <i className="fa fa-box me-2"></i> Paquetes de hoteles
+            <i className="fa fa-box me-2"></i> Packages
           </NavLink>
         </li>
       </ul>

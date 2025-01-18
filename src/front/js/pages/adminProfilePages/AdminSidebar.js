@@ -8,10 +8,10 @@ const AdminSidebar = () => {
     <div
       className="sidebar col-3 p-3"
       style={{
-        backgroundColor: '#40788c', 
+        backgroundColor: '#40788c',
         minHeight: '100vh',
         color: '#ffffff',
-        width: '250px', 
+        width: '250px',
       }}
     >
       <ul className="list-unstyled">
@@ -23,7 +23,7 @@ const AdminSidebar = () => {
             style={{ color: '#ffffff' }}
           >
             <FontAwesomeIcon icon={faUser} className="fa-icon mr-2" style={{ fontSize: '1.2rem' }} />
-            Información Personal
+            Personal Information
           </Link>
         </li>
 
@@ -35,7 +35,7 @@ const AdminSidebar = () => {
             style={{ color: '#ffffff' }}
           >
             <FontAwesomeIcon icon={faHotel} className="fa-icon mr-2" style={{ fontSize: '1.2rem' }} />
-            Hoteles Existentes
+            Existing Hotels
           </Link>
         </li>
 
@@ -47,7 +47,7 @@ const AdminSidebar = () => {
             style={{ color: '#ffffff' }}
           >
             <FontAwesomeIcon icon={faUsers} className="fa-icon mr-2" style={{ fontSize: '1.2rem' }} />
-            Usuarios Existentes
+            Existing Users
           </Link>
         </li>
       </ul>

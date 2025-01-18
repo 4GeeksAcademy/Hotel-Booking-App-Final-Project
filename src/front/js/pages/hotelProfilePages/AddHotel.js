@@ -14,7 +14,7 @@ const AddHotel = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     
-    // Assuming you are adding the hotel to a list in the state
+ 
     const newHotel = {
       name: hotelName,
       location: hotelLocation,
@@ -22,9 +22,9 @@ const AddHotel = () => {
       description: hotelDescription,
     };
 
-    // Ideally, here you would call an API to add the hotel or update state
+    // call an API to add the hotel or update state
 
-    console.log("New Hotel Added:", newHotel); // Replace with API call or state update logic
+    console.log("New Hotel Added:", newHotel); 
 
     // Navigate to the Hotels page after submission
     navigate('/hotel-profile/hotels');
@@ -32,7 +32,7 @@ const AddHotel = () => {
 
   return (
     <div className="container">
-      <h2>Añadir un Hotel</h2>
+      <h2>Add a Hotel</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="hotelName" className="form-label">Hotel Name</label>
@@ -85,21 +85,22 @@ const AddHotel = () => {
           <button
             type="button"
             className="btn btn-secondary me-2"
-            onClick={() => navigate('/hotel-profile/hotels')}
+            onClick={() => navigate(-1)} // Go back to the previous page
           >
-            Volver
+            Go Back
           </button>
           <button
             type="button"
             className="btn btn-danger me-2"
-            onClick={() => navigate('/hotel-profile/hotels')}
+            onClick={() => navigate('/hotel-profile/hotels')} // Cancel and go back to the Hotels list
           >
-            Cancelar
+            Cancel
           </button>
-          <button type="submit" className="btn btn-success">Añadir Hotel</button>
+          <button type="submit" className="btn btn-success">Add Hotel</button>
         </div>
       </form>
     </div>
   );
 };
+
 export default AddHotel;

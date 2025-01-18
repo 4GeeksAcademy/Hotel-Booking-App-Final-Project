@@ -15,10 +15,10 @@ const HotelPersonalInfo = () => {
       <HotelSidebar />
       
       <div className="flex-grow-1">
-        <Header title="Datos Personales" />
+        <Header title="Personal Information" />
 
         <div className="content container mt-4">
-          <h2 className="text-center mb-4">Información del Usuario</h2>
+          <h2 className="text-center mb-4">User Information</h2>
 
           {/* Profile Picture */}
           <div className="d-flex justify-content-center mb-4">
@@ -26,7 +26,6 @@ const HotelPersonalInfo = () => {
               className="rounded-circle bg-secondary"
               style={{ width: '150px', height: '150px' }}
             >
-             
               <img
                 src="https://via.placeholder.com/150"
                 alt="Profile"
@@ -36,11 +35,11 @@ const HotelPersonalInfo = () => {
             </div>
           </div>
 
-          
+          {/* Form */}
           <form className="w-100" style={{ maxWidth: '800px', margin: '0 auto' }}>
             <div className="row mb-3">
               <div className="col-md-6">
-                <label className="form-label">Nombre</label>
+                <label className="form-label">First Name</label>
                 <input
                   type="text"
                   className="form-control"
@@ -49,7 +48,7 @@ const HotelPersonalInfo = () => {
                 />
               </div>
               <div className="col-md-6">
-                <label className="form-label">Apellido</label>
+                <label className="form-label">Last Name</label>
                 <input
                   type="text"
                   className="form-control"
@@ -61,7 +60,7 @@ const HotelPersonalInfo = () => {
 
             <div className="row mb-3">
               <div className="col-md-6">
-                <label className="form-label">Usuario</label>
+                <label className="form-label">Username</label>
                 <input
                   type="text"
                   className="form-control"
@@ -82,16 +81,16 @@ const HotelPersonalInfo = () => {
 
             <div className="row mb-3">
               <div className="col-md-6">
-                <label className="form-label">Plan de visualización</label>
+                <label className="form-label">Display Plan</label>
                 <div className="d-flex align-items-center">
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Plan Activo"
+                    placeholder="Active Plan"
                     disabled={!isEditable}
                   />
                   <a href="#" className="ms-2 text-decoration-none">
-                    Cambiar plan
+                    Change Plan
                   </a>
                 </div>
               </div>
@@ -99,24 +98,24 @@ const HotelPersonalInfo = () => {
 
             <div className="row mb-3">
               <div className="col-md-6">
-                <label className="form-label">Idioma</label>
+                <label className="form-label">Language</label>
                 <select
                   className="form-select"
                   disabled={!isEditable}
                 >
-                  <option selected>Español</option>
+                  <option selected>Spanish</option>
                   <option>English</option>
-                  <option>Français</option>
-                  <option>Deutsch</option>
+                  <option>French</option>
+                  <option>German</option>
                 </select>
               </div>
 
               <div className="col-md-6">
-                <label className="form-label">País de residencia</label>
+                <label className="form-label">Country of Residence</label>
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="España"
+                  placeholder="Spain"
                   disabled={!isEditable}
                 />
               </div>
@@ -132,13 +131,13 @@ const HotelPersonalInfo = () => {
               className={`btn ${isEditable ? 'btn-secondary' : 'btn-warning'} me-2`}
               onClick={toggleEdit}
             >
-              {isEditable ? 'Cancelar' : 'Editar Información'}
+              {isEditable ? 'Cancel' : 'Edit Information'}
             </button>
             <button
               className="btn btn-success"
               disabled={!isEditable}
             >
-              Guardar Cambios
+              Save Changes
             </button>
           </div>
         </div>

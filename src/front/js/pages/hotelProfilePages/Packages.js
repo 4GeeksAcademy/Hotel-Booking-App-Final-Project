@@ -13,12 +13,12 @@ const Packages = () => {
         <Header title="Paquetes de Hoteles" />
         <div className="p-4">
           <div className="d-flex justify-content-between mb-3">
-            <h4>Lista de Paquetes</h4>
+            <h4>Packages list</h4>
             <button
               className="btn btn-success"
               onClick={() => navigate('/hotelProfilePages/add-package')}
             >
-              Añadir Paquete
+              Add Package
             </button>
 
           </div>

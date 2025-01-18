@@ -26,7 +26,6 @@ const AddPackage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Add the logic for submitting the form here, e.g., send a POST request
         console.log(packageData);
         // After successful submission, navigate back to the packages page
         navigate('/hotel-profile/packages');
@@ -36,15 +35,14 @@ const AddPackage = () => {
         <div className="d-flex">
             <HotelSidebar />
             <div className="flex-grow-1">
-                <Header title="Añadir Paquete" />
+                <Header title="Add Package" />
                 <div className="p-4">
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
-
-                            <h5>Añadir Paquete</h5>
+                            <h5>Add Package</h5>
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="packageName" className="form-label">Nombre del Paquete</label>
+                            <label htmlFor="packageName" className="form-label">Package Name</label>
                             <input
                                 type="text"
                                 className="form-control"
@@ -56,7 +54,7 @@ const AddPackage = () => {
                             />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="hotelName" className="form-label">Nombre del Hotel</label>
+                            <label htmlFor="hotelName" className="form-label">Hotel Name</label>
                             <input
                                 type="text"
                                 className="form-control"
@@ -68,7 +66,7 @@ const AddPackage = () => {
                             />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="country" className="form-label">País</label>
+                            <label htmlFor="country" className="form-label">Country</label>
                             <input
                                 type="text"
                                 className="form-control"
@@ -80,7 +78,7 @@ const AddPackage = () => {
                             />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="location" className="form-label">Ubicación</label>
+                            <label htmlFor="location" className="form-label">Location</label>
                             <input
                                 type="text"
                                 className="form-control"
@@ -92,7 +90,7 @@ const AddPackage = () => {
                             />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="price" className="form-label">Precio</label>
+                            <label htmlFor="price" className="form-label">Price</label>
                             <input
                                 type="number"
                                 className="form-control"
@@ -104,7 +102,7 @@ const AddPackage = () => {
                             />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="startDate" className="form-label">Fecha de Inicio</label>
+                            <label htmlFor="startDate" className="form-label">Start Date</label>
                             <input
                                 type="date"
                                 className="form-control"
@@ -116,7 +114,7 @@ const AddPackage = () => {
                             />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="endDate" className="form-label">Fecha de Fin</label>
+                            <label htmlFor="endDate" className="form-label">End Date</label>
                             <input
                                 type="date"
                                 className="form-control"
@@ -128,7 +126,7 @@ const AddPackage = () => {
                             />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="description" className="form-label">Descripción</label>
+                            <label htmlFor="description" className="form-label">Description</label>
                             <textarea
                                 className="form-control"
                                 id="description"
@@ -145,16 +143,16 @@ const AddPackage = () => {
                                 className="btn btn-secondary me-2"
                                 onClick={() => navigate('/hotel-profile/packages')}
                             >
-                                Volver
+                                Go Back
                             </button>
                             <button
                                 type="button"
                                 className="btn btn-danger me-2"
                                 onClick={() => navigate('/hotel-profile/packages')}
                             >
-                                Cancelar
+                                Cancel
                             </button>
-                            <button type="submit" className="btn btn-success">Añadir Paquete</button>
+                            <button type="submit" className="btn btn-success">Add Package</button>
                         </div>
                     </form>
                 </div>

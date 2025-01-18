@@ -6,20 +6,20 @@ import { faCalendarAlt, faTag, faHotel, faTrash } from '@fortawesome/free-solid-
 const StayHistory = () => {
   return (
     <div className="history-container">
-      <h2>Historial de estadías</h2>
+      <h2>Stay History</h2>
       <input type="text" placeholder="Buscar estadía..." className="form-control search-bar" />
       <div className="package-list">
         {[1, 2, 3].map((item) => (
           <div key={item} className="package-item">
             <div className="package-image"></div>
             <div className="package-details">
-              <h5>Nombre del Paquete</h5>
+              <h5>Package Name</h5>
               <div className="package-meta">
                 <div className="meta-item">
-                  <FontAwesomeIcon icon={faCalendarAlt} /> Fecha de estadía
+                  <FontAwesomeIcon icon={faCalendarAlt} /> Stay Date
                 </div>
                 <div className="meta-item">
-                  <FontAwesomeIcon icon={faTag} /> Precio
+                  <FontAwesomeIcon icon={faTag} /> Price
                 </div>
                 <div className="meta-item">
                   <FontAwesomeIcon icon={faHotel} /> Hotel
@@ -27,14 +27,14 @@ const StayHistory = () => {
                 <FontAwesomeIcon icon={faTrash} className="delete-icon" />
               </div>
               <div className="package-description">
-                <p>Descripción del paquete</p>
-                <a href="#">Ir al paquete</a>
+                <p>Package Description</p>
+                <a href="#">Go to package</a>
               </div>
             </div>
           </div>
         ))}
       </div>
-      <button className="btn btn-info">Guardar Cambios</button>
+      <button className="btn btn-info">Save Changes</button>
     </div>
   );
 };
