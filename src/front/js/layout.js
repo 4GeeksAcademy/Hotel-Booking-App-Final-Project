@@ -23,6 +23,7 @@ import HotelPersonalInfo from "./pages/hotelProfilePages/HotelPersonalInfo";
 import Hotels from "./pages/hotelProfilePages/Hotels";  
 import Packages from "./pages/hotelProfilePages/Packages";  
 import AddHotel from './pages/hotelProfilePages/AddHotel';
+import AddPackage from './pages/hotelProfilePages/AddPackage';
 
 
 
@@ -59,6 +60,8 @@ const Layout = () => {
                         <Route element={<Hotels />} path="/hotel-profile/hotels" />
                         <Route element={<Packages />} path="/hotel-profile/packages" />
                         <Route element={<AddHotel />} path="/hotel-profile/add-hotel" />
+                        <Route element={<AddPackage />} path="/hotelProfilePages/add-package" />
+
 
                         <Route element={<h1>Not found!</h1>} path="*" />
                     </Routes>
