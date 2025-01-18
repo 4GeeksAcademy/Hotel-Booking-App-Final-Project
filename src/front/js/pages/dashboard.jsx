@@ -14,7 +14,7 @@ export const Dashboard = () => {
 
     // Función para manejar la acción de reservar
     const handleReserve = (hotelName) => {
-        if (!store.user_session) {
+        if (!localStorage.getItem("user_session")) {
             // Si no hay sesión de usuario, mostrar la alerta
             setShowAlert(true);
             setTimeout(() => {

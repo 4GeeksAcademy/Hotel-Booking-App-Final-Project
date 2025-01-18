@@ -78,6 +78,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					await setStore({ user_type: data.user_type })
 					await setStore({ user_fName: data.fname})
 					
+					//Seteo de los datos necesarios del usuario
 					localStorage.setItem("user_session", data.access_token)
 					localStorage.setItem("user_type", data.user_type)
 					localStorage.setItem("user_fName", data.fname)
@@ -115,7 +116,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						if (errorData.msg === "Este correo ya está registrado. Por favor, usa otro email.") {
 							return "Este correo ya está registrado. Por favor, usa otro email.";
 						}
-						alert(errorData.msg);
+						//alert(errorData.msg);
 						throw new Error(errorData.msg);
 					}
 
