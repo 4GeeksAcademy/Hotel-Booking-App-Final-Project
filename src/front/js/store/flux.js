@@ -2,6 +2,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			message: null,
+			user_session: "",
+			user_type: "",
+			hotels: [],
+			name: null,
 			demo: [
 				{
 					title: "FIRST",
@@ -47,6 +51,38 @@ const getState = ({ getStore, getActions, setStore }) => {
 				//reset the global store
 				setStore({ demo: demo });
 			},
+			loginAccount: async (username, password) => {
+				try {
+					// fetching data from the backend
+					const response = await fetch(process.env.BACKEND_URL + "api/login", {
+						method: "POST",
+						headers: {
+							"Content-type": "application/json"
+						},
+						body: JSON.stringify({
+							username: username,
+							password: password
+						})
+					})
+
+					// if (!response.ok){
+					// 	const errorMsg = await response.json()
+					//  	throw new Error(errorMsg.msg)
+					// }
+
+					const data = await response.json()
+					console.log(data)
+
+					await setStore({ user_session: data.access_token })
+					await setStore({ user_type: data.user_type })
+
+					return data;
+
+				} catch (error) {
+					console.log("Error loading message from backend", error)
+					return error
+				}
+			},
 
 			signUp: async (name, last_name, email, username, password, user_type) => {
 				console.log(name, last_name, email, username, password, user_type);
@@ -84,8 +120,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error al registrar:", error);
 					return error.message || "Error al registrar el usuario.";
 				}
-			}
+			},
 
+			getHotels: async () => {
+				try {
+					const response = await fetch(process.env.BACKEND_URL + "api/hotels");
+					if (response.ok) {
+						const data = await response.json();
+						setStore({ hotels: data.hotels }); // Actualiza el estado de los hoteles
+					} else {
+						console.error("Error fetching hotels:", response.status);
+					}
+				} catch (error) {
+					console.error("Hubo un error al obtener los hoteles:", error);
+				}
+			}
 		}
 	};
 };
