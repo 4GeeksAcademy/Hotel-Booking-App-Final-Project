@@ -8,6 +8,7 @@ export const Navbar = () => {
 	return (
 		<nav className="navbar navbar-light bg-light FontDesign">
 			<div className="container">
+				
 				<Link to="/">
 					<span className="navbar-brand mb-0 h1">React Boilerplate</span>
 				</Link>
@@ -36,6 +37,22 @@ export const Navbar = () => {
 							Login
 						</button>
 					)}
+
+					 {/* Button for User Profile <--- Temporary */}
+					 <button
+                        className="btn btn-outline-success mx-2"
+                        onClick={() => navigate("/profile")}
+                    >
+                        User Profile
+                    </button>
+
+					 {/* Button for Hotel Profile  <-- Temporary*/}
+					 <button
+                        className="btn btn-outline-info"
+                        onClick={() => navigate("/hotel-profile/personal-info")}
+                    >
+                        Hotel Profile
+                    </button>
 				</div>
 
 			</div>

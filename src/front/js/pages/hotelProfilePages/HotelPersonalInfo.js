@@ -26,7 +26,7 @@ const HotelPersonalInfo = () => {
               className="rounded-circle bg-secondary"
               style={{ width: '150px', height: '150px' }}
             >
-              {/* Placeholder for Profile Picture */}
+             
               <img
                 src="https://via.placeholder.com/150"
                 alt="Profile"
@@ -36,7 +36,7 @@ const HotelPersonalInfo = () => {
             </div>
           </div>
 
-          {/* User Info Form */}
+          
           <form className="w-100" style={{ maxWidth: '800px', margin: '0 auto' }}>
             <div className="row mb-3">
               <div className="col-md-6">
