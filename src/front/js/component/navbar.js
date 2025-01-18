@@ -38,21 +38,21 @@ export const Navbar = () => {
 						</button>
 					)}
 
-					 {/* Button for User Profile <--- Temporary */}
+					 {/* Button for User Profile <--- Temporary
 					 <button
                         className="btn btn-outline-success mx-2"
                         onClick={() => navigate("/profile")}
                     >
                         User Profile
-                    </button>
+                    </button> */}
 
-					 {/* Button for Hotel Profile  <-- Temporary*/}
+					 {/* Button for Hotel Profile  <-- Temporary
 					 <button
                         className="btn btn-outline-info"
                         onClick={() => navigate("/hotel-profile/personal-info")}
                     >
                         Hotel Profile
-                    </button>
+                    </button> */}
 				</div>
 
 			</div>

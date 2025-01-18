@@ -19,13 +19,15 @@ import FavoriteHotels from "./pages/profilePages/FavoriteHotels";
 import StayHistory from "./pages/profilePages/StayHistory";
 
 
-import HotelPersonalInfo from "./pages/hotelProfilePages/HotelPersonalInfo";  
-import Hotels from "./pages/hotelProfilePages/Hotels";  
-import Packages from "./pages/hotelProfilePages/Packages";  
+import HotelPersonalInfo from "./pages/hotelProfilePages/HotelPersonalInfo";
+import Hotels from "./pages/hotelProfilePages/Hotels";
+import Packages from "./pages/hotelProfilePages/Packages";
 import AddHotel from './pages/hotelProfilePages/AddHotel';
 import AddPackage from './pages/hotelProfilePages/AddPackage';
 
-
+import AdminPersonalInfo from "./pages/adminProfilePages/AdminPersonalInfo";
+import AdminExistingHotels from "./pages/adminProfilePages/AdminExistingHotels";  // Add this import
+import AdminExistingUsers from "./pages/adminProfilePages/AdminExistingUsers";  // Add this import
 
 
 
@@ -43,11 +45,11 @@ const Layout = () => {
                         <Route element={<Home />} path="/" />
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" />
-                        <Route element={<SignUp />} path="/signup"/>
+                        <Route element={<SignUp />} path="/signup" />
                         <Route element={<LoginAccount />} path="/login" />
                         <Route element={<ContactUs />} path="/contact" />
 
-                      
+
                         <Route element={<UserProfile />} path="/profile">
                             <Route index element={<PersonalInfo />} />
                             <Route path="personal-info" element={<PersonalInfo />} />
@@ -55,12 +57,18 @@ const Layout = () => {
                             <Route path="stay-history" element={<StayHistory />} />
                         </Route>
 
-                       
+
                         <Route element={<HotelPersonalInfo />} path="/hotel-profile/personal-info" />
                         <Route element={<Hotels />} path="/hotel-profile/hotels" />
                         <Route element={<Packages />} path="/hotel-profile/packages" />
                         <Route element={<AddHotel />} path="/hotel-profile/add-hotel" />
                         <Route element={<AddPackage />} path="/hotelProfilePages/add-package" />
+
+                       
+                        <Route element={<AdminExistingHotels />} path="/admin/existing-hotels" />  
+                        <Route element={<AdminExistingUsers />} path="/admin/existing-users" />  
+                        <Route element={<AdminPersonalInfo />} path="/admin/personal-info" />
+
 
 
                         <Route element={<h1>Not found!</h1>} path="*" />
