@@ -1,8 +1,9 @@
 """
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
-from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User
+from flask import Flask, request, jsonify, url_for, Blueprint, current_app
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
+from api.models import db, User, Hotel
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
@@ -45,7 +46,7 @@ def signup():
         last_name=data['last_name'],
         email=data['email'],
         username=data['username'],
-        password=data['password'],  # No ciframos la contraseña aún
+        password=current_app.bcrypt.generate_password_hash(data["password"]).decode('utf-8'),  
         user_type=data['user_type'],
         is_active=True  # Suponiendo que el usuario estará activo por defecto
     )
@@ -58,3 +59,35 @@ def signup():
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": f"Error al registrar el usuario: {str(e)}"}), 500
+
+
+#Creacion del token de JWT
+@api.route('/login', methods = ['POST'])
+def handle_login():
+    username = request.json.get("username", None)
+    password = request.json.get("password", None)
+
+    user_exists = User.query.filter((User.email == username) |  (User.username == username)).first()
+
+    if not user_exists:
+        return jsonify({"msg": "There was an error. Incorrect username or password"}), 401
+    
+    valid_password = current_app.bcrypt.check_password_hash(user_exists.password, password)
+
+    if not valid_password:
+        return jsonify({"msg": "There was an error. Incorrect username or password"}), 401
+    
+    access_token = create_access_token(identity=username)
+
+    return jsonify({"access_token": access_token, "username":user_exists.username, "user_type":user_exists.user_type }), 200
+
+# ENDPOINT DE LA VISTA DEL DASHBOARD QUE MUESTRA HOTELES
+@api.route('/hotels', methods=['GET'])
+def get_hotels():
+    try:
+        hotels = Hotel.query.filter_by(is_active=True).all()
+        serialized_hotels = [hotel.serialize() for hotel in hotels]
+
+        return jsonify({"hotels": serialized_hotels}), 200
+    except Exception as e:
+        return jsonify({"message": f"Error retrieving hotels: {str(e)}"}),500
