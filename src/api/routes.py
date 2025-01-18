@@ -79,7 +79,7 @@ def handle_login():
     
     access_token = create_access_token(identity=username)
 
-    return jsonify({"access_token": access_token, "username":user_exists.username, "user_type":user_exists.user_type }), 200
+    return jsonify({"access_token": access_token, "username":user_exists.username, "user_type":user_exists.user_type, "fname":user_exists.name }), 200
 
 # ENDPOINT DE LA VISTA DEL DASHBOARD QUE MUESTRA HOTELES
 @api.route('/hotels', methods=['GET'])

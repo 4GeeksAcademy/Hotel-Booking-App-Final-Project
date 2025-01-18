@@ -4,6 +4,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			message: null,
 			user_session: "",
 			user_type: "",
+			user_fName: "",
 			hotels: [],
 			name: null,
 			demo: [
@@ -75,6 +76,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					await setStore({ user_session: data.access_token })
 					await setStore({ user_type: data.user_type })
+					await setStore({ user_fName: data.fname})
+					
+					localStorage.setItem("user_session", data.access_token)
+					localStorage.setItem("user_type", data.user_type)
+					localStorage.setItem("user_fName", data.fname)
+					localStorage.setItem("username", data.username)
 
 					return data;
 
@@ -134,6 +141,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} catch (error) {
 					console.error("Hubo un error al obtener los hoteles:", error);
 				}
+			},
+			logOutAccount: async () => {
+				
+				localStorage.removeItem("user_session")
+				localStorage.removeItem("user_type")
+				localStorage.removeItem("user_fName")
+
 			}
 		}
 	};
