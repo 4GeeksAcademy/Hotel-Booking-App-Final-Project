@@ -1,40 +1,131 @@
 /* src/front/styles/userProfile.css */
 
-/* .user-profile {
+.user-profile {
   display: flex;
+  flex-direction: column; 
+  height: 100vh; 
+}
+
+.user-profile-header {
+  height: 60px; 
+  display: flex;
+  align-items: center;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); 
+}
+
+.user-profile .d-flex {
+  flex-grow: 1; 
+  display: flex; 
 }
 
 .user-profile .sidebar {
   width: 250px;
-  background-color: #f8f9fa;
+  background-color: #40788c;
   padding: 20px;
-}
-
-.user-profile .sidebar ul {
-  list-style: none;
-  padding: 0;
-}
-
-.user-profile .sidebar li {
-  margin-bottom: 20px;
-}
-
-.user-profile .sidebar li a {
-  display: flex;
-  align-items: center;
-  color: #343a40; 
-  font-weight: 500;
-}
-
-.user-profile .sidebar li a:hover {
-  color: #007bff; 
+  border-right: 1px solid #dee2e6;
+  min-height: calc(100vh - 60px); 
 }
 
 .user-profile .content {
   flex-grow: 1;
   padding: 20px;
+  background-color: #f5f5f5;
+  min-height: calc(100vh - 60px); 
 }
 
-.user-profile .view h2 {
-  margin-top: 20px;
-} */
+
+
+/* ---- Stay History Styles ---- */
+
+.history-container {
+  background-color: #fff; 
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+}
+
+.package-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.package-item {
+  display: flex;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.package-image {
+  width: 120px;
+  height: 120px;
+  background-color: #dee2e6;
+  border-radius: 8px;
+  margin-right: 20px;
+}
+
+.package-details {
+  flex-grow: 1;
+}
+
+.package-details h5 {
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #343a40;
+}
+
+.package-meta {
+  display: flex;
+  gap: 15px;
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-bottom: 10px;
+}
+
+.package-meta svg {
+  margin-right: 5px;
+}
+
+.package-details p {
+  color: #6c757d;
+}
+
+.package-details a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.package-details a:hover {
+  text-decoration: underline;
+}
+
+.delete-icon {
+  color: #dc3545;
+  cursor: pointer;
+}
+
+.delete-icon:hover {
+  color: #c82333;
+}
+
+.btn-info {
+  background-color: #17a2b8;
+  border-color: #17a2b8;
+  color: #fff;
+}
+
+.btn-info:hover {
+  background-color: #138496;
+  border-color: #117a8b;
+}

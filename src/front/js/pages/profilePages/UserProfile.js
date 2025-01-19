@@ -1,26 +1,39 @@
-// // src/front/js/pages/profilePages/UserProfile.js
-// import React from 'react';
-// import Sidebar from '../../component/Sidebar'; 
-// import { Route, Routes } from 'react-router-dom';
-// import PersonalInfo from './PersonalInfo';
-// import FavoriteHotels from './FavoriteHotels';
-// import StayHistory from './StayHistory';
-// import '../../../styles/userProfile.css';
+// src/front/js/pages/profilePages/UserProfile.js
+import React from 'react';
+import Sidebar from '../../component/Sidebar';
+import { Outlet } from 'react-router-dom';
+import '../../../styles/userProfile.css';
 
+const UserProfile = () => {
+  return (
+    <div className="user-profile">
+     
+      <div
+        className="user-profile-header"
+        style={{
+          backgroundColor: '#40788c',
+          color: '#ffffff',
+          fontSize: '20px',
+          fontWeight: 'bold',
+          padding: '15px 20px',
+          width: '100%',
+        }}
+      >
+        User Profile
+      </div>
 
-// const UserProfile = () => {
-//   return (
-//     <div className="user-profile d-flex">
-//       <Sidebar />
-//       <div className="content flex-grow-1 p-4">
-//         <Routes>
-//           <Route path="personal-info" element={<PersonalInfo />} />
-//           <Route path="favorite-hotels" element={<FavoriteHotels />} />
-//           <Route path="stay-history" element={<StayHistory />} />
-//         </Routes>
-//       </div>
-//     </div>
-//   );
-// };
+     
+      <div className="d-flex">
+        {/* Sidebar */}
+        <Sidebar />
 
-// export default UserProfile;
+       
+        <div className="content flex-grow-1 p-4">
+          <Outlet />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default UserProfile;
