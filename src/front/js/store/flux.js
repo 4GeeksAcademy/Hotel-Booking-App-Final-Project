@@ -2,8 +2,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			message: null,
-			user_session: "",
+			username: "",
 			user_type: "",
+			user_fName: "",
 			hotels: [],
 			name: null,
 			demo: [
@@ -71,10 +72,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 					// }
 
 					const data = await response.json()
-					console.log(data)
+					//console.log(data)
 
-					await setStore({ user_session: data.access_token })
-					await setStore({ user_type: data.user_type })
+					
+					//Seteo de los datos necesarios del usuario
+					localStorage.setItem("user_session", data.access_token)
+					await getActions().loadUserData()
 
 					return data;
 
@@ -108,7 +111,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						if (errorData.msg === "Este correo ya está registrado. Por favor, usa otro email.") {
 							return "Este correo ya está registrado. Por favor, usa otro email.";
 						}
-						alert(errorData.msg);
+						//alert(errorData.msg);
 						throw new Error(errorData.msg);
 					}
 
@@ -133,6 +136,41 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				} catch (error) {
 					console.error("Hubo un error al obtener los hoteles:", error);
+				}
+			},
+			logOutAccount: async () => {
+				//eliminacion de la data del usuario
+				localStorage.removeItem("user_session")
+				await setStore({ user_type: "" })
+				await setStore({ user_fName: ""})
+				await setStore({ username: ""})
+
+			},
+			loadUserData: async () => {
+				//generacion de la data del usuario cada vez que refrezca la pagina
+				try {
+					const response = await fetch(process.env.BACKEND_URL + "/api/access", {
+						headers: {
+							"Authorization": `Bearer ${localStorage.getItem("user_session")}`
+						}
+					})
+					
+					const data = await response.json()
+					console.log(data[1])
+					await setStore({ user_type: data[1].user_type })
+					await setStore({ user_fName: data[1].name})
+					await setStore({ username: data[1].username})
+					
+					if(!data){
+						return -1
+					}
+	
+					//console.log(data)
+					return data[1];
+				}
+				catch(error){
+					console.log(error)
+					return error
 				}
 			}
 		}
