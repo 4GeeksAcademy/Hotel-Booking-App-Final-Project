@@ -43,5 +43,34 @@
 }
 
 .userProfileButton {
-    background: none;
+    background-color: #ffff;
+    z-index: 1;
+    border-style: solid;
+    border-color:black;
+    border-width: 2px;
+
+}
+
+.userProfileButton::after {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    top: -10%;
+    left: 91%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;  
+    border-color: transparent transparent #ffff transparent;
+}
+
+/*CSS del boton de funciones de perfil en el navBar*/
+.navBarProfileButton{
+    background-color: #ffff;
+    border: none;
+    height: 50%;
+}
+.navBarProfileButton:hover{
+    height: 100%;
+    background-color: #005f73;
+
 }
