@@ -81,13 +81,47 @@ def handle_login():
 
     return jsonify({"access_token": access_token, "username":user_exists.username, "user_type":user_exists.user_type }), 200
 
+
+# agregando POST para hoteles
+
+@api.route('/hotels', methods=['POST'])
+def add_hotel():
+    try:
+        # Get JSON data from the request
+        data = request.get_json()
+
+        # Validate the data (you can add more checks as needed)
+        if 'name' not in data or 'location' not in data or 'country' not in data:
+            return jsonify({"message": "Missing required fields"}), 400
+
+        # Create a new Hotel instance
+        new_hotel = Hotel(
+            name=data['name'],
+            location=data['location'],
+            country=data['country'],
+            description=data['description'],
+            is_active=True  # Assuming you want the hotel to be active by default
+        )
+
+        # Add the new hotel to the database
+        db.session.add(new_hotel)
+        db.session.commit()
+
+        # Return a success response
+        return jsonify({"message": "Hotel added successfully", "hotel": new_hotel.serialize()}), 201
+
+    except Exception as e:
+        return jsonify({"message": f"Error adding hotel: {str(e)}"}), 500
+
 # ENDPOINT DE LA VISTA DEL DASHBOARD QUE MUESTRA HOTELES
 @api.route('/hotels', methods=['GET'])
 def get_hotels():
     try:
         hotels = Hotel.query.filter_by(is_active=True).all()
         serialized_hotels = [hotel.serialize() for hotel in hotels]
+        print(f"Hotels fetched: {serialized_hotels}")  # Ensure this prints in the terminal
 
         return jsonify({"hotels": serialized_hotels}), 200
     except Exception as e:
-        return jsonify({"message": f"Error retrieving hotels: {str(e)}"}),500
+        print(f"Error retrieving hotels: {str(e)}")
+        return jsonify({"message": f"Error retrieving hotels: {str(e)}"}), 500

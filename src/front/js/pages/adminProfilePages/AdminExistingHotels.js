@@ -1,51 +1,62 @@
-import React from 'react';
-import AdminSidebar from './AdminSidebar'; // Import the AdminSidebar
+import React, { useEffect, useContext, useState } from "react";
+import { Context } from "../../store/appContext";  // Going up three levels
 
-const AdminExistingHotels = () => {
-  return (
-    <div className="container-fluid">
-      <div className="row">
-        {/* Sidebar */}
-        <AdminSidebar />
 
-        {/* Main Content */}
-        <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-          <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 className="h2">Existing Hotels</h1>
-          </div>
+export const AdminExistingHotels = () => {
+    const { actions, store } = useContext(Context);
+    const [showAlert, setShowAlert] = useState(false);
 
-          {/* Hotels Table Section */}
-          <div className="card mb-4">
-            <div className="card-header">Hotel List</div>
-            <div className="card-body">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Hotel Name</th>
-                    <th scope="col">Location</th>
-                    <th scope="col">Country</th>
-                    <th scope="col">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Hotel A</td>
-                    <td>Location A</td>
-                    <td>Country A</td>
-                    <td>
-                      <button className="btn btn-warning">Edit</button>
-                      <button className="btn btn-danger ms-2">Delete</button>
-                    </td>
-                  </tr>
-                  
-                </tbody>
-              </table>
+    useEffect(() => {
+        // Fetch hotels when the component mounts (for admin)
+        actions.getHotels();
+    }, []);  // Empty dependency array ensures it only runs once when the component mounts
+
+    return (
+        <div className="container py-5">
+            {showAlert && (
+                <div
+                    className="alert alert-primary position-absolute end-0 top-0 mt-5"
+                    role="alert"
+                    style={{ zIndex: 500 }}
+                >
+                    Please log in to manage hotels.
+                </div>
+            )}
+
+            <div className="d-flex align-items-center justify-content-center" style={{ gap: "10px" }}>
+                <h2 style={{ fontWeight: "bold" }}>Admin - Manage Hotels</h2>
             </div>
-          </div>
-        </main>
-      </div>
-    </div>
-  );
+
+            <div className="row">
+                {store.hotels.length > 0 ? (
+                    store.hotels.map((hotel, index) => (
+                        <div key={index} className="col-12 col-md-4">
+                            <div className="card h-100">
+                                <div className="card-body d-flex flex-column">
+                                    <h5 className="card-title">{hotel.name}</h5>
+                                    <p className="card-text">{hotel.description}</p>
+                                    <p className="card-text">{hotel.location}, {hotel.country}</p>
+                                    <div className="d-flex justify-content-between mt-auto">
+                                        {/* Button to Edit */}
+                                        <button className="btn btn-warning" onClick={() => console.log("Edit Hotel", hotel)}>
+                                            Edit
+                                        </button>
+                                        {/* Button to Delete */}
+                                        <button className="btn btn-danger" onClick={() => console.log("Delete Hotel", hotel)}>
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <p>No hotels available for management.</p>
+                )}
+            </div>
+        </div>
+    );
 };
+
 
 export default AdminExistingHotels;

@@ -49,7 +49,7 @@ const Layout = () => {
                         <Route element={<LoginAccount />} path="/login" />
                         <Route element={<ContactUs />} path="/contact" />
 
-
+                        {/* Usuario cliente */}
                         <Route element={<UserProfile />} path="/profile">
                             <Route index element={<PersonalInfo />} />
                             <Route path="personal-info" element={<PersonalInfo />} />
@@ -57,14 +57,14 @@ const Layout = () => {
                             <Route path="stay-history" element={<StayHistory />} />
                         </Route>
 
-
+                        {/* usuario hotel */}
                         <Route element={<HotelPersonalInfo />} path="/hotel-profile/personal-info" />
                         <Route element={<Hotels />} path="/hotel-profile/hotels" />
                         <Route element={<Packages />} path="/hotel-profile/packages" />
                         <Route element={<AddHotel />} path="/hotel-profile/add-hotel" />
                         <Route element={<AddPackage />} path="/hotelProfilePages/add-package" />
 
-                       
+                       {/* usuario admin */}
                         <Route element={<AdminExistingHotels />} path="/admin/existing-hotels" />  
                         <Route element={<AdminExistingUsers />} path="/admin/existing-users" />  
                         <Route element={<AdminPersonalInfo />} path="/admin/personal-info" />
