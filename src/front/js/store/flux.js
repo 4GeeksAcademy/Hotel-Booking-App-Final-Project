@@ -172,7 +172,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log(error)
 					return error
 				}
-			}
+			},
+			
+			// action to delete hotel (added for hotel delete from the admin)
+
+			deleteHotel: async (id_hotel) => {
+				try {
+				  const response = await fetch(`${process.env.BACKEND_URL}/api/hotels/${id_hotel}`, {
+					method: "DELETE",
+				  });
+		
+				  if (response.ok) {
+					// On success, update the store by removing the deleted hotel
+					const store = getStore();
+					const updatedHotels = store.hotels.filter((hotel) => hotel.id !== id_hotel);
+					setStore({ hotels: updatedHotels });  // Update the store with the new hotels list
+				  } else {
+					console.error("Failed to delete hotel");
+				  }
+				} catch (error) {
+				  console.error("Error deleting hotel:", error);
+				}
+			  },
 		}
 	};
 };

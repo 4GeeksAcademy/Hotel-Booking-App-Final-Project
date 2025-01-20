@@ -124,6 +124,29 @@ def get_hotels():
     
     except Exception as e:
         return jsonify({"message": f"Error retrieving hotels: {str(e)}"}),500
+    
+# DELETE for HOTEL from ADMIN
+@api.route('/hotels/<int:id_hotel>', methods=['DELETE'])
+@jwt_required()  # Optional: Add JWT verification if needed
+def delete_hotel(id_hotel):
+    try:
+        # Find the hotel by ID
+        hotel = Hotel.query.get(id_hotel)
+        
+        if not hotel:
+            return jsonify({"message": "Hotel not found"}), 404
+        
+        # Deactivate or delete the hotel from the database
+        hotel.is_active = False  # Soft delete (set the hotel as inactive)
+        
+        # Commit the changes to the database
+        db.session.commit()
+        
+        return jsonify({"message": "Hotel deleted successfully"}), 200
+    
+    except Exception as e:
+        return jsonify({"message": f"Error deleting hotel: {str(e)}"}), 500
+
 
 
 #Endpoint de autenticacion del usuario

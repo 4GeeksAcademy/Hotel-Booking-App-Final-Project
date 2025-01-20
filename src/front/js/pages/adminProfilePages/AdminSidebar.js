@@ -6,12 +6,12 @@ import { faUser, faHotel, faUsers } from '@fortawesome/free-solid-svg-icons';
 const AdminSidebar = () => {
   return (
     <div
-      className="sidebar col-3 p-3"
+      className="sidebar p-3"
       style={{
         backgroundColor: '#40788c',
         minHeight: '100vh',
         color: '#ffffff',
-        width: '250px',
+        width: '250px', // Fixed width
       }}
     >
       <ul className="list-unstyled">
