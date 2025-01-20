@@ -18,6 +18,7 @@ class User(db.Model):
     #Foreign keys
     favorites = db.relationship("Favorites", back_populates = "user", lazy = True)
     stay_history = db.relationship("Stay_History", back_populates = "user", lazy = True)
+    user_hotel_admin_package = db.relationship("User_Hotel_Admin_Package", back_populates = "user", lazy = True)
 
 
     def _repr_(self):
@@ -80,8 +81,8 @@ class Hotel_Admin_Package(db.Model):
 
     # faltan las foreign keys, van acá
     #Foreign Keys
-    # favorites = db.relationship("Favorites", back_populates = "hotel", lazy = True)
-    # stay_history = db.relationship("Stay_History", back_populates = "hotel", lazy = True)
+    user_hotel_admin_package = db.relationship("User_Hotel_Admin_Package", back_populates = "admin_package", lazy = True)
+   
 
     def _repr_(self):
         return f'<Hotel_Admin_Package {self.id_admin_package}>' 
@@ -92,6 +93,26 @@ class Hotel_Admin_Package(db.Model):
             "package_name": self.package_name,
             "description": self.description,
             "price": self.price
+        }
+    
+class User_Hotel_Admin_Package(db.Model):
+    # Conexion en los usuarios con el hotel admin package
+    id_user_admin_package = db.Column(db.Integer, primary_key=True) 
+
+    #Foreign Keys
+    id_user = db.Column(db.Integer, db.ForeignKey(User.id_user), nullable=False)
+    user = db.relationship(User)
+    id_hotel_Admin_Package = db.Column(db.Integer, db.ForeignKey(Hotel_Admin_Package.id_admin_package), nullable=False)
+    admin_package = db.relationship(Hotel_Admin_Package)
+
+    def _repr_(self):
+        return f'<User_Hotel_Admin_Package {self.id_user_admin_package}>' 
+
+    def serialize(self):
+        return {
+            "id_hotel_package": self.id_user_admin_package,
+            "id_user_reservation": self.id_user_reservation,
+            "id_hotel_Admin_Package": self.id_hotel_Admin_Package
         }
 
 class Stay_Package(db.Model):

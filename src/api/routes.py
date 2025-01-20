@@ -79,7 +79,7 @@ def handle_login():
     
     access_token = create_access_token(identity=username)
 
-    return jsonify({"access_token": access_token, "username":user_exists.username, "user_type":user_exists.user_type }), 200
+    return jsonify({"access_token": access_token, "username":user_exists.username, "user_type":user_exists.user_type, "fname":user_exists.name }), 200
 
 
 # agregando POST para hoteles
@@ -119,9 +119,22 @@ def get_hotels():
     try:
         hotels = Hotel.query.filter_by(is_active=True).all()
         serialized_hotels = [hotel.serialize() for hotel in hotels]
-        print(f"Hotels fetched: {serialized_hotels}")  # Ensure this prints in the terminal
 
         return jsonify({"hotels": serialized_hotels}), 200
+    
     except Exception as e:
-        print(f"Error retrieving hotels: {str(e)}")
-        return jsonify({"message": f"Error retrieving hotels: {str(e)}"}), 500
+        return jsonify({"message": f"Error retrieving hotels: {str(e)}"}),500
+
+
+#Endpoint de autenticacion del usuario
+@api.route("/access", methods = ["GET"])
+@jwt_required()
+def user_logon():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username = current_user).first()
+
+    if not user:
+        return jsonify({"msg": "The previously authenticated user does not exist anymore."}), 401
+    
+    serialized_user = User.serialize(user)
+    return jsonify("User_info", serialized_user), 200
