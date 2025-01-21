@@ -20,7 +20,7 @@ export const ContactUs = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Here you could send the form data to your backend API
+
         console.log("Form submitted", formData);
 
         // For now, just show a simple confirmation message

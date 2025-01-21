@@ -26,3 +26,22 @@
     padding: 0.5rem 1.5rem;
     text-decoration: none;
 }
+
+/* Fuente del titulo del navbar */
+.SereniaTitle {
+    font-family: "Dancing Script", serif;
+    font-optical-sizing: auto;
+    font-weight: 1000;
+    font-style: normal;
+    font-size: 35px;
+    text-decoration: none;
+  }
+  
+
+.navBarConfig {
+    background-color: #30728A; 
+}
+
+.userProfileButton {
+    background: none;
+}

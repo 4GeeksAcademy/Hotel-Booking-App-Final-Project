@@ -6,81 +6,96 @@ html, body {
     flex-direction: column;
 }
 
-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; 
-}
-
 .layout {
     display: flex;
     flex-direction: column;
-    height: 100%; 
+    height: 100%;
 }
 
 .main-content {
-    flex-grow: 1; 
+    flex-grow: 1;
     padding-bottom: 50px; 
 }
 
 .footer {
-    background-color: #40788c; 
+    background-color: #40788c;
     padding: 20px 0;
-    margin-top: auto; 
     width: 100%;
     position: relative;
+    margin-top: auto; 
 }
 
-.footer-content {
+/* Footer Content */
+.footer .footer-content {
     color: #ffffff;
     font-family: Arial, sans-serif;
 }
 
-.contact-title {
+.footer .contact-title {
     font-weight: bold;
     font-size: 18px;
 }
 
-.contact-email {
+.footer .contact-email {
     font-weight: bold;
     font-size: 16px;
 }
 
-.app-name {
-    font-family: 'Dancing Script', cursive; 
+.footer .app-name {
+    font-family: 'Dancing Script', cursive;
     font-size: 20px;
     margin-top: 5px;
 }
 
+.footer .contact-link {
+    color: #FFD700;
+    text-decoration: none;
+}
+
+.footer .contact-link:hover {
+    color: #FFCC00;
+}
+
+.footer button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.footer button:hover {
+    background-color: #0056b3;
+}
 
 
+/* Contact Us Styles */
 .contact-us-container {
     padding: 20px;
-    max-width: 600px;
-    margin: 100px auto; 
+    max-width: 2000px;
+    margin: 100px auto;
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
 
 .contact-us-container h1 {
     text-align: center;
     margin-bottom: 20px;
 }
 
-.form-group {
+.contact-us-container .form-group {
     margin-bottom: 15px;
 }
 
-.form-group label {
+.contact-us-container .form-group label {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
 }
 
-.form-group input,
-.form-group textarea {
+.contact-us-container .form-group input,
+.contact-us-container .form-group textarea {
     width: 100%;
     padding: 10px;
     border-radius: 4px;
@@ -88,12 +103,12 @@ body {
     font-size: 16px;
 }
 
-.form-group textarea {
+.contact-us-container .form-group textarea {
     resize: vertical;
     height: 150px;
 }
 
-button {
+.contact-us-container button {
     display: block;
     width: 100%;
     padding: 10px;
@@ -105,21 +120,22 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+
+.contact-us-container button:hover {
     background-color: #0056b3;
 }
 
-.thank-you-message {
+.contact-us-container .thank-you-message {
     text-align: center;
     font-size: 18px;
     color: green;
 }
 
-.contact-link {
-    color: #FFD700; 
+.contact-us-container .contact-link {
+    color: #FFD700;
     text-decoration: none;
 }
 
-.contact-link:hover {
-    color: #FFCC00; 
+.contact-us-container .contact-link:hover {
+    color: #FFCC00;
 }

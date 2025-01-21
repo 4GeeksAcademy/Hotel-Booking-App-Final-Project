@@ -2,6 +2,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			message: null,
+			username: "",
+			user_type: "",
+			user_fName: "",
+			hotels: [],
+			name: null,
 			demo: [
 				{
 					title: "FIRST",
@@ -47,6 +52,40 @@ const getState = ({ getStore, getActions, setStore }) => {
 				//reset the global store
 				setStore({ demo: demo });
 			},
+			loginAccount: async (username, password) => {
+				try {
+					// fetching data from the backend
+					const response = await fetch(process.env.BACKEND_URL + "api/login", {
+						method: "POST",
+						headers: {
+							"Content-type": "application/json"
+						},
+						body: JSON.stringify({
+							username: username,
+							password: password
+						})
+					})
+
+					// if (!response.ok){
+					// 	const errorMsg = await response.json()
+					//  	throw new Error(errorMsg.msg)
+					// }
+
+					const data = await response.json()
+					//console.log(data)
+
+					
+					//Seteo de los datos necesarios del usuario
+					localStorage.setItem("user_session", data.access_token)
+					await getActions().loadUserData()
+
+					return data;
+
+				} catch (error) {
+					console.log("Error loading message from backend", error)
+					return error
+				}
+			},
 
 			signUp: async (name, last_name, email, username, password, user_type) => {
 				console.log(name, last_name, email, username, password, user_type);
@@ -72,7 +111,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						if (errorData.msg === "Este correo ya está registrado. Por favor, usa otro email.") {
 							return "Este correo ya está registrado. Por favor, usa otro email.";
 						}
-						alert(errorData.msg);
+						//alert(errorData.msg);
 						throw new Error(errorData.msg);
 					}
 
@@ -84,8 +123,56 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error al registrar:", error);
 					return error.message || "Error al registrar el usuario.";
 				}
-			}
+			},
 
+			getHotels: async () => {
+				try {
+					const response = await fetch(process.env.BACKEND_URL + "api/hotels");
+					if (response.ok) {
+						const data = await response.json();
+						setStore({ hotels: data.hotels }); // Actualiza el estado de los hoteles
+					} else {
+						console.error("Error fetching hotels:", response.status);
+					}
+				} catch (error) {
+					console.error("Hubo un error al obtener los hoteles:", error);
+				}
+			},
+			logOutAccount: async () => {
+				//eliminacion de la data del usuario
+				localStorage.removeItem("user_session")
+				await setStore({ user_type: "" })
+				await setStore({ user_fName: ""})
+				await setStore({ username: ""})
+
+			},
+			loadUserData: async () => {
+				//generacion de la data del usuario cada vez que refrezca la pagina
+				try {
+					const response = await fetch(process.env.BACKEND_URL + "/api/access", {
+						headers: {
+							"Authorization": `Bearer ${localStorage.getItem("user_session")}`
+						}
+					})
+					
+					const data = await response.json()
+					console.log(data[1])
+					await setStore({ user_type: data[1].user_type })
+					await setStore({ user_fName: data[1].name})
+					await setStore({ username: data[1].username})
+					
+					if(!data){
+						return -1
+					}
+	
+					//console.log(data)
+					return data[1];
+				}
+				catch(error){
+					console.log(error)
+					return error
+				}
+			}
 		}
 	};
 };

@@ -1,17 +1,9 @@
 import React, { useState, useContext } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
+import "../../styles/login.css"
 
-const customMargins = {
-    "margin-top": "15vh",
-    padding: "35px",
-}
 
-const imgStyle = {
-    height:"50%",
-    width: "50%",
-    "border-radius": "50%"
-}
 
 
 export const LoginAccount = () => {
@@ -32,7 +24,7 @@ export const LoginAccount = () => {
         e.preventDefault()
         let response = await actions.loginAccount(data.username, data.password)
         //console.log(response)
-        response.msg ? alert(response.msg): navigate("/user")
+        store.username ? navigate("/") :  alert(response.msg)
     }
 
     //getting the user values
@@ -50,38 +42,38 @@ export const LoginAccount = () => {
     <>
         <div className='col-xs-auto container-fluid mt-0' >
             <div className="col-sm-auto d-flex justify-content-center mt-5 mb-0 pb-0">
-                <p style={{"font-size":"48px", "font-weight":"bold", "color":"rgb(0,0,0)"}}>Welcome to&nbsp;</p>
-                <p style={{"font-size":"48px","font-weight":"bold", "color":"#30728A"}}>Serenia</p>
+                <p id="welcomePageTitleLogin">Welcome to&nbsp;</p>
+                <p id="sereniaPageTitleLogin">Serenia</p>
             </div>
-            <div className="col-sm-auto d-flex justify-content-center mt-0 p-0 mb-0">
-                <p style={{"font-weight":"bold", "color":"#B9B9B9"}}>Please, log in</p>
+            <div id="loginMessage" className="col-sm-auto d-flex justify-content-center mt-0 p-0 mb-0">
+                <p>Please, log in</p>
             </div>
         </div>
         
 
-        <div className='col-xs-auto container-fluid w-50 border-secondary mt-0' style={customMargins}>
+        <div className='col-xs-auto container-fluid w-50 border-secondary mt-0' id = "customMarginLogin">
                 <form  onSubmit={loginUserHandling}>
                     <div className="col-xs-auto row mt-4 mb-4 d-flex justify-content-center">
-                        <input type="text" className="col-sm-auto form-control" placeholder="Enter your username" id="inputUser" name = "username"
-                            value= {data.username}  onChange={inpuntHandling} style={{"min-width":"400px","border":"solid", "border-radius": "20px", "border-width":"2px"}}/>                            
+                        <input type="text" className="loginInputData col-sm-auto form-control" placeholder="Enter your username" id="loginInputUser" name = "username"
+                            value= {data.username}  onChange={inpuntHandling}/>                            
                             <div class="invalid-feedback"></div>
                     </div>
                     
                     <div className="col-xs-auto row mt-4 mb-4 d-flex justify-content-center">
-                        <input type="password" className="form-control" placeholder="Enter your password" id="inputPassword" name= "password"
-                            value= {data.password}  onChange={inpuntHandling} style={{"min-width":"400px","border":"solid", "border-radius": "20px", "border-width":"2px"}}
+                        <input type="password" className="loginInputData form-control" placeholder="Enter your password" id="loginInputPass" name= "password"
+                            value= {data.password}  onChange={inpuntHandling} 
                             />
                             <div class="invalid-feedback"></div>
                         </div>            
                         
                     {/* Botones de login y de perdida de contraseña */}
                     <div className="col-xs-auto d-flex justify-content-center mt-5">
-                        <button className='col-xs-auto ps-4 pe-4' style={{"min-width":"230px","border": "none", "height": "40px","border-radius": "40px", "background-color":"#30728A"}} type="submit">
+                        <button id = "botonLogin" className='col-xs-auto ps-4 pe-4' type="submit">
                             <div className='text-light fw-bold' >Login</div>
                         </button>
                     </div>
                     <div className="col-12 d-flex justify-content-center">
-                        <button className='mt-3 ps-4 pe-4' style={{"min-width":"230px", "border": "none", "height": "40px","border-radius": "40px", "background-color":"#484848"}} type="submit">
+                        <button id="botonForgotPassword" className='mt-3 ps-4 pe-4' type="submit">
                             <div className='text-light fw-bold'>Forgot your password?</div>
                         </button>
                     </div>

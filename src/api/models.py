@@ -18,9 +18,10 @@ class User(db.Model):
     #Foreign keys
     favorites = db.relationship("Favorites", back_populates = "user", lazy = True)
     stay_history = db.relationship("Stay_History", back_populates = "user", lazy = True)
+    user_hotel_admin_package = db.relationship("User_Hotel_Admin_Package", back_populates = "user", lazy = True)
 
 
-    def __repr__(self):
+    def _repr_(self):
         # ver como agregar también el username
         return f'<User {self.email}>' 
 
@@ -51,13 +52,14 @@ class Hotel(db.Model):
     country = db.Column(db.String(20), unique=False, nullable=False)
     description = db.Column(db.String(500), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
+    
 
     # faltan las foreign keys, van acá
     #Foreign Keys
     favorites = db.relationship("Favorites", back_populates = "hotel", lazy = True)
     #stay_history = db.relationship("Stay_History", back_populates = "hotel", lazy = True)
 
-    def __repr__(self):
+    def _repr_(self):
         return f'<Hotel {self.id_hotel}>' 
 
     def serialize(self):
@@ -79,10 +81,10 @@ class Hotel_Admin_Package(db.Model):
 
     # faltan las foreign keys, van acá
     #Foreign Keys
-    # favorites = db.relationship("Favorites", back_populates = "hotel", lazy = True)
-    # stay_history = db.relationship("Stay_History", back_populates = "hotel", lazy = True)
+    user_hotel_admin_package = db.relationship("User_Hotel_Admin_Package", back_populates = "admin_package", lazy = True)
+   
 
-    def __repr__(self):
+    def _repr_(self):
         return f'<Hotel_Admin_Package {self.id_admin_package}>' 
 
     def serialize(self):
@@ -91,6 +93,26 @@ class Hotel_Admin_Package(db.Model):
             "package_name": self.package_name,
             "description": self.description,
             "price": self.price
+        }
+    
+class User_Hotel_Admin_Package(db.Model):
+    # Conexion en los usuarios con el hotel admin package
+    id_user_admin_package = db.Column(db.Integer, primary_key=True) 
+
+    #Foreign Keys
+    id_user = db.Column(db.Integer, db.ForeignKey(User.id_user), nullable=False)
+    user = db.relationship(User)
+    id_hotel_Admin_Package = db.Column(db.Integer, db.ForeignKey(Hotel_Admin_Package.id_admin_package), nullable=False)
+    admin_package = db.relationship(Hotel_Admin_Package)
+
+    def _repr_(self):
+        return f'<User_Hotel_Admin_Package {self.id_user_admin_package}>' 
+
+    def serialize(self):
+        return {
+            "id_hotel_package": self.id_user_admin_package,
+            "id_user_reservation": self.id_user_reservation,
+            "id_hotel_Admin_Package": self.id_hotel_Admin_Package
         }
 
 class Stay_Package(db.Model):
@@ -106,7 +128,7 @@ class Stay_Package(db.Model):
     #Foreign Keys
     stay_history = db.relationship("Stay_History", back_populates = "package", lazy = True)
 
-    def __repr__(self):
+    def _repr_(self):
         return f'<Stay_Package {self.id_hotel_package}>' 
 
     def serialize(self):
@@ -133,7 +155,7 @@ class Reservation(db.Model):
 
     stay_history = db.relationship("Stay_History", back_populates = "reservation", lazy = True)
 
-    def __repr__(self):
+    def _repr_(self):
         return f'<Reservation {self.id_reservation}>' 
 
     def serialize(self):
@@ -154,7 +176,7 @@ class Payment(db.Model):
     user_reservation = db.Column(db.Integer, db.ForeignKey(User.id_user), nullable=False)
     user = db.relationship(User)
 
-    def __repr__(self):
+    def _repr_(self):
         return f'<Reservation {self.id_reservation}>' 
 
     def serialize(self):
@@ -174,7 +196,7 @@ class Favorites(db.Model):
     hotel_favorites = db.Column(db.Integer, db.ForeignKey(Hotel.id_hotel), nullable=True)
     hotel = db.relationship(Hotel)
 
-    def __repr__(self):
+    def _repr_(self):
         return '<Favorites %r>' % self.id_favorites
     
     def serialize(self):
@@ -196,7 +218,7 @@ class Stay_History(db.Model):
     reservation_stay_history = db.Column(db.Integer, db.ForeignKey(Reservation.id_reservation), nullable=True)
     reservation = db.relationship(Reservation)
 
-    def __repr__(self):
+    def _repr_(self):
         return '<Stay_History %r>' % self.id_stay_history
     
     def serialize(self):
@@ -205,5 +227,4 @@ class Stay_History(db.Model):
             "User": self.user_stay_history.serialize(),
             "Paquete": self.package_stay_history.serialize(),
             "Fecha de reserva": self.reservation_stay_history.serialize()
-        }
-
+}
