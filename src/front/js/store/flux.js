@@ -2,6 +2,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			message: null,
+			currentUser: {},
 			username: "",
 			user_type: "",
 			user_fName: "",
@@ -72,14 +73,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 					// }
 
 					const data = await response.json()
-					//console.log(data)
+					console.log(data)
+					if (response.ok) {
+						localStorage.setItem("user_session", data.access_token)
+						setStore({ currentUser: data.user })
 
-					
+						return data;
+					}
+
+
 					//Seteo de los datos necesarios del usuario
-					localStorage.setItem("user_session", data.access_token)
-					await getActions().loadUserData()
 
-					return data;
 
 				} catch (error) {
 					console.log("Error loading message from backend", error)
@@ -142,8 +146,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				//eliminacion de la data del usuario
 				localStorage.removeItem("user_session")
 				await setStore({ user_type: "" })
-				await setStore({ user_fName: ""})
-				await setStore({ username: ""})
+				await setStore({ user_fName: "" })
+				await setStore({ username: "" })
 
 			},
 			loadUserData: async () => {
@@ -154,21 +158,26 @@ const getState = ({ getStore, getActions, setStore }) => {
 							"Authorization": `Bearer ${localStorage.getItem("user_session")}`
 						}
 					})
-					
+
 					const data = await response.json()
-					console.log(data[1])
-					await setStore({ user_type: data[1].user_type })
-					await setStore({ user_fName: data[1].name})
-					await setStore({ username: data[1].username})
-					
-					if(!data){
-						return -1
+					if (response.ok) {
+						setStore({ currentUser: data })
+						return data;
 					}
-	
+
+					// console.log(data[1])
+					// await setStore({ user_type: data[1].user_type })
+					// await setStore({ user_fName: data[1].name })
+					// await setStore({ username: data[1].username })
+
+					// if (!data) {
+					// 	return -1
+					// }
+
 					//console.log(data)
-					return data[1];
+
 				}
-				catch(error){
+				catch (error) {
 					console.log(error)
 					return error
 				}

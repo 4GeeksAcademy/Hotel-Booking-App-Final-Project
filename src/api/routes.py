@@ -6,6 +6,7 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 from api.models import db, User, Hotel
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
+from sqlalchemy import or_
 
 api = Blueprint('api', __name__)
 
@@ -67,7 +68,7 @@ def handle_login():
     username = request.json.get("username", None)
     password = request.json.get("password", None)
 
-    user_exists = User.query.filter((User.email == username) |  (User.username == username)).first()
+    user_exists = User.query.filter(or_(User.username == username, User.email == username)).first()
 
     if not user_exists:
         return jsonify({"msg": "There was an error. Incorrect username or password"}), 401
@@ -79,7 +80,7 @@ def handle_login():
     
     access_token = create_access_token(identity=username)
 
-    return jsonify({"access_token": access_token, "username":user_exists.username, "user_type":user_exists.user_type, "fname":user_exists.name }), 200
+    return jsonify({"access_token": access_token, "user":user_exists.serialize()}), 200
 
 # ENDPOINT DE LA VISTA DEL DASHBOARD QUE MUESTRA HOTELES
 @api.route('/hotels', methods=['GET'])
@@ -103,5 +104,5 @@ def user_logon():
     if not user:
         return jsonify({"msg": "The previously authenticated user does not exist anymore."}), 401
     
-    serialized_user = User.serialize(user)
-    return jsonify("User_info", serialized_user), 200
+    serialized_user = user.serialize()
+    return jsonify(serialized_user), 200
