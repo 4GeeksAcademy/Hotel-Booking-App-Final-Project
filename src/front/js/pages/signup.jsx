@@ -34,7 +34,7 @@ export const SignUp = () => {
         <div className="FontDesign container py-5">
             <div className="col-12 col-md-8 col-lg-6 mx-auto">
 
-                {/* Titulo de la Vista */}
+                {/* Titulo de la Vista Sign Up */}
                 <div className="d-flex align-items-center justify-content-center" style={{ gap: "10px" }}>
                     <h2 style={{ fontWeight: "bold" }}>Welcome to</h2>
                     <h2 style={{ color: "#30728A", fontWeight: "bold" }}>Serenia</h2>
