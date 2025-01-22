@@ -7,6 +7,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			user_fName: "",
 			hotels: [],
 			name: null,
+			personalInfo: null, // Store for personal info data
 			demo: [
 				{
 					title: "FIRST",
@@ -21,7 +22,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			]
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
+			// Use getActions to call a function within a function
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
 			},
@@ -29,15 +30,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 			getMessage: async () => {
 				try {
 					// fetching data from the backend
-					const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
-					const data = await resp.json()
-					setStore({ message: data.message })
+					const resp = await fetch(process.env.BACKEND_URL + "/api/hello");
+					const data = await resp.json();
+					setStore({ message: data.message });
 					// don't forget to return something, that is how the async resolves
 					return data;
 				} catch (error) {
-					console.log("Error loading message from backend", error)
+					console.log("Error loading message from backend", error);
 				}
 			},
+
 			changeColor: (index, color) => {
 				//get the store
 				const store = getStore();
@@ -52,6 +54,32 @@ const getState = ({ getStore, getActions, setStore }) => {
 				//reset the global store
 				setStore({ demo: demo });
 			},
+
+			// Fetch personal information for the PersonalInfo page
+			fetchPersonalInfo: async () => {
+				const token = localStorage.getItem("user_session"); // Assuming the token is stored here
+				if (!token) {
+					console.error("No token found!");
+					return null;
+				}
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/personal-info`, {
+						headers: {
+							Authorization: `Bearer ${token}`
+						}
+					});
+					if (!response.ok) {
+						throw new Error("Failed to fetch personal info");
+					}
+					const data = await response.json();
+					setStore({ personalInfo: data }); // Update the store with personal info
+					return data;
+				} catch (error) {
+					console.error("Error fetching personal info:", error);
+					return null;
+				}
+			},
+
 			loginAccount: async (username, password) => {
 				try {
 					// fetching data from the backend
@@ -64,26 +92,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 							username: username,
 							password: password
 						})
-					})
+					});
 
-					// if (!response.ok){
-					// 	const errorMsg = await response.json()
-					//  	throw new Error(errorMsg.msg)
-					// }
+					const data = await response.json();
 
-					const data = await response.json()
-					//console.log(data)
-
-					
 					//Seteo de los datos necesarios del usuario
-					localStorage.setItem("user_session", data.access_token)
-					await getActions().loadUserData()
+					localStorage.setItem("user_session", data.access_token);
+					await getActions().loadUserData();
 
 					return data;
-
 				} catch (error) {
-					console.log("Error loading message from backend", error)
-					return error
+					console.log("Error loading message from backend", error);
+					return error;
 				}
 			},
 
@@ -108,10 +128,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					if (!response.ok) {
 						const errorData = await response.json();
-						if (errorData.msg === "Este correo ya está registrado. Por favor, usa otro email.") {
-							return "Este correo ya está registrado. Por favor, usa otro email.";
-						}
-						//alert(errorData.msg);
 						throw new Error(errorData.msg);
 					}
 
@@ -138,39 +154,38 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Hubo un error al obtener los hoteles:", error);
 				}
 			},
+
 			logOutAccount: async () => {
 				//eliminacion de la data del usuario
-				localStorage.removeItem("user_session")
-				await setStore({ user_type: "" })
-				await setStore({ user_fName: ""})
-				await setStore({ username: ""})
-
+				localStorage.removeItem("user_session");
+				setStore({ user_type: "" });
+				setStore({ user_fName: "" });
+				setStore({ username: "" });
 			},
+
 			loadUserData: async () => {
 				//generacion de la data del usuario cada vez que refrezca la pagina
 				try {
 					const response = await fetch(process.env.BACKEND_URL + "/api/access", {
 						headers: {
-							"Authorization": `Bearer ${localStorage.getItem("user_session")}`
+							Authorization: `Bearer ${localStorage.getItem("user_session")}`
 						}
-					})
-					
-					const data = await response.json()
-					console.log(data[1])
-					await setStore({ user_type: data[1].user_type })
-					await setStore({ user_fName: data[1].name})
-					await setStore({ username: data[1].username})
-					
-					if(!data){
-						return -1
+					});
+
+					const data = await response.json();
+					console.log(data[1]);
+					setStore({ user_type: data[1].user_type });
+					setStore({ user_fName: data[1].name });
+					setStore({ username: data[1].username });
+
+					if (!data) {
+						return -1;
 					}
-	
-					//console.log(data)
+
 					return data[1];
-				}
-				catch(error){
-					console.log(error)
-					return error
+				} catch (error) {
+					console.log(error);
+					return error;
 				}
 			}
 		}

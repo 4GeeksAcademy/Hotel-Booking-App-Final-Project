@@ -1,10 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from "react";
+import { Context } from "../../store/appContext";
 
 const PersonalInfo = () => {
+  const { actions, store } = useContext(Context); // Access store and actions from flux
   const [isEditable, setIsEditable] = useState(false); // State to manage editability
+  const [formData, setFormData] = useState({
+    name: "",
+    last_name: "",
+    username: "",
+    email: "",
+    country: "",
+    language: ""
+  });
 
+  // Fetch user data when the component loads
+  useEffect(() => {
+    const loadUserInfo = async () => {
+      const personalInfo = await actions.fetchPersonalInfo(); // Fetch personal info from backend
+      if (personalInfo) {
+        setFormData({
+          name: personalInfo.name,
+          last_name: personalInfo.last_name,
+          username: personalInfo.username,
+          email: personalInfo.email,
+          country: personalInfo.country || "", // Default value if not present
+          language: personalInfo.language || "" // Default value if not present
+        });
+      }
+    };
+
+    loadUserInfo();
+  }, [actions]);
+
+  // Toggle edit mode
   const toggleEdit = () => {
-    setIsEditable((prevState) => !prevState); // Toggle the edit mode
+    setIsEditable((prevState) => !prevState);
+  };
+
+  // Handle form input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value
+    }));
   };
 
   return (
@@ -16,20 +55,22 @@ const PersonalInfo = () => {
       <div className="d-flex justify-content-center mb-4">
         <div
           className="rounded-circle bg-secondary"
-          style={{ width: '100px', height: '100px' }}
+          style={{ width: "100px", height: "100px" }}
         ></div>
       </div>
 
       {/* User Info Form */}
-      <form className="w-100" style={{ maxWidth: '800px', margin: '0 auto' }}>
+      <form className="w-100" style={{ maxWidth: "800px", margin: "0 auto" }}>
         <div className="row mb-3">
           <div className="col-md-6">
             <label className="form-label">First Name</label>
             <input
               type="text"
               className="form-control"
-              placeholder="John"
-              disabled={!isEditable} // Field is editable only when isEditable is true
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              disabled={!isEditable}
             />
           </div>
           <div className="col-md-6">
@@ -37,7 +78,9 @@ const PersonalInfo = () => {
             <input
               type="text"
               className="form-control"
-              placeholder="Doe"
+              name="last_name"
+              value={formData.last_name}
+              onChange={handleChange}
               disabled={!isEditable}
             />
           </div>
@@ -48,7 +91,9 @@ const PersonalInfo = () => {
             <input
               type="text"
               className="form-control"
-              placeholder="john_doe"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
               disabled={!isEditable}
             />
           </div>
@@ -57,7 +102,9 @@ const PersonalInfo = () => {
             <input
               type="email"
               className="form-control"
-              placeholder="john.doe@example.com"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               disabled={!isEditable}
             />
           </div>
@@ -68,7 +115,9 @@ const PersonalInfo = () => {
             <input
               type="text"
               className="form-control"
-              placeholder="United States"
+              name="country"
+              value={formData.country}
+              onChange={handleChange}
               disabled={!isEditable}
             />
           </div>
@@ -77,7 +126,9 @@ const PersonalInfo = () => {
             <input
               type="text"
               className="form-control"
-              placeholder="English"
+              name="language"
+              value={formData.language}
+              onChange={handleChange}
               disabled={!isEditable}
             />
           </div>
@@ -87,13 +138,13 @@ const PersonalInfo = () => {
       {/* Buttons */}
       <div
         className="d-flex justify-content-end mt-4"
-        style={{ maxWidth: '800px', margin: '0 auto' }}
+        style={{ maxWidth: "800px", margin: "0 auto" }}
       >
         <button
-          className={`btn ${isEditable ? 'btn-secondary' : 'btn-warning'} me-2`}
+          className={`btn ${isEditable ? "btn-secondary" : "btn-warning"} me-2`}
           onClick={toggleEdit}
         >
-          {isEditable ? 'Cancel' : 'Edit Info'}
+          {isEditable ? "Cancel" : "Edit Info"}
         </button>
         <button className="btn btn-success" disabled={!isEditable}>
           Save Changes

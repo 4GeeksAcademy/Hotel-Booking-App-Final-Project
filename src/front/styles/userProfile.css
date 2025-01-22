@@ -1,131 +1,89 @@
-/* src/front/styles/userProfile.css */
+/* ---- Personal Info Styles ---- */
 
-.user-profile {
-  display: flex;
-  flex-direction: column; 
-  height: 100vh; 
-}
-
-.user-profile-header {
-  height: 60px; 
-  display: flex;
-  align-items: center;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); 
-}
-
-.user-profile .d-flex {
-  flex-grow: 1; 
-  display: flex; 
-}
-
-.user-profile .sidebar {
-  width: 250px;
-  background-color: #40788c;
+.personal-info-container {
+  max-width: 800px;
+  margin: 20px auto;
   padding: 20px;
-  border-right: 1px solid #dee2e6;
-  min-height: calc(100vh - 60px); 
-}
-
-.user-profile .content {
-  flex-grow: 1;
-  padding: 20px;
-  background-color: #f5f5f5;
-  min-height: calc(100vh - 60px); 
-}
-
-
-
-/* ---- Stay History Styles ---- */
-
-.history-container {
-  background-color: #fff; 
-  padding: 20px;
+  background-color: #fff; /* White background for form */
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.search-bar {
-  width: 100%;
-  max-width: 400px;
+.personal-info-container h2 {
+  text-align: center;
   margin-bottom: 20px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #343a40; /* Dark gray for title */
+}
+
+.personal-info-container form {
+  width: 100%;
+}
+
+.personal-info-container label {
+  font-weight: bold;
+  color: #495057; /* Bootstrap's default text color */
+}
+
+.personal-info-container input {
+  border: 1px solid #ced4da; /* Light border for input fields */
+  border-radius: 5px;
   padding: 10px;
-  border: 1px solid #ced4da;
+  font-size: 1rem;
+}
+
+.personal-info-container input:disabled {
+  background-color: #e9ecef; /* Light gray background for disabled inputs */
+  color: #6c757d; /* Muted text for disabled inputs */
+}
+
+.personal-info-container .btn {
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
   border-radius: 5px;
 }
 
-.package-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.package-item {
-  display: flex;
-  background-color: #f8f9fa;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-}
-
-.package-image {
-  width: 120px;
-  height: 120px;
-  background-color: #dee2e6;
-  border-radius: 8px;
-  margin-right: 20px;
-}
-
-.package-details {
-  flex-grow: 1;
-}
-
-.package-details h5 {
-  margin-bottom: 10px;
-  font-weight: bold;
-  color: #343a40;
-}
-
-.package-meta {
-  display: flex;
-  gap: 15px;
-  font-size: 0.9rem;
-  color: #6c757d;
-  margin-bottom: 10px;
-}
-
-.package-meta svg {
-  margin-right: 5px;
-}
-
-.package-details p {
-  color: #6c757d;
-}
-
-.package-details a {
-  text-decoration: none;
-  color: #007bff;
-}
-
-.package-details a:hover {
-  text-decoration: underline;
-}
-
-.delete-icon {
-  color: #dc3545;
-  cursor: pointer;
-}
-
-.delete-icon:hover {
-  color: #c82333;
-}
-
-.btn-info {
-  background-color: #17a2b8;
-  border-color: #17a2b8;
+.personal-info-container .btn-warning {
+  background-color: #ffc107; /* Yellow for edit button */
+  border-color: #ffc107;
   color: #fff;
 }
 
-.btn-info:hover {
-  background-color: #138496;
-  border-color: #117a8b;
+.personal-info-container .btn-warning:hover {
+  background-color: #e0a800;
+  border-color: #d39e00;
 }
+
+.personal-info-container .btn-secondary {
+  background-color: #6c757d; /* Bootstrap's secondary color */
+  border-color: #6c757d;
+  color: #fff;
+}
+
+.personal-info-container .btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+.personal-info-container .btn-success {
+  background-color: #28a745; /* Green for save button */
+  border-color: #28a745;
+  color: #fff;
+}
+
+.personal-info-container .btn-success:disabled {
+  background-color: #c3e6cb; /* Light green for disabled button */
+  border-color: #c3e6cb;
+  color: #6c757d; /* Muted text */
+}
+
+/* Profile Picture */
+.personal-info-container .rounded-circle {
+  background-color: #dee2e6; /* Light gray for placeholder */
+  width: 100px;
+  height: 100px;
+  margin-bottom: 20px;
+}
+
