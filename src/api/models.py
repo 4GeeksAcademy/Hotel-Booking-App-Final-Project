@@ -13,6 +13,10 @@ class User(db.Model):
     password = db.Column(db.String(120), unique=False, nullable=False)
     user_type = db.Column(db.Enum('cliente', 'hotel', 'admin', name='user_type_enum'), nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
+
+        # Campos específicos para usuarios tipo 'hotel'
+  
+
     
     # faltan las foreign keys, van acá
     #Foreign keys
@@ -33,6 +37,7 @@ class User(db.Model):
             "email": self.email,
             "username": self.username,
             "user_type": self.user_type,
+           
             "is_active": self.is_active,
         }
 

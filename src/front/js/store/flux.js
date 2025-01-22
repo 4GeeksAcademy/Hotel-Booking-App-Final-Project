@@ -80,6 +80,61 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			fetchHotelPersonalInfo: async () => {
+				const token = localStorage.getItem("user_session"); // Assuming the token is stored here
+				if (!token) {
+					console.error("No token found!");
+					return null;
+				}
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/hotel-personal-info`, {
+						headers: {
+							Authorization: `Bearer ${token}`
+						}
+					});
+					if (!response.ok) {
+						throw new Error("Failed to fetch hotel personal info");
+					}
+					const data = await response.json();
+					setStore({ personalInfo: data }); // Update the store with hotel personal info
+					return data;
+				} catch (error) {
+					console.error("Error fetching hotel personal info:", error);
+					return null;
+				}
+			},
+			/*edita el personal information del hotel desde el perfil de hotel */
+			updateHotelPersonalInfo: async (formData) => {
+				const token = localStorage.getItem("user_session"); // Assuming the token is stored here
+				if (!token) {
+					console.error("No token found!");
+					return false;
+				}
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/hotel-personal-info`, {
+						method: "PUT",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+						body: JSON.stringify(formData),
+					});
+			
+					if (!response.ok) {
+						throw new Error("Failed to update hotel personal info");
+					}
+			
+					const data = await response.json();
+					console.log("Hotel personal info updated:", data);
+					return true; // Return success
+				} catch (error) {
+					console.error("Error updating hotel personal info:", error);
+					return false; // Return failure
+				}
+			},
+			
+			
+
 			loginAccount: async (username, password) => {
 				try {
 					// fetching data from the backend

@@ -127,3 +127,69 @@ def get_personal_info():
     print("User found, returning data")
     return jsonify(user.serialize()), 200
 
+#borrar perfil si el usuario quiere borrar su usuario por completo.
+# @api.route('/update-info', methods=['PUT'])
+# @jwt_required()
+# def update_user_info():
+#     current_user = get_jwt_identity()
+#     user = User.query.filter_by(username=current_user).first()
+#     data = request.get_json()
+#     user.name = data.get("name", user.name)
+#     user.last_name = data.get("last_name", user.last_name)
+#     db.session.commit()
+#     return jsonify(user.serialize()), 200
+
+#ruta para poder mostrar la informacion de hotel en el p[erfil de hotel]
+@api.route('/hotel-personal-info', methods=['GET'])
+@jwt_required()
+def get_hotel_personal_info():
+    current_user = get_jwt_identity()
+    print(f"Current Hotel User: {current_user}")  # Debug log
+
+    user = User.query.filter_by(username=current_user).first()
+
+    # Check if the user exists
+    if not user:
+        print("User not found")
+        return jsonify({"message": "User not found"}), 404
+
+    # Check if the user has the `hotel` user_type
+    if user.user_type != 'hotel':
+        print("Access denied for non-hotel users")
+        return jsonify({"message": "Access denied"}), 403
+
+    print("Hotel User found, returning data")
+    return jsonify(user.serialize()), 200
+
+#PUT para editar la informacion del hotel desde el profile de hotel
+@api.route('/hotel-personal-info', methods=['PUT'])
+@jwt_required()
+def update_hotel_personal_info():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first()
+
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+
+    if user.user_type != 'hotel':
+        return jsonify({"message": "Access denied"}), 403
+
+    # Parse the JSON request data
+    data = request.get_json()
+    if not data:
+        return jsonify({"message": "Invalid data"}), 400
+
+    # Update the fields
+    user.name = data.get("name", user.name)
+    user.last_name = data.get("last_name", user.last_name)
+    user.username = data.get("username", user.username)
+    user.email = data.get("email", user.email)
+    
+
+    try:
+        db.session.commit()
+        return jsonify(user.serialize()), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": f"Failed to update user: {str(e)}"}), 500
+
