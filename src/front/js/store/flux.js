@@ -141,17 +141,54 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			getHotels: async () => {
+			// getHotels: async () => {
+			// 	try {
+			// 		const response = await fetch(process.env.BACKEND_URL + "api/hotels");
+			// 		if (response.ok) {
+			// 			const data = await response.json();
+			// 			setStore({ hotels: data.hotels }); // Actualiza el estado de los hoteles
+			// 		} else {
+			// 			console.error("Error fetching hotels:", response.status);
+			// 		}
+			// 	} catch (error) {
+			// 		console.error("Hubo un error al obtener los hoteles:", error);
+			// 	}
+			// },
+
+			createHotel: async (hotelData) => {
 				try {
-					const response = await fetch(process.env.BACKEND_URL + "api/hotels");
+					const response = await fetch('/api/hotels', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify(hotelData)
+					});
+					const data = await response.json();
 					if (response.ok) {
-						const data = await response.json();
-						setStore({ hotels: data.hotels }); // Actualiza el estado de los hoteles
+						console.log('Hotel Created:', data);
+						// Aquí podrías actualizar el estado con los nuevos hoteles si es necesario
 					} else {
-						console.error("Error fetching hotels:", response.status);
+						console.error('Error creating hotel:', data.message);
 					}
 				} catch (error) {
-					console.error("Hubo un error al obtener los hoteles:", error);
+					console.error('Error creating hotel:', error);
+				}
+			},
+
+			// Obtener los hoteles del usuario
+			getHotels: async (userId) => {
+				try {
+					const response = await fetch(`/api/hotels?user_id=${userId}`);
+					const data = await response.json();
+					if (response.ok) {
+						setStore({ hotels: data.hotels }); // Actualizar el estado con los hoteles obtenidos
+						return data.hotels;
+					} else {
+						console.error('Error retrieving hotels:', data.message);
+						return [];
+					}
+				} catch (error) {
+					console.error('Error retrieving hotels:', error);
+					return [];
 				}
 			},
 

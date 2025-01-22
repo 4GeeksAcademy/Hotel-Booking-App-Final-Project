@@ -1,16 +1,34 @@
 import React, { useEffect, useContext, useState } from "react";
 import { Context } from "../store/appContext";
 
-export const Dashboard = () => {
+export const Dashboard = ({ userId }) => {
     const { actions, store } = useContext(Context);
+    const [hotels, setHotels] = useState([]);
     const [showAlert, setShowAlert] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [selectedHotel, setSelectedHotel] = useState(null);
 
     useEffect(() => {
-        // Obtener hoteles cuando el componente se monta
-        actions.getHotels();
-    }, []);
+        const fetchHotels = async () => {
+            try {
+                const fetchedHotels = await actions.getHotels(userId);
+                if (fetchedHotels.length > 0) {
+                    // Dividir los hoteles según su tipo de paquete
+                    const prioritarios = fetchedHotels.filter(hotel => hotel.package_id === 1); // Suponiendo que '1' es el ID del paquete prioritario
+                    const basicos = fetchedHotels.filter(hotel => hotel.package_id === 2); // Suponiendo que '2' es el ID del paquete básico
+
+                    // Ordenar los hoteles prioritarios al principio
+                    const orderedHotels = [...prioritarios, ...basicos];
+                    setHotels(orderedHotels);
+                } else {
+                    console.error('No hotels found.');
+                }
+            } catch (error) {
+                console.error("Error fetching hotels:", error);
+            }
+        };
+        fetchHotels();
+    }, [userId, actions]);
 
     // Función para manejar la acción de reservar
     const handleReserve = (hotelName) => {
@@ -62,8 +80,8 @@ export const Dashboard = () => {
             </div>
 
             <div className="row">
-                {store.hotels.length > 0 ? (
-                    store.hotels.map((hotel, index) => (
+                {hotels.length > 0 ? (
+                    hotels.map((hotel, index) => (
                         <div key={index} className="col-12 col-md-4">
                             <div className="card h-100">
                                 <div className="card-body d-flex flex-column">

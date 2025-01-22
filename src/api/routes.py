@@ -3,7 +3,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 from flask import Flask, request, jsonify, url_for, Blueprint, current_app
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
-from api.models import db, User, Hotel
+from api.models import db, User, Hotel, User_Hotel_Admin_Package
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
@@ -83,16 +83,65 @@ def handle_login():
     return jsonify({"access_token": access_token, "username":user_exists.username, "user_type":user_exists.user_type, "fname":user_exists.name }), 200
 
 # ENDPOINT DE LA VISTA DEL DASHBOARD QUE MUESTRA HOTELES
+# @api.route('/hotels', methods=['GET'])
+# def get_hotels():
+#     try:
+#         hotels = Hotel.query.filter_by(is_active=True).all()
+#         serialized_hotels = [hotel.serialize() for hotel in hotels]
+
+#         return jsonify({"hotels": serialized_hotels}), 200
+#     except Exception as e:
+#         return jsonify({"message": f"Error retrieving hotels: {str(e)}"}),500
+
+@api.route('/hotels', methods=['POST'])
+def create_hotel():
+    try:
+        data = request.get_json()
+
+        user_id = data.get('user_id')
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({"message": "User not found"}), 404
+
+        name = data.get('name')
+        location = data.get('location')
+        price = data.get('price')
+        availability = data.get('availability')
+
+        new_hotel = Hotel(name=name, location=location, price=price, availability=availability)
+        db.session.add(new_hotel)
+        db.session.commit()
+
+        user_hotel = User_Hotel_Admin_Package(user_id=user.id_user, hotel_id=new_hotel.id_hotel, package_id=data.get('package_id'))
+        db.session.add(user_hotel)
+        db.session.commit()
+
+        return jsonify({"message": "Hotel created and associated with user successfully", "hotel": new_hotel.serialize()}), 201
+
+    except Exception as e:
+        return jsonify({"message": f"Error creating hotel: {str(e)}"}), 500
+
 @api.route('/hotels', methods=['GET'])
 def get_hotels():
     try:
-        hotels = Hotel.query.filter_by(is_active=True).all()
-        serialized_hotels = [hotel.serialize() for hotel in hotels]
+        user_id = request.args.get('user_id')
+        if not user_id:
+            return jsonify({"message": "User ID is required"}), 400
 
-        return jsonify({"hotels": serialized_hotels}), 200
+        user_hotels = User_Hotel_Admin_Package.query.filter_by(user_id=user_id).all()
+        hotels_with_package = []
+        
+        for user_hotel in user_hotels:
+            hotel = Hotel.query.get(user_hotel.hotel_id)  # Cambiar a 'hotel_id' aquí
+            if hotel:
+                hotel_data = hotel.serialize()
+                hotel_data['package_id'] = user_hotel.package_id  # Asignar correctamente el 'package_id'
+                hotels_with_package.append(hotel_data)
+
+        return jsonify({"hotels": hotels_with_package}), 200
+
     except Exception as e:
-        return jsonify({"message": f"Error retrieving hotels: {str(e)}"}),500
-
+        return jsonify({"message": f"Error retrieving hotels: {str(e)}"}), 500
 
 #Endpoint de autenticacion del usuario
 @api.route("/access", methods = ["GET"])
