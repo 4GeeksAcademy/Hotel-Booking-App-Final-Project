@@ -3,7 +3,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 from flask import Flask, request, jsonify, url_for, Blueprint, current_app
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
-from api.models import db, User, Hotel, User_Hotel_Admin_Package
+from api.models import db, User, Hotel, User_Hotel_Admin_Package, Hotel_Admin_Package
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
@@ -98,28 +98,49 @@ def create_hotel():
     try:
         data = request.get_json()
 
-        user_id = data.get('user_id')
-        user = User.query.get(user_id)
+        # Validar si se envían todos los campos requeridos
+        required_fields = ['user_id', 'name', 'location', 'price', 'availability', 'package_id']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({"message": f"{field} is required"}), 400
+
+        # Validar si el usuario existe
+        user = User.query.get(data['user_id'])
         if not user:
             return jsonify({"message": "User not found"}), 404
 
-        name = data.get('name')
-        location = data.get('location')
-        price = data.get('price')
-        availability = data.get('availability')
+        # Validar si el paquete existe
+        package = Hotel_Admin_Package.query.get(data['package_id'])
+        if not package:
+            return jsonify({"message": "Package not found"}), 404
 
-        new_hotel = Hotel(name=name, location=location, price=price, availability=availability)
+        # Crear el nuevo hotel
+        new_hotel = Hotel(
+            name=data['name'],
+            location=data['location'],
+            price=data['price'],
+            availability=data['availability']
+        )
         db.session.add(new_hotel)
         db.session.commit()
 
-        user_hotel = User_Hotel_Admin_Package(user_id=user.id_user, hotel_id=new_hotel.id_hotel, package_id=data.get('package_id'))
+        # Asociar el hotel con el usuario y el paquete
+        user_hotel = User_Hotel_Admin_Package(
+            user_id=user.id_user,
+            hotel_id=new_hotel.id_hotel,
+            package_id=package.id_admin_package
+        )
         db.session.add(user_hotel)
         db.session.commit()
 
-        return jsonify({"message": "Hotel created and associated with user successfully", "hotel": new_hotel.serialize()}), 201
+        return jsonify({
+            "message": "Hotel created and associated with user successfully",
+            "hotel": new_hotel.serialize()
+        }), 201
 
     except Exception as e:
         return jsonify({"message": f"Error creating hotel: {str(e)}"}), 500
+
 
 @api.route('/hotels', methods=['GET'])
 def get_hotels():
