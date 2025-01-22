@@ -9,6 +9,7 @@ from flask_cors import CORS
 
 api = Blueprint('api', __name__)
 
+
 # Allow CORS requests to this API
 CORS(api)
 
@@ -105,3 +106,24 @@ def user_logon():
     
     serialized_user = User.serialize(user)
     return jsonify("User_info", serialized_user), 200
+
+
+#informacion de clientes 
+@api.route('/personal-info', methods=['GET'])
+@jwt_required()
+def get_personal_info():
+    current_user = get_jwt_identity()
+    print(f"Current User: {current_user}")  # Add this log
+    user = User.query.filter_by(username=current_user).first()
+
+    if not user:
+        print("User not found")
+        return jsonify({"message": "User not found"}), 404
+
+    if user.user_type != 'cliente':
+        print("Access denied")
+        return jsonify({"message": "Access denied"}), 403
+
+    print("User found, returning data")
+    return jsonify(user.serialize()), 200
+
