@@ -4,8 +4,8 @@ import HotelSidebar from "./HotelSidebar";
 import { Context } from "../../store/appContext";
 
 const HotelPersonalInfo = () => {
-  const { actions, store } = useContext(Context);
-  const [isEditable, setIsEditable] = useState(false); // State to toggle edit mode
+  const { actions } = useContext(Context);
+  const [isEditable, setIsEditable] = useState(false); // Toggle edit mode
   const [formData, setFormData] = useState({
     name: "",
     last_name: "",
@@ -13,32 +13,32 @@ const HotelPersonalInfo = () => {
     email: "",
   });
 
+  // Fetch hotel info on component mount
   useEffect(() => {
-    // Fetch hotel info on component load
     const loadHotelInfo = async () => {
       const hotelInfo = await actions.fetchHotelPersonalInfo();
-      if (hotelInfo) {
+      if (hotelInfo && !isEditable) {
         setFormData({
           name: hotelInfo.name || "",
           last_name: hotelInfo.last_name || "",
           username: hotelInfo.username || "",
           email: hotelInfo.email || "",
-        
         });
       }
     };
+
     loadHotelInfo();
-  }, [actions]);
+  }, [actions, isEditable]);
 
   const toggleEdit = () => setIsEditable((prevState) => !prevState); // Toggle edit mode
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [name]: value }); // Update local state
   };
 
   const handleSave = async () => {
-    const success = await actions.updateHotelPersonalInfo(formData); // Call update action
+    const success = await actions.updateHotelPersonalInfo(formData); // Save changes to backend
     if (success) {
       alert("Changes saved successfully!");
       setIsEditable(false); // Disable edit mode
@@ -46,7 +46,6 @@ const HotelPersonalInfo = () => {
       alert("Failed to save changes. Please try again.");
     }
   };
-  
 
   return (
     <div className="d-flex">
@@ -124,38 +123,6 @@ const HotelPersonalInfo = () => {
                   disabled={!isEditable}
                 />
               </div>
-            </div>
-
-           
-
-            <div className="row mb-3">
-              {/* <div className="col-md-6">
-                <label className="form-label">Language</label>
-                <select
-                  className="form-select"
-                  name="language"
-                  value={formData.language}
-                  onChange={handleChange}
-                  disabled={!isEditable}
-                >
-                  <option value="English">English</option>
-                  <option value="Spanish">Spanish</option>
-                  <option value="French">French</option>
-                  <option value="German">German</option>
-                </select>
-              </div> */}
-
-              {/* <div className="col-md-6">
-                <label className="form-label">Country of Residence</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="country"
-                  value={formData.country}
-                  onChange={handleChange}
-                  disabled={!isEditable}
-                />
-              </div> */}
             </div>
           </form>
 
