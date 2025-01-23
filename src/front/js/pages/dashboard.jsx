@@ -80,7 +80,7 @@ export const Dashboard = () => {
                 )}
             </div>
 
-            {/* Hoteles básicos */}
+            {/* Hoteles con paquete o plan básicos */}
             <div className="row">
                 <h3>Basic Hotels</h3>
                 {basicHotels.length > 0 ? (
