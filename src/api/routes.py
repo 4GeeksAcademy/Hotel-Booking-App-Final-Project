@@ -6,6 +6,7 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 from api.models import db, User, Hotel, User_Hotel_Admin_Package, Hotel_Admin_Package
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
+import os, cloudinary, cloudinary.uploader
 
 api = Blueprint('api', __name__)
 
@@ -13,6 +14,11 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
+cloudinary.config(
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET")
+)
 
 @api.route('/hello', methods=['POST', 'GET'])
 def handle_hello():
@@ -82,17 +88,6 @@ def handle_login():
 
     return jsonify({"access_token": access_token, "username":user_exists.username, "user_type":user_exists.user_type, "fname":user_exists.name }), 200
 
-# ENDPOINT DE LA VISTA DEL DASHBOARD QUE MUESTRA HOTELES
-# @api.route('/hotels', methods=['GET'])
-# def get_hotels():
-#     try:
-#         hotels = Hotel.query.filter_by(is_active=True).all()
-#         serialized_hotels = [hotel.serialize() for hotel in hotels]
-
-#         return jsonify({"hotels": serialized_hotels}), 200
-#     except Exception as e:
-#         return jsonify({"message": f"Error retrieving hotels: {str(e)}"}),500
-
 # Endpoint para obtener hoteles con paquetes prioritarios
 @api.route('/hotels/<package_name>', methods=['GET'])
 def get_hotels_with_priority_package(package_name):
@@ -137,3 +132,20 @@ def get_personal_info():
     print("User found, returning data")
     return jsonify(user.serialize()), 200
 
+# CLOUDINARY
+@api.route('/upload', methods=['POST']) 
+def upload_image():
+        # Recibe archivo
+        file = request.files.get("image")
+
+        # Validar si no se envió un archivo
+        if not file:
+            return jsonify({"error": "File is required"}), 400
+
+        # Subir archivo a Cloudinary
+        result = cloudinary.uploader.upload(file)
+
+        if 'secure_url' not in result:
+            return jsonify({"error": "The image can not be uploaded"}), 400
+
+        return jsonify(result["secure_url"]), 200

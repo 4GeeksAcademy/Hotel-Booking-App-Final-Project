@@ -8,6 +8,43 @@ export const Dashboard = () => {
     const [showAlert, setShowAlert] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [selectedHotel, setSelectedHotel] = useState(null);
+    const [myImage, setMyImage] = useState(null);
+
+    // ********************************** SUBIR CON CLOUDINARY***************************************
+    const uploadImage = async (e) => {
+        try {
+            const file = e.target.files[0];
+            if (!file) {
+                console.error("No file selected");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            // URL sin doble barra
+            const response = await fetch(process.env.BACKEND_URL + "api/upload", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Error uploading image:", errorData.error);
+                return;
+            }
+
+            const data = await response.json();
+            console.log("Uploaded image:", data);
+
+            // Actualiza el estado con la URL segura de la imagen
+            setMyImage(data.secure_url); // Esto actualiza el estado con el secure_url
+
+        } catch (error) {
+            console.error("Error in uploadImage:", error);
+        }
+    };
+    // ********************************** CIERRE DEL SUBIR CON CLOUDINARY***************************************
 
     useEffect(() => {
         const fetchHotels = async () => {
@@ -37,6 +74,7 @@ export const Dashboard = () => {
 
     const confirmReservation = () => {
         console.log(`Reservation confirmed for: ${selectedHotel}`);
+
         setShowModal(false);
     };
 
@@ -105,6 +143,10 @@ export const Dashboard = () => {
                 )}
             </div>
 
+            {/* CLOUDINARY */}
+            {myImage && <img src={myImage} alt="Uploaded" style={{ width: "100%", maxWidth: "500px" }} />}
+            <input type="file" onChange={uploadImage} />
+
             {/* Modal de confirmación */}
             {showModal && (
                 <div className="modal show" tabIndex="-1" style={{ display: "block" }}>
@@ -131,4 +173,4 @@ export const Dashboard = () => {
             )}
         </div>
     );
-};
+}; 
