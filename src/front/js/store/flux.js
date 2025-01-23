@@ -229,6 +229,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					const data = await response.json();
 					console.log(data[1]);
+					setStore({ personalInfo: data[1] })
 					setStore({ user_type: data[1].user_type });
 					setStore({ user_fName: data[1].name });
 					setStore({ username: data[1].username });

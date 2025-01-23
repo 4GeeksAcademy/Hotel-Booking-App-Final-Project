@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Header from "./Header";
 import HotelSidebar from "./HotelSidebar";
 import { Context } from "../../store/appContext";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const HotelPersonalInfo = () => {
   const { actions } = useContext(Context);
@@ -12,23 +13,28 @@ const HotelPersonalInfo = () => {
     username: "",
     email: "",
   });
+  const navigate = useNavigate()
 
   // Fetch hotel info on component mount
   useEffect(() => {
     const loadHotelInfo = async () => {
       const hotelInfo = await actions.fetchHotelPersonalInfo();
-      if (hotelInfo && !isEditable) {
+      if (hotelInfo ) {
         setFormData({
           name: hotelInfo.name || "",
           last_name: hotelInfo.last_name || "",
           username: hotelInfo.username || "",
           email: hotelInfo.email || "",
+          
         });
       }
+      else {console.log ("no usuario hotel")
+        navigate("/")}
+      
     };
 
     loadHotelInfo();
-  }, [actions, isEditable]);
+  }, []);
 
   const toggleEdit = () => setIsEditable((prevState) => !prevState); // Toggle edit mode
 

@@ -144,7 +144,7 @@ def get_personal_info():
 @jwt_required()
 def get_hotel_personal_info():
     current_user = get_jwt_identity()
-    print(f"Current Hotel User: {current_user}")  # Debug log
+    print(f"Current Hotel User: {current_user}")  
 
     user = User.query.filter_by(username=current_user).first()
 
@@ -193,3 +193,37 @@ def update_hotel_personal_info():
         db.session.rollback()
         return jsonify({"message": f"Failed to update user: {str(e)}"}), 500
 
+#endpoint para crear hotel desde hotel profile.
+
+@api.route('/hotels', methods=['POST'])
+@jwt_required()  # Ensure only authenticated users can add hotels
+def add_hotel():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first()
+
+    # Ensure the user exists and is of type 'hotel'
+    if not user or user.user_type != 'hotel':
+        return jsonify({"message": "Access denied"}), 403
+
+    
+    data = request.get_json()
+    required_fields = ["name", "location", "country", "description"]
+    if not all(field in data for field in required_fields):
+        return jsonify({"message": "Missing required fields"}), 400
+
+    try:
+        # crear y guardar hotel
+        new_hotel = Hotel(
+            name=data["name"],
+            location=data["location"],
+            country=data["country"],
+            description=data["description"],
+            is_active=True  
+        )
+        db.session.add(new_hotel)
+        db.session.commit()
+
+        return jsonify(new_hotel.serialize()), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": f"Error creating hotel: {str(e)}"}), 500
