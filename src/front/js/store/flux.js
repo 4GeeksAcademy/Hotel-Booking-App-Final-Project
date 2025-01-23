@@ -6,6 +6,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			user_type: "",
 			user_fName: "",
 			hotels: [],
+			hotelsPriority: [],  // Almacena hoteles con paquete prioritario
+			hotelsBasic: [],     // Almacenar hoteles con paquete básico
 			name: null,
 			personalInfo: null, // Store for personal info data
 			demo: [
@@ -141,17 +143,48 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			getHotels: async () => {
+			// getHotels: async () => {
+			// 	try {
+			// 		const response = await fetch(process.env.BACKEND_URL + "api/hotels");
+			// 		if (response.ok) {
+			// 			const data = await response.json();
+			// 			setStore({ hotels: data.hotels }); // Actualiza el estado de los hoteles
+			// 		} else {
+			// 			console.error("Error fetching hotels:", response.status);
+			// 		}
+			// 	} catch (error) {
+			// 		console.error("Hubo un error al obtener los hoteles:", error);
+			// 	}
+			// },
+
+			getPriorityHotels: async () => {
 				try {
-					const response = await fetch(process.env.BACKEND_URL + "api/hotels");
+					const response = await fetch(process.env.BACKEND_URL + "/api/hotels/priority");
 					if (response.ok) {
 						const data = await response.json();
-						setStore({ hotels: data.hotels }); // Actualiza el estado de los hoteles
+						setStore({ hotelsPriority: data }); // Guardar hoteles prioritarios en el estado global
+						return data; // Retornar los hoteles prioritarios
 					} else {
-						console.error("Error fetching hotels:", response.status);
+						console.error("Error fetching priority hotels:", response.status);
 					}
 				} catch (error) {
-					console.error("Hubo un error al obtener los hoteles:", error);
+					console.error("Error fetching priority hotels:", error);
+				}
+			},
+
+			getBasicHotels: async () => {
+				try {
+					const response = await fetch(process.env.BACKEND_URL + "/api/hotels/basic");
+					if (response.ok) {
+						const data = await response.json();
+						console.log(data);
+						setStore({ hotelsBasic: data }); // Guardar hoteles básicos en el estado global
+						return data; // Retornar los hoteles básicos
+					} else {
+						console.error("Error fetching basic hotels:", response.status);
+					}
+				} catch (error) {
+					console.error("Error fetching basic hotels:", error);
 				}
 			},
 
