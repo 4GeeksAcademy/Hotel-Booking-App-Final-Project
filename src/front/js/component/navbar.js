@@ -14,6 +14,19 @@ export const Navbar = () => {
 
 	}
 
+	const handleUserProfile = (e) => {
+		e.preventDefault()
+		if(store.user_type == "cliente"){
+			navigate("/profile")
+		}
+		else if(store.user_type == "hotel"){
+			navigate("/hotel-profile/personal-info")
+		}
+		else if(store.user_type == "admin"){
+			navigate("/admin/personal-info")
+		}
+	}
+
 
 
 	return (
@@ -26,17 +39,22 @@ export const Navbar = () => {
 					{/* Mostrar el botón de Logout si el usuario está logueado */}
 					{localStorage.getItem("user_session") ? (
 						<>
-							{/* Botón de Logout */}
+							{/* Botón de funciones de usuario */}
 							{location.pathname === "/" && localStorage.getItem("user_session") && (
-								<div className="navBar Dropdown-Setup">
-									<p>Hola, {store.user_fName}</p>
-									<div class="dropdown">
-										<a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-											<i className="fa-solid fa-circle-user text-light"></i>
+								<div className="mb-0 navBar Dropdown-Setup row d-flex justify-contente-start">
+									{/* Mensaje saludando al usuario */}
+									<p className="mb-0 pb-0 w-75 fw-none text-light text-end">Hola, {store.user_fName}</p>
+									{/* Funciones especificas del usuario a traves del navBar */}
+									<div class="dropdown mb-0 w-25 d-flex justify-content-start">
+										<a class="dropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+											<i className="fs-2 mb-0 fa-solid fa-circle-user text-light"></i>
 										</a>
-										<ul class="dropdown-menu userProfileButton">
-											<li><a className=" text-warning"
-												onClick={handleLogOut} href="#">Logout</a></li>
+										<ul class="dropdown-menu dropdown-menu-end userProfileButton bg-light">
+											<li><button className="navBarProfileButton text-start w-100 h-100"
+												onClick={handleUserProfile} href="#">User profile</button></li>
+											<li><hr classname="dropdown-divider bg-dark mb-0"></hr></li>
+											<li><button className="navBarProfileButton text-start text-danger mt-0 w-100 h-100"
+												onClick={handleLogOut} href="#">Logout</button></li>
 										</ul>
 									</div>
 								</div>
