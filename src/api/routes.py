@@ -93,76 +93,27 @@ def handle_login():
 #     except Exception as e:
 #         return jsonify({"message": f"Error retrieving hotels: {str(e)}"}),500
 
-@api.route('/hotels', methods=['POST'])
-def create_hotel():
-    try:
-        data = request.get_json()
+# Endpoint para obtener hoteles con paquetes prioritarios
+@api.route('/hotels/priority', methods=['GET'])
+def get_hotels_with_priority_package():
+    hotels = db.session.query(Hotel).join(User).join(User_Hotel_Admin_Package).join(Hotel_Admin_Package).filter(
+        User.user_type == 'hotel',
+        Hotel_Admin_Package.package_name == 'prioritario'
+    ).all()
 
-        # Validar si se envían todos los campos requeridos
-        required_fields = ['user_id', 'name', 'location', 'price', 'availability', 'package_id']
-        for field in required_fields:
-            if not data.get(field):
-                return jsonify({"message": f"{field} is required"}), 400
+    result = [hotel.serialize() for hotel in hotels]
+    return jsonify(result)
 
-        # Validar si el usuario existe
-        user = User.query.get(data['user_id'])
-        if not user:
-            return jsonify({"message": "User not found"}), 404
+# Endpoint para obtener hoteles con paquetes básicos
+@api.route('/hotels/basic', methods=['GET'])
+def get_hotels_with_basic_package():
+    hotels = db.session.query(Hotel).join(User).join(User_Hotel_Admin_Package).join(Hotel_Admin_Package).filter(
+        User.user_type == 'hotel',
+        Hotel_Admin_Package.package_name == 'básico'
+    ).all()
 
-        # Validar si el paquete existe
-        package = Hotel_Admin_Package.query.get(data['package_id'])
-        if not package:
-            return jsonify({"message": "Package not found"}), 404
-
-        # Crear el nuevo hotel
-        new_hotel = Hotel(
-            name=data['name'],
-            location=data['location'],
-            price=data['price'],
-            availability=data['availability']
-        )
-        db.session.add(new_hotel)
-        db.session.commit()
-
-        # Asociar el hotel con el usuario y el paquete
-        user_hotel = User_Hotel_Admin_Package(
-            user_id=user.id_user,
-            hotel_id=new_hotel.id_hotel,
-            package_id=package.id_admin_package
-        )
-        db.session.add(user_hotel)
-        db.session.commit()
-
-        return jsonify({
-            "message": "Hotel created and associated with user successfully",
-            "hotel": new_hotel.serialize()
-        }), 201
-
-    except Exception as e:
-        return jsonify({"message": f"Error creating hotel: {str(e)}"}), 500
-
-
-@api.route('/hotels', methods=['GET'])
-def get_hotels():
-    try:
-        user_id = request.args.get('user_id')
-        if not user_id:
-            return jsonify({"message": "User ID is required"}), 400
-
-        user_hotels = User_Hotel_Admin_Package.query.filter_by(user_id=user_id).all()
-        hotels_with_package = []
-        
-        for user_hotel in user_hotels:
-            hotel = Hotel.query.get(user_hotel.hotel_id)  # Cambiar a 'hotel_id' aquí
-            if hotel:
-                hotel_data = hotel.serialize()
-                hotel_data['package_id'] = user_hotel.package_id  # Asignar correctamente el 'package_id'
-                hotels_with_package.append(hotel_data)
-
-        return jsonify({"hotels": hotels_with_package}), 200
-
-    except Exception as e:
-        return jsonify({"message": f"Error retrieving hotels: {str(e)}"}), 500
+    result = [hotel.serialize() for hotel in hotels]
+    return jsonify(result)
 
 #Endpoint de autenticacion del usuario
 @api.route("/access", methods = ["GET"])

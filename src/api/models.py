@@ -15,6 +15,7 @@ class User(db.Model):
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     
     # faltan las foreign keys, van acá
+    hotels = db.relationship('Hotel', back_populates="user", lazy=True)
     #Foreign keys
     favorites = db.relationship("Favorites", back_populates = "user", lazy = True)
     stay_history = db.relationship("Stay_History", back_populates = "user", lazy = True)
@@ -55,6 +56,8 @@ class Hotel(db.Model):
     
 
     # faltan las foreign keys, van acá
+    id_user = db.Column(db.Integer, db.ForeignKey('user.id_user'), nullable=False)
+    user = db.relationship('User')
     #Foreign Keys
     favorites = db.relationship("Favorites", back_populates = "hotel", lazy = True)
     #stay_history = db.relationship("Stay_History", back_populates = "hotel", lazy = True)
@@ -97,7 +100,7 @@ class Hotel_Admin_Package(db.Model):
     
 class User_Hotel_Admin_Package(db.Model):
     # Conexion en los usuarios con el hotel admin package
-    id_user_admin_package = db.Column(db.Integer, primary_key=True) 
+    id_user_admin_package = db.Column(db.Integer, primary_key=True)
 
     #Foreign Keys
     id_user = db.Column(db.Integer, db.ForeignKey(User.id_user), nullable=False)
