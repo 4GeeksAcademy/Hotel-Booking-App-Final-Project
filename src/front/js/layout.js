@@ -12,12 +12,10 @@ import injectContext from "./store/appContext";
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 
-
 import UserProfile from "./pages/profilePages/UserProfile";
 import PersonalInfo from "./pages/profilePages/PersonalInfo";
 import FavoriteHotels from "./pages/profilePages/FavoriteHotels";
 import StayHistory from "./pages/profilePages/StayHistory";
-
 
 import HotelPersonalInfo from "./pages/hotelProfilePages/HotelPersonalInfo";
 import Hotels from "./pages/hotelProfilePages/Hotels";
@@ -26,10 +24,8 @@ import AddHotel from './pages/hotelProfilePages/AddHotel';
 import AddPackage from './pages/hotelProfilePages/AddPackage';
 
 import AdminPersonalInfo from "./pages/adminProfilePages/AdminPersonalInfo";
-import AdminExistingHotels from "./pages/adminProfilePages/AdminExistingHotels";  // Add this import
-import AdminExistingUsers from "./pages/adminProfilePages/AdminExistingUsers";  // Add this import
-
-
+import AdminExistingHotels from "./pages/adminProfilePages/AdminExistingHotels";
+import AdminExistingUsers from "./pages/adminProfilePages/AdminExistingUsers";
 
 const Layout = () => {
     const basename = process.env.BASENAME || "";
@@ -42,6 +38,7 @@ const Layout = () => {
                 <ScrollToTop>
                     <Navbar />
                     <Routes>
+                        {/* General Routes */}
                         <Route element={<Dashboard />} path="/" />
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" />
@@ -49,29 +46,27 @@ const Layout = () => {
                         <Route element={<LoginAccount />} path="/login" />
                         <Route element={<ContactUs />} path="/contact" />
 
-                        {/*Ruta de usuario cliente*/}
+                        {/* User Profile Routes */}
                         <Route element={<UserProfile />} path="/profile">
-                            <Route index element={<PersonalInfo />} />
+                            <Route index element={<PersonalInfo />} /> {/* Default route */}
                             <Route path="personal-info" element={<PersonalInfo />} />
                             <Route path="favorite-hotels" element={<FavoriteHotels />} />
                             <Route path="stay-history" element={<StayHistory />} />
                         </Route>
 
-                        {/*Ruta de usuario hotel*/}
+                        {/* Hotel Profile Routes */}
                         <Route element={<HotelPersonalInfo />} path="/hotel-profile/personal-info" />
                         <Route element={<Hotels />} path="/hotel-profile/hotels" />
                         <Route element={<Packages />} path="/hotel-profile/packages" />
                         <Route element={<AddHotel />} path="/hotel-profile/add-hotel" />
-                        <Route element={<AddPackage />} path="/hotelProfilePages/add-package" />
+                        <Route element={<AddPackage />} path="/hotel-profile/add-package" />
 
-                        {/*Ruta de usuario admin*/}
+                        {/* Admin Routes */}
+                        <Route element={<AdminExistingHotels />} path="/admin/existing-hotels" />
+                        <Route element={<AdminExistingUsers />} path="/admin/existing-users" />
                         <Route element={<AdminPersonalInfo />} path="/admin/personal-info" />
-                        <Route element={<AdminExistingHotels />} path="/admin/existing-hotels" />  
-                        <Route element={<AdminExistingUsers />} path="/admin/existing-users" />  
-                        
 
-
-
+                        {/* Fallback Route */}
                         <Route element={<h1>Not found!</h1>} path="*" />
                     </Routes>
                     <Footer />
