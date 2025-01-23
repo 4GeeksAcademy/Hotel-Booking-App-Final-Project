@@ -13,7 +13,7 @@ class User(db.Model):
     password = db.Column(db.String(120), unique=False, nullable=False)
     user_type = db.Column(db.Enum('cliente', 'hotel', 'admin', name='user_type_enum'), nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
-
+    hotels = db.relationship('Hotel', back_populates='user', lazy=True)  # Relationship to hotels
         # Campos específicos para usuarios tipo 'hotel'
   
 
@@ -58,8 +58,12 @@ class Hotel(db.Model):
     description = db.Column(db.String(500), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     
+    
 
-    # faltan las foreign keys, van acá
+    # faltan las foreign keys, van acá   - agregando foreign keys
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id_user'), nullable=False)
+    user = db.relationship('User', back_populates='hotels')  # Add reverse relationship
+    
     #Foreign Keys
     favorites = db.relationship("Favorites", back_populates = "hotel", lazy = True)
     #stay_history = db.relationship("Stay_History", back_populates = "hotel", lazy = True)

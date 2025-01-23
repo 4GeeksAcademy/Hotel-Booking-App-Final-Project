@@ -243,7 +243,97 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log(error);
 					return error;
 				}
-			}
+			},
+			addHotel: async (hotelData) => {
+				
+				const token = localStorage.getItem("user_session");
+				if (!token) {
+					console.error("No token found!");
+					return false;
+				}
+				try {
+					
+					const response = await fetch(`${process.env.BACKEND_URL}/api/hotels`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+						body: JSON.stringify(hotelData),
+					});
+			
+					if (!response.ok) {
+						throw new Error("Failed to add hotel");
+					}
+			
+					const data = await response.json();
+					console.log("Hotel successfully added:", data);
+					const actions = getActions();
+					await actions.getHotels();
+					return true;
+				} catch (error) {
+					console.error("Error adding hotel:", error);
+					return false;
+				}
+			},
+			
+			
+			
+			getHotels: async () => {
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/hotels`);
+					if (response.ok) {
+						const data = await response.json();
+						setStore({ hotels: data.hotels }); // Update the hotels state
+						console.log("Hotels fetched successfully:", data.hotels);
+					} else {
+						console.error("Error fetching hotels:", response.status);
+					}
+				} catch (error) {
+					console.error("Error fetching hotels:", error);
+				}
+			},
+
+			/*deactivate hotel from hotel profile*/
+			deactivateHotel: async (hotelId) => {
+				const token = localStorage.getItem("user_session");
+				
+				if (!token) {
+					console.error("No token found!");
+					return false;
+				}
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/hotels/${hotelId}`, {
+						method: "PUT",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+						body: JSON.stringify({ is_active: false }),
+					});
+			
+					if (!response.ok) {
+						throw new Error("Failed to deactivate hotel");
+					}
+			
+					const data = await response.json();
+					console.log("Hotel successfully deactivated:", data);
+			
+					// Refresh the list of hotels
+					const actions = getActions();
+					await actions.getHotels();
+			
+					return true;
+				} catch (error) {
+					console.error("Error deactivating hotel:", error);
+					return false;
+				}
+			},
+			
+			
+			
+					
+			
 		}
 	};
 };

@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { Context } from "../../store/appContext";
 
 const AddHotel = () => {
   const navigate = useNavigate();
@@ -9,22 +11,65 @@ const AddHotel = () => {
   const [hotelLocation, setHotelLocation] = useState('');
   const [hotelCountry, setHotelCountry] = useState('');
   const [hotelDescription, setHotelDescription] = useState('');
+  const { actions } = useContext(Context); 
 
   // Function to handle form submission
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    
- 
+
     const newHotel = {
-      name: hotelName,
-      location: hotelLocation,
-      country: hotelCountry,
-      description: hotelDescription,
+        name: hotelName,
+        location: hotelLocation,
+        country: hotelCountry,
+        description: hotelDescription,
     };
+
+    console.log("Submitting hotel data:", newHotel); // Debugging log to ensure data is prepared
+
+    const success = await actions.addHotel(newHotel); // Call the addHotel action
+    if (success) {
+        navigate('/hotel-profile/hotels'); // Redirect on success
+    } else {
+        alert("Failed to add the hotel. Please try again.");
+    }
+
+
 
     // call an API to add the hotel or update state
 
-    console.log("New Hotel Added:", newHotel); 
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+    
+      const newHotel = {
+        name: hotelName,
+        location: hotelLocation,
+        country: hotelCountry,
+        description: hotelDescription,
+      };
+    
+      try {
+        const response = await fetch(`${process.env.BACKEND_URL}/api/hotels`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('user_session')}`,
+          },
+          body: JSON.stringify(newHotel),
+        });        
+    
+        if (response.ok) {
+          console.log('New Hotel Added:', newHotel);
+          navigate('/hotel-profile/hotels'); // Redirect after success
+        } else {
+          console.error('Failed to add hotel:', response.statusText);
+        }
+        
+      } catch (error) {
+        console.error('Error adding hotel:', error);
+      }
+    };
+    
+  
 
     // Navigate to the Hotels page after submission
     navigate('/hotel-profile/hotels');
