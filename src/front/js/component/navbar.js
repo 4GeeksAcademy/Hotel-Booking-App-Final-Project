@@ -73,15 +73,6 @@ export const Navbar = () => {
 								</button>
 							)}
 
-							{/* Botón de Login dentro de Vista SignUp */}
-							{location.pathname === "/signup" && (
-								<button
-									className="btnlogin-signup"
-									onClick={() => navigate("/login")}
-								>
-									Login
-								</button>
-							)}
 						</>
 					)}
 				</div>
