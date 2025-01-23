@@ -177,6 +177,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const response = await fetch(process.env.BACKEND_URL + "/api/hotels/basic");
 					if (response.ok) {
 						const data = await response.json();
+						console.log(data);
 						setStore({ hotelsBasic: data }); // Guardar hoteles básicos en el estado global
 						return data; // Retornar los hoteles básicos
 					} else {

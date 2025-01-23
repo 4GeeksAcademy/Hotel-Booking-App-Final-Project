@@ -94,22 +94,11 @@ def handle_login():
 #         return jsonify({"message": f"Error retrieving hotels: {str(e)}"}),500
 
 # Endpoint para obtener hoteles con paquetes prioritarios
-@api.route('/hotels/priority', methods=['GET'])
-def get_hotels_with_priority_package():
+@api.route('/hotels/<package_name>', methods=['GET'])
+def get_hotels_with_priority_package(package_name):
     hotels = db.session.query(Hotel).join(User).join(User_Hotel_Admin_Package).join(Hotel_Admin_Package).filter(
         User.user_type == 'hotel',
-        Hotel_Admin_Package.package_name == 'prioritario'
-    ).all()
-
-    result = [hotel.serialize() for hotel in hotels]
-    return jsonify(result)
-
-# Endpoint para obtener hoteles con paquetes básicos
-@api.route('/hotels/basic', methods=['GET'])
-def get_hotels_with_basic_package():
-    hotels = db.session.query(Hotel).join(User).join(User_Hotel_Admin_Package).join(Hotel_Admin_Package).filter(
-        User.user_type == 'hotel',
-        Hotel_Admin_Package.package_name == 'básico'
+        Hotel_Admin_Package.package_name == package_name
     ).all()
 
     result = [hotel.serialize() for hotel in hotels]

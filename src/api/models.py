@@ -78,7 +78,7 @@ class Hotel(db.Model):
 class Hotel_Admin_Package(db.Model):
     # Datos de los Paquetes de pago por usuario hotel
     id_admin_package = db.Column(db.Integer, primary_key=True) 
-    package_name = db.Column(db.Enum('básico', 'prioritario', name='package_name_enum'), nullable=False)
+    package_name = db.Column(db.String(120), unique=False, nullable=False)
     description = db.Column(db.String(120), unique=False, nullable=False)
     price = db.Column(db.Integer, unique=False, nullable=False)
 
