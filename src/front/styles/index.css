@@ -74,3 +74,9 @@
     background-color: #005f73;
 
 }
+
+/*Configuracion de los inputs de busqueda*/
+.searchBarConfig input {
+    border-radius: 50px;
+    min-height: 50px;
+}

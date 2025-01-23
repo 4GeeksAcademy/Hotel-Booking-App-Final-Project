@@ -40,7 +40,7 @@ export const Navbar = () => {
 					{localStorage.getItem("user_session") ? (
 						<>
 							{/* Botón de funciones de usuario */}
-							{location.pathname === "/" && localStorage.getItem("user_session") && (
+							{localStorage.getItem("user_session") && (
 								<div className="mb-0 navBar Dropdown-Setup row d-flex justify-contente-start">
 									{/* Mensaje saludando al usuario */}
 									<p className="mb-0 pb-0 w-75 fw-none text-light text-end">Hola, {store.user_fName}</p>
@@ -64,7 +64,7 @@ export const Navbar = () => {
 					) : (
 						<>
 							{/* Botón de Login si no está logueado */}
-							{location.pathname === "/" && (
+							{(
 								<button
 									className="btndashboard-signup"
 									onClick={() => navigate("/login")}
@@ -83,16 +83,6 @@ export const Navbar = () => {
 								</button>
 							)}
 						</>
-					)}
-
-					{/* Botón de Dashboard en Vista SignUp */}
-					{location.pathname === "/signup" && (
-						<button
-							className="btndashboard-signup"
-							onClick={() => navigate("/")}
-						>
-							Dashboard
-						</button>
 					)}
 				</div>
 			</div>
