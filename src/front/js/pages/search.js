@@ -32,12 +32,11 @@ export const Search = () => {
 	return(
 		<>	
 			{/*Busqueda de hoteles */}
-			<form>
-				<div className="col-12 border border-solid d-inline justify-content-center h-25  mb-5 mt-5 ">
+			<form className="container-fluid d-flex">
 					<div className="col-12 border border-solid d-flex justify-content-center  h-50  mt-5">
-						<div className="col-12 border border-solid d-flex justify-content-center searchBarConfig">
+						<div className="col-12 border border-solid d-inline-flex justify-content-center searchBarConfig">
 							{/*Por nombre de hotel*/}
-							<div className="border border-solid me-3">
+							<div className="sm-col-12 border border-solid me-3">
 								<label for="locationSearch" className="label">Hotel</label>
 								<div className="group-label">
 									<input type="text" className="h-25" placeholder="By hotel name" id="hotelSearch" name = "hotel"
@@ -46,7 +45,7 @@ export const Search = () => {
 								</div>
 							</div>
 							{/*ubicacion de hotel */}
-							<div className="border border-solid me-3">
+							<div className="sm-col-12 border border-solid me-3">
 								<label for="locationSearch" className="label">Location</label>
 								<div className="group-label">
 									<input type="text" className="h-25" placeholder="By Location" id="locationSearch" name = "location"
@@ -55,7 +54,7 @@ export const Search = () => {
 								</div>
 							</div>
 							{/*Nombre del paquete*/}
-							<div className="border border-solid me-3">
+							<div className="sm-col-12 border border-solid me-3">
 								<label for="locationSearch" className="label">Package name</label>
 								<div className="group-label">
 									<input type="text" className="h-25" placeholder="By package name" id="nameSearch" name = "package_name"
@@ -64,7 +63,7 @@ export const Search = () => {
 								</div>
 							</div>
 							{/*Por fecha de inicio paquete*/}
-							<div className="border border-solid me-3">
+							<div className="sm-col-12 border border-solid me-3">
 								<label for="locationSearch" className="label">Date</label>
 								<div className="group-label">
 									<input type="text" className="h-25" placeholder="By check-in date" id="dateSearch" name = "hotel"
@@ -73,7 +72,7 @@ export const Search = () => {
 								</div>
 							</div>
 							{/*Por precio*/}
-							<div className="border border-solid">
+							<div className="sm-col-12 border border-solid">
 								<label for="locationSearch" className="label">Price range</label>
 								<div className="group-label">
 									<input type="text" className="h-25" placeholder="By package name" id="priceSearch" name = "price"
@@ -83,31 +82,32 @@ export const Search = () => {
 							</div>
 						</div>
 					</div>
-				</div>
+				
 			</form>
 			
 			
-			<div className="col-6 border border-solid d-flex justify-content-center ms-3 h-75 mb-5 mt-5">
-				<ul className="list-group w-75">
+			<div className="hotelPackageList col-6 d-flex justify-content-start ms-3 h-75 mb-5 mt-5 ps-0">
+				<ul className="list-group">
 					{ store.hotel_packages ? store.hotel_packages.map((item, index) => {
 					return (
 						<li
 							key={index}
-							className="list-group-item d-flex justify-content-between"
-							style={{ background: "white", width:"100%"}}>
-							<img className="me-5 ms-5 mt-4 mb-4" src="https://picsum.photos/536/354" style= {{"border-radius": "50%", width: "180px", height: "190px"}}/>
-
-							<div className="container ms-5">
+							className="list-group-item d-flex mt-2"
+							>
+							<div className="col-4 imgPackage container-fluid ">
+								<img className="" src="https://picsum.photos/536/354"/>
+							</div>
 							
+
+							<div className="col-6 packageDetails container-fluid ">
 								<div className="fs-2">{item.hotel_package_name}</div>
 								<div className="fs-3 mt-3"><i className="fa-solid fa-location-dot"></i> {item.description}</div>
 								<div className="fs-4"><i className="fa-solid fa-phone"></i> {item.price}</div>
-								<div className="fs-5"><i className="fa-solid fa-envelope"></i> {item.start_date}</div>
-							</div>
-							<div className="d-flex justify-content-end">
-								<button className='bg-success mb-4'><div className='text-light fw-bold'>Add New Contact</div></button>
 							</div>
 
+							<div className="col-2 packageButtons container-fluid ">
+								<p>aaaaaaaaaaaaaaaa</p>
+							</div>
 						</li>
 					);
 				}) : <p>No contacts right now!</p>

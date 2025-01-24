@@ -150,8 +150,7 @@ def get_hotel_stay_packages():
         print("User not found")
         return jsonify({"message": "User not found"}), 404
     
-    for hotel_names in hotel_packages:
-        serialized_hotels.append(hotel_names.serialize())
+    serialized_hotels = [package.serialize() for package in hotel_packages]
 
     print(serialized_hotels)
 

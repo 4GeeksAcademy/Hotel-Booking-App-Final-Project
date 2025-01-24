@@ -229,7 +229,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const data = await response.json();
 					
 
-					await setStore({hotel_packages: data})
+					await setStore({hotel_packages: data.hotel_packages})
 
 					console.log(data);
 
