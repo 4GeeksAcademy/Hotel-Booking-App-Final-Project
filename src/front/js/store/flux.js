@@ -142,8 +142,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					return "User registered successfully";
 				} catch (error) {
-					console.error("Error al registrar:", error);
-					return error.message || "Error al registrar el usuario.";
+					console.error("Error registering:", error);
+					return error.message || "This email or username is already registered, try it again.";
 				}
 			},
 
