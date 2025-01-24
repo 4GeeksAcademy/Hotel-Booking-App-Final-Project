@@ -43,9 +43,9 @@ def signup():
     existing_user_username = User.query.filter_by(username=data['username']).first()
 
     if existing_user_email:
-        return jsonify({"message": "Este correo ya está registrado. Por favor, usa otro email."}), 400
+        return jsonify({"message": "This email is already registered. Please use another email address.."}), 400
     if existing_user_username:
-        return jsonify({"message": "Este nombre de usuario ya está en uso. Por favor, elige otro."}), 400
+        return jsonify({"message": "This username is already in use. Please choose another one."}), 400
 
     # Crear una nueva instancia de User
     new_user = User(
@@ -62,10 +62,10 @@ def signup():
     try:
         db.session.add(new_user)
         db.session.commit()
-        return jsonify({"message": "Usuario registrado correctamente"}), 201
+        return jsonify({"message": "User registered successfully"}), 201
     except Exception as e:
         db.session.rollback()
-        return jsonify({"message": f"Error al registrar el usuario: {str(e)}"}), 500
+        return jsonify({"message": f"Error registering user: {str(e)}"}), 500
 
 
 #Creacion del token de JWT
