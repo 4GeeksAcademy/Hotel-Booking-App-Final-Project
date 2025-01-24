@@ -151,6 +151,7 @@ def upload_image():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
 #paquetes en ventana de busqueda
 @api.route('/hotel_packages', methods=['GET'])
 def get_hotel_stay_packages():
