@@ -86,7 +86,7 @@ def handle_login():
     
     access_token = create_access_token(identity=username)
 
-    return jsonify({"access_token": access_token, "username":user_exists.username, "user_type":user_exists.user_type, "fname":user_exists.name }), 200
+    return jsonify({"access_token": access_token, "user":user_exists.serialize()}), 200
 
 # Endpoint para obtener hoteles con paquetes prioritarios
 @api.route('/hotels/<package_name>', methods=['GET'])
@@ -109,8 +109,7 @@ def user_logon():
     if not user:
         return jsonify({"msg": "The previously authenticated user does not exist anymore."}), 401
     
-    serialized_user = User.serialize(user)
-    return jsonify("User_info", serialized_user), 200
+    return jsonify(user.serialize()), 200
 
 
 #informacion de clientes 
@@ -148,16 +147,7 @@ def upload_image():
 
         image_url = result["secure_url"]
 
-        # Guardar la URL de la imagen en la base de datos
-        hotel_id = request.form.get("hotel_id")
-        hotel = Hotel.query.get(hotel_id)
-
-        if hotel:
-            hotel.image_url = image_url
-            db.session.commit()
-            return jsonify({"message": "Image uploaded successfully", "image_url": image_url}), 200
-
-        return jsonify({"error": "Hotel not found"}), 404
+        return jsonify({"message": "Image uploaded successfully", "image_url": image_url}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

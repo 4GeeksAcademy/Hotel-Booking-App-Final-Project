@@ -8,43 +8,8 @@ export const Dashboard = () => {
     const [showAlert, setShowAlert] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [selectedHotel, setSelectedHotel] = useState(null);
-    const [myImage, setMyImage] = useState(null);
 
-    // ********************************** SUBIR CON CLOUDINARY***************************************
-    const uploadImage = async (e) => {
-        try {
-            const file = e.target.files[0];
-            if (!file) {
-                console.error("No file selected");
-                return;
-            }
 
-            const formData = new FormData();
-            formData.append('image', file);
-
-            // Asegúrate de que tu URL de backend esté correcta
-            const response = await fetch(`${process.env.BACKEND_URL}/api/upload`, {
-                method: "POST",
-                body: formData,
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error("Error uploading image:", errorData.error);
-                return;
-            }
-
-            const data = await response.json();
-            console.log("Uploaded image:", data);
-
-            // Actualiza el estado con la URL segura de la imagen
-            setMyImage(data.image_url); // Guarda la URL en el estado
-
-        } catch (error) {
-            console.error("Error in uploadImage:", error);
-        }
-    };
-    // ********************************** CIERRE DEL SUBIR CON CLOUDINARY***************************************
 
     useEffect(() => {
         const fetchHotels = async () => {
@@ -60,6 +25,11 @@ export const Dashboard = () => {
         };
 
         fetchHotels();
+
+        // const user = JSON.parse(localStorage.getItem("user_session"));
+        // if (user && user.name) {
+        //     setUserName(user.name);
+        // }
     }, []);
 
     const handleReserve = (hotelName) => {
@@ -90,7 +60,10 @@ export const Dashboard = () => {
                 </div>
             )}
 
-            <h2 className="text-center mb-5" style={{ fontWeight: "bold" }}>Welcome</h2>
+            {/* Aquí se muestra el nombre del usuario después de "Welcome" */}
+            <h2 className="text-center mb-5" style={{ fontWeight: "bold" }}>
+                Welcome, {store.currentUser ? store.currentUser.name : "Guest"}
+            </h2>
 
             {/* Hoteles prioritarios */}
             <div className="row mb-5">
@@ -123,7 +96,7 @@ export const Dashboard = () => {
                 )}
             </div>
 
-            {/* Hoteles con paquete o plan básicos */}
+            {/* Hoteles básicos */}
             <div className="row">
                 <h3>Basic Hotels</h3>
                 {basicHotels.length > 0 ? (
@@ -132,7 +105,7 @@ export const Dashboard = () => {
                             <div className="card h-100">
                                 <div className="card-body d-flex flex-column">
                                     <img
-                                        src={hotel.image_url || 'https://via.placeholder.com/300x200?text=No+Image'}
+                                        src={hotel.image_url ? hotel.image_url : 'https://via.placeholder.com/200x200.png?text=No+Image'}
                                         alt={hotel.name}
                                         className="card-img-top"
                                         style={{ height: "200px", objectFit: "cover" }}
@@ -154,13 +127,11 @@ export const Dashboard = () => {
                 )}
             </div>
 
-            {/* CLOUDINARY */}
-            <input type="file" onChange={uploadImage} />
-            {myImage && <img src={myImage} alt="Uploaded" className="mt-3" style={{ width: "100px", height: "100px", objectFit: "cover" }} />}
 
-            {/* Modal de confirmación */}
+
+            {/* Modal for reservation */}
             {showModal && (
-                <div className="modal show" tabIndex="-1" style={{ display: "block" }}>
+                <div className="modal show" style={{ display: "block" }}>
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
@@ -168,15 +139,11 @@ export const Dashboard = () => {
                                 <button type="button" className="btn-close" onClick={cancelReservation}></button>
                             </div>
                             <div className="modal-body">
-                                <p>Are you sure you want to reserve {selectedHotel}?</p>
+                                <p>Are you sure you want to reserve: {selectedHotel}?</p>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" onClick={cancelReservation}>
-                                    Cancel
-                                </button>
-                                <button type="button" className="btn btn-primary" onClick={confirmReservation}>
-                                    Confirm
-                                </button>
+                                <button type="button" className="btn btn-secondary" onClick={cancelReservation}>Cancel</button>
+                                <button type="button" className="btn btn-primary" onClick={confirmReservation}>Confirm</button>
                             </div>
                         </div>
                     </div>

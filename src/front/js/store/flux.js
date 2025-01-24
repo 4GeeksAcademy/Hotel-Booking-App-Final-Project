@@ -1,6 +1,7 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
+			currentUser: null,
 			message: null,
 			username: "",
 			user_type: "",
@@ -97,12 +98,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 					});
 
 					const data = await response.json();
+					if (response.ok) {
+						//Seteo de los datos necesarios del usuario
+						localStorage.setItem("user_session", data.access_token);
+						setStore({ currentUser: data.user })
+						// await getActions().loadUserData();
 
-					//Seteo de los datos necesarios del usuario
-					localStorage.setItem("user_session", data.access_token);
-					await getActions().loadUserData();
+						return data;
+					}
 
-					return data;
 				} catch (error) {
 					console.log("Error loading message from backend", error);
 					return error;
@@ -191,9 +195,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			logOutAccount: async () => {
 				//eliminacion de la data del usuario
 				localStorage.removeItem("user_session");
-				setStore({ user_type: "" });
-				setStore({ user_fName: "" });
-				setStore({ username: "" });
+				setStore({ currentUser: false });
 			},
 
 			loadUserData: async () => {
@@ -206,16 +208,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 					});
 
 					const data = await response.json();
-					console.log(data[1]);
-					setStore({ user_type: data[1].user_type });
-					setStore({ user_fName: data[1].name });
-					setStore({ username: data[1].username });
+					if (response.ok) {
+						setStore({ currentUser: data })
+						// await getActions().loadUserData();
 
-					if (!data) {
-						return -1;
+						return data;
 					}
-
-					return data[1];
 				} catch (error) {
 					console.log(error);
 					return error;
