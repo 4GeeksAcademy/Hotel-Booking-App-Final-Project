@@ -74,3 +74,144 @@
     background-color: #005f73;
 
 }
+
+/*****************************************************************************DASHBOARD******************************************************************************/
+
+/*BOTONES DASHBOARD*/
+.custom-btn {
+    background: linear-gradient(45deg, #6a11cb, #2575fc); /* Gradiente de color */
+    border: none;
+    color: white;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.custom-btn:hover {
+    background: linear-gradient(45deg, #2575fc, #6a11cb);
+    transform: scale(1.05);
+}
+
+.custom-btn:focus {
+    outline: none;
+}
+
+/*DEMAS CSS DEL DASHBOARD*/
+
+/* Alert */
+.dashboard-alert {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-top: 5rem;
+    z-index: 500;
+}
+
+/* Carrusel */
+.dashboard-carousel {
+    margin-bottom: 3rem;
+}
+
+.dashboard-carousel .carousel-item {
+    height: 100%;
+}
+
+.dashboard-carousel .carousel-card {
+    border-radius: 15px;
+    overflow: hidden;
+    height: 100%;
+}
+
+.dashboard-carousel .carousel-img {
+    height: 200px; /* Ajusta la altura aquí */
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.dashboard-carousel .carousel-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semi-transparente */
+    color: white; /* Texto blanco para buen contraste */
+    padding: 20px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.dashboard-carousel .carousel-caption h5,
+.dashboard-carousel .carousel-caption p {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra al texto */
+}
+
+.dashboard-carousel .carousel-btn {
+    margin-top: -1rem;
+}
+
+/* Estilo de la tarjeta de hotel */
+.dashboard-card .card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card .card-img-top {
+    height: 150px;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+.dashboard-card .card-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.dashboard-card .card-title {
+    font-size: 1rem; /* Reducido el tamaño de la fuente */
+}
+
+.dashboard-card .card-text {
+    font-size: 0.875rem; /* Reducido el tamaño de la fuente */
+    margin-bottom: 0.5rem; /* Puedes ajustar el margen también si lo deseas */
+}
+
+.dashboard-card .card-btn {
+    margin-top: auto;
+    font-size: 0.875rem; /* Reducir el tamaño del texto del botón */
+}
+
+.dashboard-modal .modal-content {
+    border-radius: 15px;
+}
+
+.dashboard-modal .modal-header {
+    border-bottom: 2px solid #ddd;
+}
+
+.dashboard-modal .modal-footer {
+    border-top: 2px solid #ddd;
+}
+
+/* Estilo para el título principal */
+.dashboard-title {
+    font-weight: bold;
+}
+
+/* Botón personalizado */
+.custom-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.custom-btn:hover {
+    background-color: #0056b3;
+}
+/***********************************************************************CIERRE DASHBOARD**********************************************************************************/
