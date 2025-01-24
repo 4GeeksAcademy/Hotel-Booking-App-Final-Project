@@ -1,33 +1,37 @@
 import React, { useState, useContext } from "react";
 import { Context } from "../store/appContext";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const SignUp = () => {
-    const { actions } = useContext(Context); // Obtener acciones del contexto
+    const { actions } = useContext(Context);
     const [name, setName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [userType, setUserType] = useState(""); // Cambié a "userType" para coincidir con el backend
+    const [userType, setUserType] = useState("");
     const [toastMessage, setToastMessage] = useState(null);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Verificar si las contraseñas coinciden
-        if (password !== confirmPassword) { // Nueva validación de confirmación
-            setToastMessage({ text: "Passwords do not match. Please try again.", type: "danger" }); // Mensaje de error
+        // Validación de contraseñas
+        if (password !== confirmPassword) {
+            setToastMessage({ text: "Las contraseñas no coinciden.", type: "danger" });
             setTimeout(() => setToastMessage(null), 3000);
-            return; // Detener el envío si no coinciden
+            return;
         }
 
-        // Llamada a la acción de registro del Flux Store con el tipo de Usuario
+        // Llamada a la acción de registro del Flux Store con el tipo de usuario
         const message = await actions.signUp(name, lastName, email, userName, password, userType);
 
-        if (message === "Usuario registrado correctamente") {
-            setToastMessage({ text: "Usuario registrado correctamente.", type: "success" });
+        if (message === "User registered successfully") {
+            setToastMessage({ text: "User registered successfully.", type: "success" });
+            setTimeout(() => {
+                navigate("/login"); // Redirige al login después de un registro exitoso
+            }, 1500); // Espera segundos para mostrar el mensaje de éxito antes de redirigir
         } else if (message === "Este correo ya está registrado. Por favor, usa otro email.") {
             setToastMessage({ text: message, type: "danger" });
         } else {
@@ -51,7 +55,7 @@ export const SignUp = () => {
                 <h5 className="d-flex align-items-center justify-content-center text-secondary"><strong>Sign Up</strong></h5>
 
                 <form onSubmit={handleSubmit} className="eb-garamond">
-                    {/* Pregunta 1 - Registro */}
+                    {/* Nombre */}
                     <h5 className="fs-6 mt-4">Name</h5>
                     <div className="input-group mb-3">
                         <input
@@ -64,7 +68,7 @@ export const SignUp = () => {
                         />
                     </div>
 
-                    {/* Pregunta 2 - Registro */}
+                    {/* Apellido */}
                     <h5 className="fs-6 mt-4">Last Name</h5>
                     <div className="input-group mb-3">
                         <input
@@ -77,7 +81,7 @@ export const SignUp = () => {
                         />
                     </div>
 
-                    {/* Pregunta 3 - Registro */}
+                    {/* Email */}
                     <h5 className="fs-6 mt-4">Email</h5>
                     <div className="input-group mb-3">
                         <input
@@ -90,7 +94,7 @@ export const SignUp = () => {
                         />
                     </div>
 
-                    {/* Pregunta 4 - Registro */}
+                    {/* Nombre de Usuario */}
                     <h5 className="fs-6 mt-4">Username</h5>
                     <div className="input-group mb-3">
                         <input
@@ -103,7 +107,7 @@ export const SignUp = () => {
                         />
                     </div>
 
-                    {/* Pregunta 5 - Registro */}
+                    {/* Contraseña */}
                     <h5 className="fs-6 mt-4">Password</h5>
                     <div className="input-group mb-3">
                         <input
@@ -116,20 +120,20 @@ export const SignUp = () => {
                         />
                     </div>
 
-                    {/* Nueva sección: Confirmación de contraseña */}
-                    <h5 className="fs-6 mt-4">Confirm Password</h5> {/* Nuevo título */}
+                    {/* Confirmar Contraseña */}
+                    <h5 className="fs-6 mt-4">Confirm Password</h5>
                     <div className="input-group mb-3">
                         <input
                             type="password"
                             className="form-control rounded-pill"
-                            placeholder="Re-enter your password"
-                            value={confirmPassword} // Nuevo valor
-                            onChange={(e) => setConfirmPassword(e.target.value)} // Nuevo manejador
+                            placeholder="Confirm your password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
                             required
                         />
                     </div>
 
-                    {/* Pregunta 6 - Registro */}
+                    {/* Propósito del registro */}
                     <h5 className="fs-6 mt-4">Purpose of registration</h5>
                     <div className="form-check">
                         <input
@@ -162,6 +166,7 @@ export const SignUp = () => {
                         </label>
                     </div>
 
+                    {/* Botón de registro */}
                     <div className="d-flex flex-column align-items-center justify-content-center mt-5">
                         <button
                             type="submit"
@@ -171,11 +176,10 @@ export const SignUp = () => {
                             Sign Up
                         </button>
                     </div>
-
-
                 </form>
             </div >
 
+            {/* Mensajes de toast */}
             {toastMessage && (
                 <div className="toast-container position-fixed top-0 end-0 p-3" style={{ zIndex: 1050 }}>
                     <div
