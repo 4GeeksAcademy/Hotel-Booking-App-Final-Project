@@ -78,5 +78,16 @@
 /*Configuracion de los inputs de busqueda*/
 .searchBarConfig input {
     border-radius: 50px;
-    min-height: 50px;
+    min-height: 25px;
+    border: solid;
+    border-color:rgb(226, 226, 226);
+    border-width: 2px;
+}
+
+.searchBarConfig label {
+    font-weight: bold;
+}
+
+.searchBarConfig input:hover {
+    border-color: black;
 }

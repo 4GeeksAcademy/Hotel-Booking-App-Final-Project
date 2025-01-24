@@ -3,7 +3,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 from flask import Flask, request, jsonify, url_for, Blueprint, current_app
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
-from api.models import db, User, Hotel, User_Hotel_Admin_Package, Hotel_Admin_Package
+from api.models import db, User, Hotel, User_Hotel_Admin_Package, Hotel_Admin_Package, Stay_Package
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
@@ -137,3 +137,23 @@ def get_personal_info():
     print("User found, returning data")
     return jsonify(user.serialize()), 200
 
+
+#paquetes en ventana de busqueda
+@api.route('/hotel_packages', methods=['GET'])
+def get_hotel_stay_packages():
+    hotel_packages = Stay_Package.query.all()
+    print (hotel_packages)
+
+    serialized_hotels = []
+
+    if not hotel_packages:
+        print("User not found")
+        return jsonify({"message": "User not found"}), 404
+    
+    for hotel_names in hotel_packages:
+        serialized_hotels.append(hotel_names.serialize())
+
+    print(serialized_hotels)
+
+    return jsonify({"hotel_packages": serialized_hotels}), 200
+    

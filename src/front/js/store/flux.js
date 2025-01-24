@@ -8,6 +8,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			hotels: [],
 			hotelsPriority: [],  // Almacena hoteles con paquete prioritario
 			hotelsBasic: [],     // Almacenar hoteles con paquete básico
+			hotel_packages: [], // Almacenamiento de los paquetes de estadia de los hoteles
 			name: null,
 			personalInfo: null, // Store for personal info data
 			demo: [
@@ -216,6 +217,26 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 
 					return data[1];
+				} catch (error) {
+					console.log(error);
+					return error;
+				}
+			},
+			loadHotelPackages: async () =>{
+				try {
+					const response = await fetch(process.env.BACKEND_URL + "/api/hotel_packages");
+
+					const data = await response.json();
+					
+
+					await setStore({hotel_packages: data})
+
+					console.log(data);
+
+
+					return data;
+
+
 				} catch (error) {
 					console.log(error);
 					return error;

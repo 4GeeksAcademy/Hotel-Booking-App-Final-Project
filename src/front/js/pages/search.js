@@ -8,11 +8,27 @@ export const Search = () => {
 	const navigate = useNavigate();
 	const {store, actions }  = useContext(Context);
 	const [state, setState] = useState(null)
+	const [searchInfo, setSearchInfo] = useState({
+		hotel_name: "",
+		hotel_location: "",
+		package_name: "",
+		package_date: "",
+		price_range_min: "",
+		price_range_max: ""
+	})
 	let contactID = 0;
 	let contactName = "";
 
-	//useEffect(()=> {actions.loadSomeData()}, []);
-    console.log(store.hotels)
+	useEffect(()=> {
+		const loadPage = async () => {
+			await actions.loadHotelPackages()
+		}
+		
+		loadPage();
+	
+	}, []);
+
+    //console.log(store.hotels)
 	return(
 		<>	
 			{/*Busqueda de hoteles */}
@@ -73,7 +89,7 @@ export const Search = () => {
 			
 			<div className="col-6 border border-solid d-flex justify-content-center ms-3 h-75 mb-5 mt-5">
 				<ul className="list-group w-75">
-					{ store.hotels ? store.hotels.map((item, index) => {
+					{ store.hotel_packages ? store.hotel_packages.map((item, index) => {
 					return (
 						<li
 							key={index}
@@ -83,15 +99,13 @@ export const Search = () => {
 
 							<div className="container ms-5">
 							
-								<div className="fs-2">{item.name}</div>
-								<div className="fs-3 mt-3"><i className="fa-solid fa-location-dot"></i> {item.location}</div>
-								<div className="fs-4"><i className="fa-solid fa-phone"></i> {item.coountry}</div>
-								<div className="fs-5"><i className="fa-solid fa-envelope"></i> {item.description}</div>
+								<div className="fs-2">{item.hotel_package_name}</div>
+								<div className="fs-3 mt-3"><i className="fa-solid fa-location-dot"></i> {item.description}</div>
+								<div className="fs-4"><i className="fa-solid fa-phone"></i> {item.price}</div>
+								<div className="fs-5"><i className="fa-solid fa-envelope"></i> {item.start_date}</div>
 							</div>
 							<div className="d-flex justify-content-end">
-								<button className='bg-success mb-4' style={{border: "none", height: "40px","border-radius": "5px", "margin-right": "12.5%"}}
-									onClick={() => navigate("/addContact")}
-								><div className='text-light fw-bold'>Add New Contact</div></button>
+								<button className='bg-success mb-4'><div className='text-light fw-bold'>Add New Contact</div></button>
 							</div>
 
 						</li>
