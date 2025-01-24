@@ -9,30 +9,45 @@ const AddHotel = () => {
   const [hotelLocation, setHotelLocation] = useState('');
   const [hotelCountry, setHotelCountry] = useState('');
   const [hotelDescription, setHotelDescription] = useState('');
+  const [packageName, setPackageName] = useState('priority'); // Default to 'priority'
   const [myImage, setMyImage] = useState(null);
 
   // Function to handle form submission
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
 
     const newHotel = {
       name: hotelName,
       location: hotelLocation,
       country: hotelCountry,
       description: hotelDescription,
-      image_url: myImage
+      image_url: myImage,
+      package_name: packageName, // Include the selected package name
     };
 
-    // call an API to add the hotel or update state
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/hotels`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('user_session')}`,
+        },
+        body: JSON.stringify(newHotel),
+      });
 
-    console.log("New Hotel Added:", newHotel);
-
-    // Navigate to the Hotels page after submission
-    navigate('/hotel-profile/hotels');
+      if (response.ok) {
+        const data = await response.json();
+        console.log('New Hotel Added:', data);
+        navigate('/hotel-profile/hotels'); // Redirect after success
+      } else {
+        console.error('Failed to add hotel:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error adding hotel:', error);
+    }
   };
 
-  // ********************************** SUBIR CON CLOUDINARY***************************************
+  // Function to handle image upload with Cloudinary
   const uploadImage = async (e) => {
     try {
       const file = e.target.files[0];
@@ -44,9 +59,8 @@ const AddHotel = () => {
       const formData = new FormData();
       formData.append('image', file);
 
-      // Asegúrate de que tu URL de backend esté correcta
       const response = await fetch(`${process.env.BACKEND_URL}/api/upload`, {
-        method: "POST",
+        method: 'POST',
         body: formData,
       });
 
@@ -58,15 +72,11 @@ const AddHotel = () => {
 
       const data = await response.json();
       console.log("Uploaded image:", data);
-
-      // Actualiza el estado con la URL segura de la imagen
-      setMyImage(data.image_url); // Guarda la URL en el estado
-
+      setMyImage(data.image_url); // Save the image URL to state
     } catch (error) {
       console.error("Error in uploadImage:", error);
     }
   };
-  // ********************************** CIERRE DEL SUBIR CON CLOUDINARY***************************************
 
   return (
     <div className="container">
@@ -120,29 +130,43 @@ const AddHotel = () => {
         </div>
 
         <div className="mb-3">
+          <label htmlFor="packageName" className="form-label">Package Type</label>
+          <select
+            id="packageName"
+            className="form-control"
+            value={packageName}
+            onChange={(e) => setPackageName(e.target.value)}
+            required
+          >
+            <option value="priority">Priority</option>
+            <option value="basic">Basic</option>
+          </select>
+        </div>
+
+        <div className="mb-3">
           <label htmlFor="hotelImage" className="form-label">Hotel Image</label>
           <input
             id="hotelImage"
-            type='file'
+            type="file"
             className="form-control"
             onChange={uploadImage}
             required
           />
-          <img src={myImage} />
+          {myImage && <img src={myImage} alt="Hotel" className="img-thumbnail mt-3" />}
         </div>
 
         <div>
           <button
             type="button"
             className="btn btn-secondary me-2"
-            onClick={() => navigate(-1)} // Go back to the previous page
+            onClick={() => navigate(-1)}
           >
             Go Back
           </button>
           <button
             type="button"
             className="btn btn-danger me-2"
-            onClick={() => navigate('/hotel-profile/hotels')} // Cancel and go back to the Hotels list
+            onClick={() => navigate('/hotel-profile/hotels')}
           >
             Cancel
           </button>
