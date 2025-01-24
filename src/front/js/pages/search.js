@@ -33,10 +33,10 @@ export const Search = () => {
 		<>	
 			{/*Busqueda de hoteles */}
 			<form className="container-fluid d-flex">
-					<div className="col-12 border border-solid d-flex justify-content-center  h-50  mt-5">
-						<div className="col-12 border border-solid d-inline-flex justify-content-center searchBarConfig">
+					<div className="col d-flex justify-content-center h-50 mt-5">
+						<div className="row d-inline-flex justify-content-center searchBarConfig">
 							{/*Por nombre de hotel*/}
-							<div className="sm-col-12 border border-solid me-3">
+							<div className="col me-3">
 								<label for="locationSearch" className="label">Hotel</label>
 								<div className="group-label">
 									<input type="text" className="h-25" placeholder="By hotel name" id="hotelSearch" name = "hotel"
@@ -45,7 +45,7 @@ export const Search = () => {
 								</div>
 							</div>
 							{/*ubicacion de hotel */}
-							<div className="sm-col-12 border border-solid me-3">
+							<div className="col me-3">
 								<label for="locationSearch" className="label">Location</label>
 								<div className="group-label">
 									<input type="text" className="h-25" placeholder="By Location" id="locationSearch" name = "location"
@@ -54,7 +54,7 @@ export const Search = () => {
 								</div>
 							</div>
 							{/*Nombre del paquete*/}
-							<div className="sm-col-12 border border-solid me-3">
+							<div className="col me-3">
 								<label for="locationSearch" className="label">Package name</label>
 								<div className="group-label">
 									<input type="text" className="h-25" placeholder="By package name" id="nameSearch" name = "package_name"
@@ -63,7 +63,7 @@ export const Search = () => {
 								</div>
 							</div>
 							{/*Por fecha de inicio paquete*/}
-							<div className="sm-col-12 border border-solid me-3">
+							<div className="col me-3">
 								<label for="locationSearch" className="label">Date</label>
 								<div className="group-label">
 									<input type="text" className="h-25" placeholder="By check-in date" id="dateSearch" name = "hotel"
@@ -72,7 +72,7 @@ export const Search = () => {
 								</div>
 							</div>
 							{/*Por precio*/}
-							<div className="sm-col-12 border border-solid">
+							<div className="col">
 								<label for="locationSearch" className="label">Price range</label>
 								<div className="group-label">
 									<input type="text" className="h-25" placeholder="By package name" id="priceSearch" name = "price"
@@ -86,26 +86,26 @@ export const Search = () => {
 			</form>
 			
 			
-			<div className="hotelPackageList col-6 d-flex justify-content-start ms-3 h-75 mb-5 mt-5 ps-0">
+			<div className="hotelPackageList col-6 d-flex justify-content-start  ms-3 h-75 mb-5 mt-5 ps-0">
 				<ul className="list-group">
 					{ store.hotel_packages ? store.hotel_packages.map((item, index) => {
 					return (
 						<li
 							key={index}
-							className="list-group-item d-flex mt-2"
+							className="d-flex mt-4"
 							>
 							<div className="col-4 imgPackage container-fluid ">
 								<img className="" src="https://picsum.photos/536/354"/>
 							</div>
 							
 
-							<div className="col-6 packageDetails container-fluid ">
+							<div className="col-6 packageDetails container-fluid">
 								<div className="fs-2">{item.hotel_package_name}</div>
-								<div className="fs-3 mt-3"><i className="fa-solid fa-location-dot"></i> {item.description}</div>
+								<div className="fs-3 mt-3 text-break"><i className="fa-solid fa-location-dot"></i> {item.description}</div>
 								<div className="fs-4"><i className="fa-solid fa-phone"></i> {item.price}</div>
 							</div>
 
-							<div className="col-2 packageButtons container-fluid ">
+							<div className="col-2 packageButtons container-fluid d-flex justify-content-start text-break">
 								<p>aaaaaaaaaaaaaaaa</p>
 							</div>
 						</li>

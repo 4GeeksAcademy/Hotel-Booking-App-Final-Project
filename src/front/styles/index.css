@@ -98,14 +98,16 @@
 .hotelPackageList {
     border-radius: 20px;
     padding: 0px;
-    margin: 0px
+    margin: 0px;
 }
 
 .hotelPackageList li {
     margin: 0;
     padding: 0;
     width: 100%;
-    border: 2px solid grey;
+    border: 1px solid grey;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px #888888;
 }
 
 .hotelPackageList .imgPackage {
@@ -118,9 +120,9 @@
 .imgPackage  img{
     margin: 0;
     padding: 0;
-    border: none;
     width: 100%;
     height: 100%;
+    border-radius: 20px 0 0 20px;
 }
 
 .hotelPackageList li img:hover{
