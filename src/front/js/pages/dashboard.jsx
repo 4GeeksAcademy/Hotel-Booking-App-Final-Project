@@ -9,8 +9,6 @@ export const Dashboard = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedHotel, setSelectedHotel] = useState(null);
 
-
-
     useEffect(() => {
         const fetchHotels = async () => {
             try {
@@ -25,11 +23,6 @@ export const Dashboard = () => {
         };
 
         fetchHotels();
-
-        // const user = JSON.parse(localStorage.getItem("user_session"));
-        // if (user && user.name) {
-        //     setUserName(user.name);
-        // }
     }, []);
 
     const handleReserve = (hotelName) => {
@@ -53,69 +46,84 @@ export const Dashboard = () => {
     };
 
     return (
-        <div className="container py-5">
+        <div className="FontDesign container py-5">
             {showAlert && (
-                <div className="alert alert-primary position-absolute end-0 top-0 mt-5" role="alert" style={{ zIndex: 500 }}>
+                <div className="alert alert-primary position-absolute end-0 top-0 mt-5 dashboard-alert" role="alert">
                     Please log in to make a reservation.
                 </div>
             )}
 
-            {/* Aquí se muestra el nombre del usuario después de "Welcome" */}
-            <h2 className="text-center mb-5" style={{ fontWeight: "bold" }}>
+            <h2 className="text-center mb-5 dashboard-title">
                 Welcome, {store.currentUser ? store.currentUser.name : "Guest"}
             </h2>
 
-            {/* Hoteles prioritariosh */}
-            <div className="row mb-5">
-                <h3>Priority Hotels</h3>
-                {priorityHotels.length > 0 ? (
-                    priorityHotels.map((hotel, index) => (
-                        <div key={index} className="col-12 col-md-4">
-                            <div className="card h-100">
-                                <div className="card-body d-flex flex-column">
+            {/* Hoteles prioritarios como carrusel */}
+            <div id="priorityHotelsCarousel" className="carousel slide mb-5 dashboard-carousel" data-bs-ride="carousel">
+                <div className="carousel-inner">
+                    {priorityHotels.length > 0 ? (
+                        priorityHotels.map((hotel, index) => (
+                            <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                                <div className="card h-100 dashboard-card">
                                     <img
                                         src={hotel.image_url ? hotel.image_url : 'https://via.placeholder.com/200x200.png?text=No+Image'}
                                         alt={hotel.name}
-                                        className="card-img-top"
-                                        style={{ height: "200px", objectFit: "cover" }}
+                                        className="d-block w-100 carousel-img"
                                     />
-                                    <h5 className="card-title">{hotel.name}</h5>
-                                    <p className="card-text">{hotel.description}</p>
-                                    <p className="card-text">{hotel.location}, {hotel.country}</p>
-                                    <div className="d-flex justify-content-between mt-auto">
-                                        <button className="btn btn-primary" onClick={() => handleReserve(hotel.name)}>
-                                            Reserve
-                                        </button>
+                                    <div className="carousel-caption d-none d-md-block text-start">
+                                        <h5>{hotel.name}</h5>
+                                        <p>{hotel.description}</p>
+                                        <div className="d-flex align-items-center">
+                                            <p className="mt-2">{hotel.location}, {hotel.country}</p>
+                                            <button
+                                                className="btn custom-btn ms-3 align-self-start mt-n4"
+                                                onClick={() => handleReserve(hotel.name)}
+                                            >
+                                                Reserve
+                                            </button>
+                                            <button className="btn custom-btn ms-3 align-self-start mt-n4" onClick={() => handleReserve(hotel.name)}>
+                                                View Details
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    ))
-                ) : (
-                    <p>No priority hotels available.</p>
-                )}
+                        ))
+                    ) : (
+                        <p>No priority hotels available.</p>
+                    )}
+                </div>
+                <button className="carousel-control-prev" type="button" data-bs-target="#priorityHotelsCarousel" data-bs-slide="prev">
+                    <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span className="visually-hidden">Previous</span>
+                </button>
+                <button className="carousel-control-next" type="button" data-bs-target="#priorityHotelsCarousel" data-bs-slide="next">
+                    <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span className="visually-hidden">Next</span>
+                </button>
             </div>
 
             {/* Hoteles básicos */}
             <div className="row">
-                <h3>Basic Hotels</h3>
+                <h3 className="fs-5">Other Hotels</h3>
                 {basicHotels.length > 0 ? (
                     basicHotels.map((hotel, index) => (
                         <div key={index} className="col-12 col-md-4">
-                            <div className="card h-100">
+                            <div className="card h-100 dashboard-card">
                                 <div className="card-body d-flex flex-column">
                                     <img
                                         src={hotel.image_url ? hotel.image_url : 'https://via.placeholder.com/200x200.png?text=No+Image'}
                                         alt={hotel.name}
                                         className="card-img-top"
-                                        style={{ height: "200px", objectFit: "cover" }}
                                     />
                                     <h5 className="card-title">{hotel.name}</h5>
                                     <p className="card-text">{hotel.description}</p>
                                     <p className="card-text">{hotel.location}, {hotel.country}</p>
                                     <div className="d-flex justify-content-between mt-auto">
-                                        <button className="btn btn-primary" onClick={() => handleReserve(hotel.name)}>
+                                        <button className="btn custom-btn" onClick={() => handleReserve(hotel.name)}>
                                             Reserve
+                                        </button>
+                                        <button className="btn custom-btn" onClick={() => handleReserve(hotel.name)}>
+                                            View Details
                                         </button>
                                     </div>
                                 </div>
@@ -127,11 +135,9 @@ export const Dashboard = () => {
                 )}
             </div>
 
-
-
             {/* Modal for reservation */}
             {showModal && (
-                <div className="modal show" style={{ display: "block" }}>
+                <div className="modal show dashboard-modal" style={{ display: "block" }}>
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
