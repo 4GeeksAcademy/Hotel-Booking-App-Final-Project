@@ -52,6 +52,7 @@ class Hotel(db.Model):
     location = db.Column(db.String(120), unique=False, nullable=False)
     country = db.Column(db.String(20), unique=False, nullable=False)
     description = db.Column(db.String(500), unique=False, nullable=False)
+    image_url = db.Column(db.String(255), nullable=True) # URL DE LA IMAGEN
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     
 
@@ -72,6 +73,7 @@ class Hotel(db.Model):
             "location": self.location,
             "country": self.country,
             "description": self.description,
+            "image_url": self.image_url,
             "is_active": self.is_active
         }
 

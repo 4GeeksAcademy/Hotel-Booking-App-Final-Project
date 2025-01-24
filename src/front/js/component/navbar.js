@@ -16,14 +16,16 @@ export const Navbar = () => {
 
 	const handleUserProfile = (e) => {
 		e.preventDefault()
-		if(store.user_type == "cliente"){
-			navigate("/profile")
-		}
-		else if(store.user_type == "hotel"){
-			navigate("/hotel-profile/personal-info")
-		}
-		else if(store.user_type == "admin"){
-			navigate("/admin/personal-info")
+		if (store.currentUser) {
+			if (store.currentUser.user_type == "cliente") {
+				navigate("/profile")
+			}
+			else if (store.currentUser.user_type == "hotel") {
+				navigate("/hotel-profile/personal-info")
+			}
+			else if (store.currentUser.user_type == "admin") {
+				navigate("/admin/personal-info")
+			}
 		}
 	}
 
@@ -43,7 +45,7 @@ export const Navbar = () => {
 							{localStorage.getItem("user_session") && (
 								<div className="mb-0 navBar Dropdown-Setup row d-flex justify-contente-start">
 									{/* Mensaje saludando al usuario */}
-									<p className="mb-0 pb-0 w-75 fw-none text-light text-end">Hola, {store.user_fName}</p>
+									<p className="mb-0 pb-0 w-75 fw-none text-light text-end">Hola, {store.currentUser && store.currentUser.name}</p>
 									{/* Funciones especificas del usuario a traves del navBar */}
 									<div class="dropdown mb-0 w-25 d-flex justify-content-start">
 										<a class="dropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -58,7 +60,7 @@ export const Navbar = () => {
 										</ul>
 									</div>
 								</div>
-								
+
 							)}
 						</>
 					) : (

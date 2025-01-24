@@ -13,7 +13,7 @@ const HotelPersonalInfo = () => {
     <div className="d-flex">
       {/* Sidebar */}
       <HotelSidebar />
-      
+
       <div className="flex-grow-1">
         <Header title="Personal Information" />
 
