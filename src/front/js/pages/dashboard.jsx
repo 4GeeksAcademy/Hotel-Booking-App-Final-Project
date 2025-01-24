@@ -65,7 +65,7 @@ export const Dashboard = () => {
                 Welcome, {store.currentUser ? store.currentUser.name : "Guest"}
             </h2>
 
-            {/* Hoteles prioritarios */}
+            {/* Hoteles prioritariosh */}
             <div className="row mb-5">
                 <h3>Priority Hotels</h3>
                 {priorityHotels.length > 0 ? (
