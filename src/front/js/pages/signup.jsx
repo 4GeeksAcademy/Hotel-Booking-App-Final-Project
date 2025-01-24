@@ -9,11 +9,19 @@ export const SignUp = () => {
     const [email, setEmail] = useState("");
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [userType, setUserType] = useState(""); // Cambié a "userType" para coincidir con el backend
     const [toastMessage, setToastMessage] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Verificar si las contraseñas coinciden
+        if (password !== confirmPassword) { // Nueva validación de confirmación
+            setToastMessage({ text: "Passwords do not match. Please try again.", type: "danger" }); // Mensaje de error
+            setTimeout(() => setToastMessage(null), 3000);
+            return; // Detener el envío si no coinciden
+        }
 
         // Llamada a la acción de registro del Flux Store con el tipo de Usuario
         const message = await actions.signUp(name, lastName, email, userName, password, userType);
@@ -104,6 +112,19 @@ export const SignUp = () => {
                             placeholder="e.g. 3456kj20"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    {/* Nueva sección: Confirmación de contraseña */}
+                    <h5 className="fs-6 mt-4">Confirm Password</h5> {/* Nuevo título */}
+                    <div className="input-group mb-3">
+                        <input
+                            type="password"
+                            className="form-control rounded-pill"
+                            placeholder="Re-enter your password"
+                            value={confirmPassword} // Nuevo valor
+                            onChange={(e) => setConfirmPassword(e.target.value)} // Nuevo manejador
                             required
                         />
                     </div>
