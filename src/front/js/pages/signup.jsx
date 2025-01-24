@@ -15,7 +15,7 @@ export const SignUp = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Llamada a la acción de registro del Flux Store con el tipo de usuario
+        // Llamada a la acción de registro del Flux Store con el tipo de Usuario
         const message = await actions.signUp(name, lastName, email, userName, password, userType);
 
         if (message === "Usuario registrado correctamente") {

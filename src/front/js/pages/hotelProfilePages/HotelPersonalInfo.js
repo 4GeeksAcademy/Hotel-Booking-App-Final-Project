@@ -108,7 +108,7 @@ const HotelPersonalInfo = () => {
                   <option>French</option>
                   <option>German</option>
                 </select>
-              </div>
+              </div>git pus
 
               <div className="col-md-6">
                 <label className="form-label">Country of Residence</label>
