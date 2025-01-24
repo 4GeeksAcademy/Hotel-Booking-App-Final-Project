@@ -28,16 +28,18 @@ export const SignUp = () => {
         // Llamada a la acción de registro del Flux Store con el tipo de usuario
         const message = await actions.signUp(name, lastName, email, userName, password, userType);
 
-        if (message === "Usuario registrado correctamente") {
-            setToastMessage({ text: "Usuario registrado correctamente.", type: "success" });
-        } else if (message === "Este correo ya está registrado. Por favor, usa otro email.") {
-            setToastMessage({ text: message, type: "danger" });
-        } else {
-            setToastMessage({ text: message, type: "danger" });
-        }
+        if (message === "User registered successfully") {
+            // Mostrar el mensaje de éxito
+            setToastMessage({ text: "User registered successfully.", type: "success" });
+
+            // Redirigir al login
+            setTimeout(() => {
+                navigate("/login");
+            }, 3000);
+        };
 
         // Oculta el toast después de 3 segundos
-        setTimeout(() => setToastMessage(null), 3000);
+        setTimeout(() => setToastMessage(null), 1000);
     };
 
     return (
