@@ -22,8 +22,8 @@ export const Dashboard = () => {
             const formData = new FormData();
             formData.append('image', file);
 
-            // URL sin doble barra
-            const response = await fetch(process.env.BACKEND_URL + "api/upload", {
+            // Asegúrate de que tu URL de backend esté correcta
+            const response = await fetch(`${process.env.BACKEND_URL}/api/upload`, {
                 method: "POST",
                 body: formData,
             });
@@ -38,7 +38,7 @@ export const Dashboard = () => {
             console.log("Uploaded image:", data);
 
             // Actualiza el estado con la URL segura de la imagen
-            setMyImage(data.secure_url); // Esto actualiza el estado con el secure_url
+            setMyImage(data.image_url); // Guarda la URL en el estado
 
         } catch (error) {
             console.error("Error in uploadImage:", error);
@@ -74,7 +74,6 @@ export const Dashboard = () => {
 
     const confirmReservation = () => {
         console.log(`Reservation confirmed for: ${selectedHotel}`);
-
         setShowModal(false);
     };
 
@@ -101,6 +100,12 @@ export const Dashboard = () => {
                         <div key={index} className="col-12 col-md-4">
                             <div className="card h-100">
                                 <div className="card-body d-flex flex-column">
+                                    <img
+                                        src={hotel.image_url ? hotel.image_url : 'https://via.placeholder.com/200x200.png?text=No+Image'}
+                                        alt={hotel.name}
+                                        className="card-img-top"
+                                        style={{ height: "200px", objectFit: "cover" }}
+                                    />
                                     <h5 className="card-title">{hotel.name}</h5>
                                     <p className="card-text">{hotel.description}</p>
                                     <p className="card-text">{hotel.location}, {hotel.country}</p>
@@ -126,6 +131,12 @@ export const Dashboard = () => {
                         <div key={index} className="col-12 col-md-4">
                             <div className="card h-100">
                                 <div className="card-body d-flex flex-column">
+                                    <img
+                                        src={hotel.image_url || 'https://via.placeholder.com/300x200?text=No+Image'}
+                                        alt={hotel.name}
+                                        className="card-img-top"
+                                        style={{ height: "200px", objectFit: "cover" }}
+                                    />
                                     <h5 className="card-title">{hotel.name}</h5>
                                     <p className="card-text">{hotel.description}</p>
                                     <p className="card-text">{hotel.location}, {hotel.country}</p>
@@ -144,8 +155,8 @@ export const Dashboard = () => {
             </div>
 
             {/* CLOUDINARY */}
-            {myImage && <img src={myImage} alt="Uploaded" style={{ width: "100%", maxWidth: "500px" }} />}
             <input type="file" onChange={uploadImage} />
+            {myImage && <img src={myImage} alt="Uploaded" className="mt-3" style={{ width: "100px", height: "100px", objectFit: "cover" }} />}
 
             {/* Modal de confirmación */}
             {showModal && (
@@ -173,4 +184,4 @@ export const Dashboard = () => {
             )}
         </div>
     );
-}; 
+};

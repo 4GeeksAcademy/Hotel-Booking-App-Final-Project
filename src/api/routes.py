@@ -133,19 +133,31 @@ def get_personal_info():
     return jsonify(user.serialize()), 200
 
 # CLOUDINARY
-@api.route('/upload', methods=['POST']) 
+@api.route('/upload', methods=['POST'])
 def upload_image():
-        # Recibe archivo
-        file = request.files.get("image")
+    file = request.files.get("image")
 
-        # Validar si no se envió un archivo
-        if not file:
-            return jsonify({"error": "File is required"}), 400
+    if not file:
+        return jsonify({"error": "File is required"}), 400
 
-        # Subir archivo a Cloudinary
+    # Subir la imagen a Cloudinary
+    try:
         result = cloudinary.uploader.upload(file)
-
         if 'secure_url' not in result:
-            return jsonify({"error": "The image can not be uploaded"}), 400
+            return jsonify({"error": "The image cannot be uploaded"}), 400
 
-        return jsonify(result["secure_url"]), 200
+        image_url = result["secure_url"]
+
+        # Guardar la URL de la imagen en la base de datos
+        hotel_id = request.form.get("hotel_id")
+        hotel = Hotel.query.get(hotel_id)
+
+        if hotel:
+            hotel.image_url = image_url
+            db.session.commit()
+            return jsonify({"message": "Image uploaded successfully", "image_url": image_url}), 200
+
+        return jsonify({"error": "Hotel not found"}), 404
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
