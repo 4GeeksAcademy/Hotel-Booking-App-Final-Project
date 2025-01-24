@@ -57,7 +57,7 @@ class Hotel(db.Model):
 
     # faltan las foreign keys, van acá
     id_user = db.Column(db.Integer, db.ForeignKey('user.id_user'), nullable=False)
-    user = db.relationship('User')
+    user = db.relationship('User', back_populates='hotels')  # Add reverse relationship
     #Foreign Keys
     favorites = db.relationship("Favorites", back_populates = "hotel", lazy = True)
     #stay_history = db.relationship("Stay_History", back_populates = "hotel", lazy = True)
