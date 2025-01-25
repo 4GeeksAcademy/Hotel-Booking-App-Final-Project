@@ -3,9 +3,10 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 from flask import Flask, request, jsonify, url_for, Blueprint, current_app
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
-from api.models import db, User, Hotel
+from api.models import db, User, Hotel, User_Hotel_Admin_Package, Hotel_Admin_Package
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
+import os, cloudinary, cloudinary.uploader
 
 api = Blueprint('api', __name__)
 
@@ -13,6 +14,11 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
+cloudinary.config(
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET")
+)
 
 @api.route('/hello', methods=['POST', 'GET'])
 def handle_hello():
@@ -37,9 +43,9 @@ def signup():
     existing_user_username = User.query.filter_by(username=data['username']).first()
 
     if existing_user_email:
-        return jsonify({"message": "Este correo ya está registrado. Por favor, usa otro email."}), 400
+        return jsonify({"message": "This email is already registered. Please use another email address.."}), 400
     if existing_user_username:
-        return jsonify({"message": "Este nombre de usuario ya está en uso. Por favor, elige otro."}), 400
+        return jsonify({"message": "This username is already in use. Please choose another one."}), 400
 
     # Crear una nueva instancia de User
     new_user = User(
@@ -56,10 +62,10 @@ def signup():
     try:
         db.session.add(new_user)
         db.session.commit()
-        return jsonify({"message": "Usuario registrado correctamente"}), 201
+        return jsonify({"message": "User registered successfully"}), 201
     except Exception as e:
         db.session.rollback()
-        return jsonify({"message": f"Error al registrar el usuario: {str(e)}"}), 500
+        return jsonify({"message": f"Error registering user: {str(e)}"}), 500
 
 
 #Creacion del token de JWT
@@ -80,19 +86,18 @@ def handle_login():
     
     access_token = create_access_token(identity=username)
 
-    return jsonify({"access_token": access_token, "username":user_exists.username, "user_type":user_exists.user_type, "fname":user_exists.name }), 200
+    return jsonify({"access_token": access_token, "user":user_exists.serialize()}), 200
 
-# ENDPOINT DE LA VISTA DEL DASHBOARD QUE MUESTRA HOTELES
-@api.route('/hotels', methods=['GET'])
-def get_hotels():
-    try:
-        hotels = Hotel.query.filter_by(is_active=True).all()
-        serialized_hotels = [hotel.serialize() for hotel in hotels]
+# Endpoint para obtener hoteles con paquetes prioritarios
+@api.route('/hotels/<package_name>', methods=['GET'])
+def get_hotels_with_priority_package(package_name):
+    hotels = db.session.query(Hotel).join(User).join(User_Hotel_Admin_Package).join(Hotel_Admin_Package).filter(
+        User.user_type == 'hotel',
+        Hotel_Admin_Package.package_name == package_name
+    ).all()
 
-        return jsonify({"hotels": serialized_hotels}), 200
-    except Exception as e:
-        return jsonify({"message": f"Error retrieving hotels: {str(e)}"}),500
-
+    result = [hotel.serialize() for hotel in hotels]
+    return jsonify(result)
 
 #Endpoint de autenticacion del usuario
 @api.route("/access", methods = ["GET"])
@@ -104,8 +109,7 @@ def user_logon():
     if not user:
         return jsonify({"msg": "The previously authenticated user does not exist anymore."}), 401
     
-    serialized_user = User.serialize(user)
-    return jsonify("User_info", serialized_user), 200
+    return jsonify(user.serialize()), 200
 
 
 #informacion de clientes 
@@ -193,6 +197,7 @@ def update_hotel_personal_info():
         db.session.rollback()
         return jsonify({"message": f"Failed to update user: {str(e)}"}), 500
 
+#add hotels
 #endpoint para crear hotel desde hotel profile.
 @api.route('/hotels', methods=['POST'])
 @jwt_required()
@@ -206,7 +211,7 @@ def add_hotel():
     data = request.get_json()
     print("Received data from frontend:", data)  # Log incoming data
 
-    required_fields = ["name", "location", "country", "description"]
+    required_fields = ["name", "location", "country", "description", "image_url"]
     if not all(field in data for field in required_fields):
         return jsonify({"message": "Missing required fields"}), 400
 
@@ -217,8 +222,10 @@ def add_hotel():
             country=data["country"],
             description=data["description"],
             is_active=True,
-            user_id=user.id_user  # Associate the hotel with the user
+            id_user=user.id_user,  # Associate the hotel with the user
+            image_url=data["image_url"]
         )
+
         db.session.add(new_hotel)
         db.session.commit()
 
@@ -268,3 +275,23 @@ def update_hotel_status(hotel_id):
         print("Error deactivating hotel:", str(e))  # Debugging log
         return jsonify({"message": f"Error updating hotel: {str(e)}"}), 500
 
+# CLOUDINARY
+@api.route('/upload', methods=['POST'])
+def upload_image():
+    file = request.files.get("image")
+
+    if not file:
+        return jsonify({"error": "File is required"}), 400
+
+    # Subir la imagen a Cloudinary
+    try:
+        result = cloudinary.uploader.upload(file)
+        if 'secure_url' not in result:
+            return jsonify({"error": "The image cannot be uploaded"}), 400
+
+        image_url = result["secure_url"]
+
+        return jsonify({"message": "Image uploaded successfully", "image_url": image_url}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

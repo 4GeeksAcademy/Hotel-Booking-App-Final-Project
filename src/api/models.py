@@ -19,6 +19,7 @@ class User(db.Model):
 
     
     # faltan las foreign keys, van acá
+    hotels = db.relationship('Hotel', back_populates="user", lazy=True)
     #Foreign keys
     favorites = db.relationship("Favorites", back_populates = "user", lazy = True)
     stay_history = db.relationship("Stay_History", back_populates = "user", lazy = True)
@@ -56,14 +57,14 @@ class Hotel(db.Model):
     location = db.Column(db.String(120), unique=False, nullable=False)
     country = db.Column(db.String(20), unique=False, nullable=False)
     description = db.Column(db.String(500), unique=False, nullable=False)
+    image_url = db.Column(db.String(255), nullable=True) # URL DE LA IMAGEN
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     
     
 
-    # faltan las foreign keys, van acá   - agregando foreign keys
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id_user'), nullable=False)
-    user = db.relationship('User', back_populates='hotels')  # Add reverse relationship
-    
+    # faltan las foreign keys, van acá
+    id_user = db.Column(db.Integer, db.ForeignKey('user.id_user'), nullable=False)
+    user = db.relationship('User')
     #Foreign Keys
     favorites = db.relationship("Favorites", back_populates = "hotel", lazy = True)
     #stay_history = db.relationship("Stay_History", back_populates = "hotel", lazy = True)
@@ -78,13 +79,14 @@ class Hotel(db.Model):
             "location": self.location,
             "country": self.country,
             "description": self.description,
+            "image_url": self.image_url,
             "is_active": self.is_active
         }
 
 class Hotel_Admin_Package(db.Model):
     # Datos de los Paquetes de pago por usuario hotel
     id_admin_package = db.Column(db.Integer, primary_key=True) 
-    package_name = db.Column(db.Enum('básico', 'prioritario', name='package_name_enum'), nullable=False)
+    package_name = db.Column(db.String(120), unique=False, nullable=False)
     description = db.Column(db.String(120), unique=False, nullable=False)
     price = db.Column(db.Integer, unique=False, nullable=False)
 
@@ -106,7 +108,7 @@ class Hotel_Admin_Package(db.Model):
     
 class User_Hotel_Admin_Package(db.Model):
     # Conexion en los usuarios con el hotel admin package
-    id_user_admin_package = db.Column(db.Integer, primary_key=True) 
+    id_user_admin_package = db.Column(db.Integer, primary_key=True)
 
     #Foreign Keys
     id_user = db.Column(db.Integer, db.ForeignKey(User.id_user), nullable=False)

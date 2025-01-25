@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Context } from "../store/appContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 
 export const SignUp = () => {
     const { actions } = useContext(Context); // Obtener acciones del contexto
@@ -8,26 +9,37 @@ export const SignUp = () => {
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [userName, setUserName] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [password, setPassword] = useState("");
     const [userType, setUserType] = useState(""); // Cambié a "userType" para coincidir con el backend
     const [toastMessage, setToastMessage] = useState(null);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Validación de contraseñas
+        if (password !== confirmPassword) {
+            setToastMessage({ text: "The passwords do not match.", type: "danger" });
+            setTimeout(() => setToastMessage(null), 3000);
+            return;
+        }
+
         // Llamada a la acción de registro del Flux Store con el tipo de usuario
         const message = await actions.signUp(name, lastName, email, userName, password, userType);
 
-        if (message === "Usuario registrado correctamente") {
-            setToastMessage({ text: "Usuario registrado correctamente.", type: "success" });
-        } else if (message === "Este correo ya está registrado. Por favor, usa otro email.") {
-            setToastMessage({ text: message, type: "danger" });
-        } else {
-            setToastMessage({ text: message, type: "danger" });
-        }
+        if (message === "User registered successfully") {
+            // Mostrar el mensaje de éxito
+            setToastMessage({ text: "User registered successfully.", type: "success" });
+
+            // Redirigir al login
+            setTimeout(() => {
+                navigate("/login");
+            }, 3000);
+        };
 
         // Oculta el toast después de 3 segundos
-        setTimeout(() => setToastMessage(null), 3000);
+        setTimeout(() => setToastMessage(null), 1000);
     };
 
     return (
@@ -104,6 +116,19 @@ export const SignUp = () => {
                             placeholder="e.g. 3456kj20"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    {/* Confirmar Contraseña */}
+                    <h5 className="fs-6 mt-4">Confirm Password</h5>
+                    <div className="input-group mb-3">
+                        <input
+                            type="password"
+                            className="form-control rounded-pill"
+                            placeholder="Confirm your password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
                             required
                         />
                     </div>

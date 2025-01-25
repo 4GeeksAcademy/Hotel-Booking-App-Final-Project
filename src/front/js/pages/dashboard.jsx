@@ -3,128 +3,183 @@ import { Context } from "../store/appContext";
 
 export const Dashboard = () => {
     const { actions, store } = useContext(Context);
+    const [priorityHotels, setPriorityHotels] = useState([]);
+    const [basicHotels, setBasicHotels] = useState([]);
     const [showAlert, setShowAlert] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [selectedHotel, setSelectedHotel] = useState(null);
 
+    // Determina si el usuario actual es de tipo "hotel" o "cliente"
+    const isHotelUser = store.currentUser?.user_type === "hotel";
+    const isClientUser = store.currentUser?.user_type === "cliente";
+
     useEffect(() => {
-        // Obtener hoteles cuando el componente se monta
-        actions.getHotels();
+        const fetchHotels = async () => {
+            try {
+                const fetchedPriorityHotels = await actions.getPriorityHotels();
+                setPriorityHotels(fetchedPriorityHotels || []);
+
+                const fetchedBasicHotels = await actions.getBasicHotels();
+                setBasicHotels(fetchedBasicHotels || []);
+            } catch (error) {
+                console.error("Error fetching hotels:", error);
+            }
+        };
+
+        fetchHotels();
     }, []);
 
-    // Función para manejar la acción de reservar
     const handleReserve = (hotelName) => {
-        if (!localStorage.getItem("user_session")) {
-            // Si no hay sesión de usuario, mostrar la alerta
-            setShowAlert(true);
-            setTimeout(() => {
-                setShowAlert(false);
-            }, 3000);
+        const userSession = localStorage.getItem("user_session");
+        if (!userSession) {
+            setShowAlert(true); // Activa la alerta
+            setTimeout(() => setShowAlert(false), 3000); // Oculta la alerta tras 3 segundos
         } else {
-            // Si está logueado, mostrar modal de confirmación. Este después se cambia
             setSelectedHotel(hotelName);
             setShowModal(true);
         }
     };
 
-    const handleViewDetails = (hotelName) => {
-        console.log(`Ver detalles del hotel: ${hotelName}`);
-        // Aquí para redirigir a una página de detalles del hotel o abrir un modal con más información
-    };
 
-    // Confirmar la reserva
     const confirmReservation = () => {
-        console.log(`Reserva confirmada para el hotel: ${selectedHotel}`);
+        console.log(`Reservation confirmed for: ${selectedHotel}`);
         setShowModal(false);
-        // Aquí podríamos agregar la lógica de reserva real
     };
 
-    // Cancelar la reserva
     const cancelReservation = () => {
         setShowModal(false);
         setSelectedHotel(null);
     };
 
     return (
-        <div className="container py-5">
+        <div className="FontDesign container py-5">
             {showAlert && (
-                <div
-                    className="alert alert-primary position-absolute end-0 top-0 mt-5"
-                    role="alert"
-                    style={{ zIndex: 500 }}
-                >
+                <div className="alert alert-primary position-fixed top-0 end-0 mt-3 me-3 z-index-1050" role="alert">
                     Please log in to make a reservation.
                 </div>
             )}
 
-            <div className="d-flex align-items-center justify-content-center" style={{ gap: "10px" }}>
-                <h2 style={{ fontWeight: "bold" }}>Welcome</h2>
+            {/* Mensaje de bienvenida dinámico */}
+            <h2 className="text-center mb-3 dashboard-title">
+                Welcome, {store.currentUser ? store.currentUser.name : "Guest"}
+            </h2>
+            <p className="text-center text-muted fs-5 mb-5">
+                {isHotelUser
+                    ? "Grow your business by publishing your hotels with Serenia"
+                    : "Book with the best, with Serenia"}
+            </p>
+
+            {/* Hoteles prioritarios como carrusel */}
+            <div id="priorityHotelsCarousel" className="carousel slide mb-5 dashboard-carousel" data-bs-ride="carousel">
+                <div className="carousel-inner">
+                    {priorityHotels.length > 0 ? (
+                        priorityHotels.map((hotel, index) => (
+                            <div key={index} className={`carousel-item ${index === 0 ? "active" : ""}`}>
+                                <div className="card h-100 dashboard-card">
+                                    <img
+                                        src={hotel.image_url ? hotel.image_url : "https://via.placeholder.com/200x200.png?text=No+Image"}
+                                        alt={hotel.name}
+                                        className="d-block w-100 carousel-img"
+                                    />
+                                    <div className="carousel-caption d-none d-md-block text-start">
+                                        <h5>{hotel.name}</h5>
+                                        <p>{hotel.description}</p>
+                                        <div className="d-flex align-items-center">
+                                            <p className="mt-2">
+                                                {hotel.location}, {hotel.country}
+                                            </p>
+                                            {!isHotelUser && (
+                                                <button
+                                                    className="btn custom-btn ms-3 align-self-start mt-n4"
+                                                    onClick={() => handleReserve(hotel.name)}
+                                                >
+                                                    Reserve
+                                                </button>
+                                            )}
+                                            <button className="btn custom-btn ms-3 align-self-start mt-n4">
+                                                View Details
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No priority hotels available.</p>
+                    )}
+                </div>
+                <button
+                    className="carousel-control-prev"
+                    type="button"
+                    data-bs-target="#priorityHotelsCarousel"
+                    data-bs-slide="prev"
+                >
+                    <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span className="visually-hidden">Previous</span>
+                </button>
+                <button
+                    className="carousel-control-next"
+                    type="button"
+                    data-bs-target="#priorityHotelsCarousel"
+                    data-bs-slide="next"
+                >
+                    <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span className="visually-hidden">Next</span>
+                </button>
             </div>
 
+            {/* Hoteles básicos */}
             <div className="row">
-                {store.hotels.length > 0 ? (
-                    store.hotels.map((hotel, index) => (
+                <h3 className="fs-5">Other Hotels</h3>
+                {basicHotels.length > 0 ? (
+                    basicHotels.map((hotel, index) => (
                         <div key={index} className="col-12 col-md-4">
-                            <div className="card h-100">
+                            <div className="card h-100 dashboard-card">
                                 <div className="card-body d-flex flex-column">
+                                    <img
+                                        src={hotel.image_url ? hotel.image_url : "https://via.placeholder.com/200x200.png?text=No+Image"}
+                                        alt={hotel.name}
+                                        className="card-img-top"
+                                    />
                                     <h5 className="card-title">{hotel.name}</h5>
                                     <p className="card-text">{hotel.description}</p>
-                                    <p className="card-text">{hotel.location}, {hotel.country}</p>
+                                    <p className="card-text">
+                                        {hotel.location}, {hotel.country}
+                                    </p>
                                     <div className="d-flex justify-content-between mt-auto">
-                                        {/* Botón Reservar */}
-                                        <button
-                                            className="btndashboard-signup"
-                                            onClick={() => handleReserve(hotel.name)}
-                                        >
-                                            Reservar
-                                        </button>
-                                        <button
-                                            className="btnlogin-signup"
-                                            onClick={() => handleViewDetails(hotel.name)}
-                                        >
-                                            See details
-                                        </button>
+                                        {!isHotelUser && (
+                                            <button className="btn custom-btn" onClick={() => handleReserve(hotel.name)}>
+                                                Reserve
+                                            </button>
+                                        )}
+                                        <button className="btn custom-btn">View Details</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     ))
                 ) : (
-                    <p>There are no hotels available at the moment.</p>
+                    <p>No basic hotels available.</p>
                 )}
             </div>
 
-            {/* Modal de confirmación por el momento, después se cambia por otra cosa */}
+            {/* Modal for reservation */}
             {showModal && (
-                <div className="modal show" tabIndex="-1" style={{ display: "block" }}>
+                <div className="modal show dashboard-modal" style={{ display: "block" }}>
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title">Confirm Reservation</h5>
-                                <button
-                                    type="button"
-                                    className="btn-close"
-                                    data-bs-dismiss="modal"
-                                    aria-label="Close"
-                                    onClick={cancelReservation}
-                                ></button>
+                                <button type="button" className="btn-close" onClick={cancelReservation}></button>
                             </div>
                             <div className="modal-body">
-                                <p>Are you sure you want to reserve {selectedHotel}?</p>
+                                <p>Are you sure you want to reserve: {selectedHotel}?</p>
                             </div>
                             <div className="modal-footer">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                    onClick={cancelReservation}
-                                >
+                                <button type="button" className="btn btn-secondary" onClick={cancelReservation}>
                                     Cancel
                                 </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-primary"
-                                    onClick={confirmReservation}
-                                >
+                                <button type="button" className="btn btn-primary" onClick={confirmReservation}>
                                     Confirm
                                 </button>
                             </div>

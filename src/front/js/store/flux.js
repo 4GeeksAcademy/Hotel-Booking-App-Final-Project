@@ -1,11 +1,14 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
+			currentUser: null,
 			message: null,
 			username: "",
 			user_type: "",
 			user_fName: "",
 			hotels: [],
+			hotelsPriority: [],  // Almacena hoteles con paquete prioritario
+			hotelsBasic: [],     // Almacenar hoteles con paquete básico
 			name: null,
 			personalInfo: null, // Store for personal info data
 			demo: [
@@ -150,12 +153,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 					});
 
 					const data = await response.json();
+					if (response.ok) {
+						//Seteo de los datos necesarios del usuario
+						localStorage.setItem("user_session", data.access_token);
+						setStore({ currentUser: data.user })
+						// await getActions().loadUserData();
 
-					//Seteo de los datos necesarios del usuario
-					localStorage.setItem("user_session", data.access_token);
-					await getActions().loadUserData();
+						return data;
+					}
 
-					return data;
 				} catch (error) {
 					console.log("Error loading message from backend", error);
 					return error;
@@ -191,31 +197,60 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					return "User registered successfully";
 				} catch (error) {
-					console.error("Error al registrar:", error);
-					return error.message || "Error al registrar el usuario.";
+					console.error("Error registering:", error);
+					return error.message || "This email or username is already registered, try it again.";
 				}
 			},
 
-			getHotels: async () => {
+			// getHotels: async () => {
+			// 	try {
+			// 		const response = await fetch(process.env.BACKEND_URL + "api/hotels");
+			// 		if (response.ok) {
+			// 			const data = await response.json();
+			// 			setStore({ hotels: data.hotels }); // Actualiza el estado de los hoteles
+			// 		} else {
+			// 			console.error("Error fetching hotels:", response.status);
+			// 		}
+			// 	} catch (error) {
+			// 		console.error("Hubo un error al obtener los hoteles:", error);
+			// 	}
+			// },
+
+			getPriorityHotels: async () => {
 				try {
-					const response = await fetch(process.env.BACKEND_URL + "api/hotels");
+					const response = await fetch(process.env.BACKEND_URL + "/api/hotels/priority");
 					if (response.ok) {
 						const data = await response.json();
-						setStore({ hotels: data.hotels }); // Actualiza el estado de los hoteles
+						setStore({ hotelsPriority: data }); // Guardar hoteles prioritarios en el estado global
+						return data; // Retornar los hoteles prioritarios
 					} else {
-						console.error("Error fetching hotels:", response.status);
+						console.error("Error fetching priority hotels:", response.status);
 					}
 				} catch (error) {
-					console.error("Hubo un error al obtener los hoteles:", error);
+					console.error("Error fetching priority hotels:", error);
+				}
+			},
+
+			getBasicHotels: async () => {
+				try {
+					const response = await fetch(process.env.BACKEND_URL + "/api/hotels/basic");
+					if (response.ok) {
+						const data = await response.json();
+						console.log(data);
+						setStore({ hotelsBasic: data }); // Guardar hoteles básicos en el estado global
+						return data; // Retornar los hoteles básicos
+					} else {
+						console.error("Error fetching basic hotels:", response.status);
+					}
+				} catch (error) {
+					console.error("Error fetching basic hotels:", error);
 				}
 			},
 
 			logOutAccount: async () => {
 				//eliminacion de la data del usuario
 				localStorage.removeItem("user_session");
-				setStore({ user_type: "" });
-				setStore({ user_fName: "" });
-				setStore({ username: "" });
+				setStore({ currentUser: false });
 			},
 
 			loadUserData: async () => {
@@ -228,17 +263,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 					});
 
 					const data = await response.json();
-					console.log(data[1]);
-					setStore({ personalInfo: data[1] })
-					setStore({ user_type: data[1].user_type });
-					setStore({ user_fName: data[1].name });
-					setStore({ username: data[1].username });
+					if (response.ok) {
+						setStore({ currentUser: data })
+						// await getActions().loadUserData();
 
-					if (!data) {
-						return -1;
+						return data;
 					}
-
-					return data[1];
 				} catch (error) {
 					console.log(error);
 					return error;

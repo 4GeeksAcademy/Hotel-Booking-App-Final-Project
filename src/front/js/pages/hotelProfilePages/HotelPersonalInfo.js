@@ -126,6 +126,49 @@ const HotelPersonalInfo = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
+                  // placeholder="john@example.com"
+                  // disabled={!isEditable}
+                />
+              </div>
+            </div>
+
+            <div className="row mb-3">
+              <div className="col-md-6">
+                <label className="form-label">Display Plan</label>
+                <div className="d-flex align-items-center">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Active Plan"
+                    disabled={!isEditable}
+                  />
+                  <a href="#" className="ms-2 text-decoration-none">
+                    Change Plan
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className="row mb-3">
+              <div className="col-md-6">
+                <label className="form-label">Language</label>
+                <select
+                  className="form-select"
+                  disabled={!isEditable}
+                >
+                  <option selected>Spanish</option>
+                  <option>English</option>
+                  <option>French</option>
+                  <option>German</option>
+                </select>
+              </div>git pus
+
+              <div className="col-md-6">
+                <label className="form-label">Country of Residence</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Spain"
                   disabled={!isEditable}
                 />
               </div>
