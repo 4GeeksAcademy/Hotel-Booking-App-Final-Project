@@ -11,7 +11,7 @@ const Hotels = () => {
 
     useEffect(() => {
         const fetchHotels = async () => {
-            await actions.getHotels();
+            await actions.getUserHotels();
         };
 
         if (store.hotels.length === 0) {
@@ -20,8 +20,8 @@ const Hotels = () => {
     }, []);
 
     useEffect(() => {
-        setHotels(store.hotels);
-    }, [store.hotels]);
+        setHotels(store.userHotels);
+    }, [store.userHotels]);
 
     const goToAddHotel = () => {
         navigate('/hotel-profile/add-hotel');

@@ -130,6 +130,7 @@ def get_personal_info():
 
     print("User found, returning data")
     return jsonify(user.serialize()), 200
+    
 
 #borrar perfil si el usuario quiere borrar su usuario por completo.
 # @api.route('/update-info', methods=['PUT'])
@@ -196,6 +197,21 @@ def update_hotel_personal_info():
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": f"Failed to update user: {str(e)}"}), 500
+    
+
+@api.route('/user/hotels', methods=['GET'])
+@jwt_required()
+def get_user_hotels():
+    current_user = get_jwt_identity()
+    print(f"Current User: {current_user}")  # Add this log
+    user = User.query.filter_by(username=current_user).first()
+
+    if not user:
+        print("User not found")
+        return jsonify({"message": "User not found"}), 404
+
+    print("User found, returning data")
+    return jsonify(user.serialize_hotels()), 200
 
 #add hotels
 #endpoint para crear hotel desde hotel profile.

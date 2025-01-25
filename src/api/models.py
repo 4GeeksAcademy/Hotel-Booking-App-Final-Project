@@ -48,6 +48,9 @@ class User(db.Model):
     
     def serialize_stay_history(self):
         return [stay_history.serialize() for stay_history in self.stay_history]
+    
+    def serialize_hotels(self):
+        return [hotel.serialize() for hotel in self.hotels]
 
 
 class Hotel(db.Model):

@@ -2,10 +2,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			currentUser: null,
+			userHotels: [],
 			message: null,
-			username: "",
-			user_type: "",
-			user_fName: "",
 			hotels: [],
 			hotelsPriority: [],  // Almacena hoteles con paquete prioritario
 			hotelsBasic: [],     // Almacenar hoteles con paquete básico
@@ -299,7 +297,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const data = await response.json();
 					console.log("Hotel successfully added:", data);
 					const actions = getActions();
-					await actions.getHotels();
+					await actions.getUserHotels();
 					return true;
 				} catch (error) {
 					console.error("Error adding hotel:", error);
@@ -309,12 +307,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 			
 			
 			
-			getHotels: async () => {
+			getUserHotels: async () => {
 				try {
-					const response = await fetch(`${process.env.BACKEND_URL}/api/hotels`);
+					const response = await fetch(`${process.env.BACKEND_URL}/api/user/hotels`, {headers:{"Authorization": 'Bearer '+localStorage.getItem('user_session')}});
 					if (response.ok) {
 						const data = await response.json();
-						setStore({ hotels: data.hotels }); // Update the hotels state
+						setStore({ userHotels: data }); // Update the hotels state
 						console.log("Hotels fetched successfully:", data.hotels);
 					} else {
 						console.error("Error fetching hotels:", response.status);
