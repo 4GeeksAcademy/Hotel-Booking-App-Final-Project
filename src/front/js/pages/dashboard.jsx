@@ -9,6 +9,8 @@ export const Dashboard = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedHotel, setSelectedHotel] = useState(null);
 
+
+
     useEffect(() => {
         const fetchHotels = async () => {
             try {
@@ -23,6 +25,11 @@ export const Dashboard = () => {
         };
 
         fetchHotels();
+
+        // const user = JSON.parse(localStorage.getItem("user_session"));
+        // if (user && user.name) {
+        //     setUserName(user.name);
+        // }
     }, []);
 
     const handleReserve = (hotelName) => {
@@ -53,7 +60,10 @@ export const Dashboard = () => {
                 </div>
             )}
 
-            <h2 className="text-center mb-5" style={{ fontWeight: "bold" }}>Welcome</h2>
+            {/* Aquí se muestra el nombre del usuario después de "Welcome" */}
+            <h2 className="text-center mb-5" style={{ fontWeight: "bold" }}>
+                Welcome, {store.currentUser ? store.currentUser.name : "Guest"}
+            </h2>
 
             {/* Hoteles prioritarios */}
             <div className="row mb-5">
@@ -63,6 +73,12 @@ export const Dashboard = () => {
                         <div key={index} className="col-12 col-md-4">
                             <div className="card h-100">
                                 <div className="card-body d-flex flex-column">
+                                    <img
+                                        src={hotel.image_url ? hotel.image_url : 'https://via.placeholder.com/200x200.png?text=No+Image'}
+                                        alt={hotel.name}
+                                        className="card-img-top"
+                                        style={{ height: "200px", objectFit: "cover" }}
+                                    />
                                     <h5 className="card-title">{hotel.name}</h5>
                                     <p className="card-text">{hotel.description}</p>
                                     <p className="card-text">{hotel.location}, {hotel.country}</p>
@@ -88,6 +104,12 @@ export const Dashboard = () => {
                         <div key={index} className="col-12 col-md-4">
                             <div className="card h-100">
                                 <div className="card-body d-flex flex-column">
+                                    <img
+                                        src={hotel.image_url ? hotel.image_url : 'https://via.placeholder.com/200x200.png?text=No+Image'}
+                                        alt={hotel.name}
+                                        className="card-img-top"
+                                        style={{ height: "200px", objectFit: "cover" }}
+                                    />
                                     <h5 className="card-title">{hotel.name}</h5>
                                     <p className="card-text">{hotel.description}</p>
                                     <p className="card-text">{hotel.location}, {hotel.country}</p>
@@ -105,9 +127,11 @@ export const Dashboard = () => {
                 )}
             </div>
 
-            {/* Modal de confirmación */}
+
+
+            {/* Modal for reservation */}
             {showModal && (
-                <div className="modal show" tabIndex="-1" style={{ display: "block" }}>
+                <div className="modal show" style={{ display: "block" }}>
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
@@ -115,15 +139,11 @@ export const Dashboard = () => {
                                 <button type="button" className="btn-close" onClick={cancelReservation}></button>
                             </div>
                             <div className="modal-body">
-                                <p>Are you sure you want to reserve {selectedHotel}?</p>
+                                <p>Are you sure you want to reserve: {selectedHotel}?</p>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" onClick={cancelReservation}>
-                                    Cancel
-                                </button>
-                                <button type="button" className="btn btn-primary" onClick={confirmReservation}>
-                                    Confirm
-                                </button>
+                                <button type="button" className="btn btn-secondary" onClick={cancelReservation}>Cancel</button>
+                                <button type="button" className="btn btn-primary" onClick={confirmReservation}>Confirm</button>
                             </div>
                         </div>
                     </div>
