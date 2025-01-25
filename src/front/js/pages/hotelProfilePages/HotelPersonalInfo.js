@@ -19,18 +19,20 @@ const HotelPersonalInfo = () => {
   useEffect(() => {
     const loadHotelInfo = async () => {
       const hotelInfo = await actions.fetchHotelPersonalInfo();
-      if (hotelInfo ) {
+      if (hotelInfo) {
         setFormData({
           name: hotelInfo.name || "",
           last_name: hotelInfo.last_name || "",
           username: hotelInfo.username || "",
           email: hotelInfo.email || "",
-          
+
         });
       }
-      else {console.log ("no usuario hotel")
-        navigate("/")}
-      
+      else {
+        console.log("no usuario hotel")
+        // navigate("/")
+      }
+
     };
 
     loadHotelInfo();
@@ -126,8 +128,8 @@ const HotelPersonalInfo = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  // placeholder="john@example.com"
-                  // disabled={!isEditable}
+                // placeholder="john@example.com"
+                // disabled={!isEditable}
                 />
               </div>
             </div>
