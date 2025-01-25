@@ -84,7 +84,9 @@ def handle_login():
     if not valid_password:
         return jsonify({"msg": "There was an error. Incorrect username or password"}), 401
     
-    access_token = create_access_token(identity=username)
+
+    
+    access_token = create_access_token(identity=user_exists.username)
 
     return jsonify({"access_token": access_token, "user":user_exists.serialize()}), 200
 
@@ -219,10 +221,11 @@ def get_user_hotels():
 @jwt_required()
 def add_hotel():
     current_user = get_jwt_identity()
+    print (current_user)
     user = User.query.filter_by(username=current_user).first()
 
-    if not user or user.user_type != 'hotel':
-        return jsonify({"message": "Access denied"}), 403
+    # if not user or user.user_type != 'hotel':
+    #     return jsonify({"message": "Access denied"}), 403
 
     data = request.get_json()
     print("Received data from frontend:", data)  # Log incoming data
