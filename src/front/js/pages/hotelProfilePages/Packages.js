@@ -16,7 +16,7 @@ const Packages = () => {
             <h4>Packages list</h4>
             <button
               className="btn btn-success"
-              onClick={() => navigate('/hotelProfilePages/add-package')}
+              onClick={() => navigate('/hotel-profile/add-package')}
             >
               Add Package
             </button>
