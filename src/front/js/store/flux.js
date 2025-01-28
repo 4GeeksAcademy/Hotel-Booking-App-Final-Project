@@ -357,6 +357,40 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return false;
 				}
 			},
+
+			/*send personal info cliente to API*/
+			savePersonalInfo: async (formData) => {
+				const token = localStorage.getItem("user_session"); // Assuming the token is stored here
+				if (!token) {
+					console.error("No token found!");
+					return false;
+				}
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/personal-info`, {
+						method: "PUT", 
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`
+						},
+						body: JSON.stringify(formData)
+					});
+			
+					if (!response.ok) {
+						throw new Error("Failed to update personal info");
+					}
+			
+					const data = await response.json();
+					console.log("Personal info updated successfully:", data);
+			
+					// Update the personalInfo in the store
+					setStore({ personalInfo: data });
+			
+					return true; 
+				} catch (error) {
+					console.error("Error updating personal info:", error);
+					return false; 
+				}
+			},			
 			
 			
 			
