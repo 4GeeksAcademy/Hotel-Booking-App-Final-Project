@@ -78,8 +78,8 @@
 /*Configuracion de los inputs de busqueda*/
 .searchBarConfig input {
     border-radius: 50px;
-    min-height: 3vh;
-    min-width: 8vw;
+    min-height: 2rem;
+    min-width: 8rem;
     border: solid;
     border-color:rgb(226, 226, 226);
     border-width: 2px;
@@ -98,6 +98,11 @@
 .searchBackground {
     background-color: rgb(245, 245, 245);
     height: 100%;
+}
+
+.searchButton {
+    width: 5rem;
+    height:2.5rem;
 }
 
 
