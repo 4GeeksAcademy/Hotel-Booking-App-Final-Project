@@ -39,13 +39,13 @@ export const Navbar = () => {
 				</Link>
 				<div className="ml-auto">
 					{/* Mostrar el botón de Logout si el usuario está logueado */}
-					{localStorage.getItem("user_session") ? (
+					{localStorage.getItem("user_session") && store.currentUser ? (
 						<>
 							{/* Botón de funciones de usuario */}
 							{location.pathname === "/" && localStorage.getItem("user_session") && (
 								<div className="mb-0 navBar Dropdown-Setup row d-flex justify-contente-start">
 									{/* Mensaje saludando al usuario */}
-									<p className="mb-0 pb-0 w-75 fw-none text-light text-end">Hola, {store.currentUser && store.currentUser.name}</p>
+									<p className="mb-0 pb-0 w-75 fw-none text-light text-end">Hello, {store.currentUser && store.currentUser.name}</p>
 									{/* Funciones especificas del usuario a traves del navBar */}
 									<div class="dropdown mb-0 w-25 d-flex justify-content-start">
 										<a class="dropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
