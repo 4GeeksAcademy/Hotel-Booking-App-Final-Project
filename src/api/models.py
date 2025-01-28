@@ -13,6 +13,10 @@ class User(db.Model):
     password = db.Column(db.String(120), unique=False, nullable=False)
     user_type = db.Column(db.Enum('cliente', 'hotel', 'admin', name='user_type_enum'), nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
+    hotels = db.relationship('Hotel', back_populates='user', lazy=True)  # Relationship to hotels
+        # Campos específicos para usuarios tipo 'hotel'
+  
+
     
     # faltan las foreign keys, van acá
     hotels = db.relationship('Hotel', back_populates="user", lazy=True)
@@ -34,6 +38,7 @@ class User(db.Model):
             "email": self.email,
             "username": self.username,
             "user_type": self.user_type,
+           
             "is_active": self.is_active,
         }
 
@@ -43,6 +48,9 @@ class User(db.Model):
     
     def serialize_stay_history(self):
         return [stay_history.serialize() for stay_history in self.stay_history]
+    
+    def serialize_hotels(self):
+        return [hotel.serialize() for hotel in self.hotels]
 
 
 class Hotel(db.Model):
@@ -54,6 +62,7 @@ class Hotel(db.Model):
     description = db.Column(db.String(500), unique=False, nullable=False)
     image_url = db.Column(db.String(255), nullable=True) # URL DE LA IMAGEN
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
+    
     
 
     # faltan las foreign keys, van acá

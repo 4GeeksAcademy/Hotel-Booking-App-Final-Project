@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { Context } from "../../store/appContext";
 
 const AddHotel = () => {
   const navigate = useNavigate();
@@ -9,10 +11,11 @@ const AddHotel = () => {
   const [hotelLocation, setHotelLocation] = useState('');
   const [hotelCountry, setHotelCountry] = useState('');
   const [hotelDescription, setHotelDescription] = useState('');
+  const { actions } = useContext(Context); 
   const [myImage, setMyImage] = useState(null);
 
   // Function to handle form submission
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
 
@@ -23,6 +26,17 @@ const AddHotel = () => {
       description: hotelDescription,
       image_url: myImage
     };
+
+    console.log("Submitting hotel data:", newHotel); // Debugging log to ensure data is prepared
+
+    const success = await actions.addHotel(newHotel); // Call the addHotel action
+    if (success) {
+        navigate('/hotel-profile/hotels'); // Redirect on success
+    } else {
+        alert("Failed to add the hotel. Please try again.");
+    }
+
+
 
     // call an API to add the hotel or update state
 

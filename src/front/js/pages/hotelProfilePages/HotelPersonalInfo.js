@@ -1,12 +1,58 @@
-import React, { useState } from 'react';
-import Header from './Header';
-import HotelSidebar from './HotelSidebar';
+import React, { useState, useEffect, useContext } from "react";
+import Header from "./Header";
+import HotelSidebar from "./HotelSidebar";
+import { Context } from "../../store/appContext";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const HotelPersonalInfo = () => {
-  const [isEditable, setIsEditable] = useState(false); // State to toggle edit mode
+  const { actions } = useContext(Context);
+  const [isEditable, setIsEditable] = useState(false); // Toggle edit mode
+  const [formData, setFormData] = useState({
+    name: "",
+    last_name: "",
+    username: "",
+    email: "",
+  });
+  const navigate = useNavigate()
 
-  const toggleEdit = () => {
-    setIsEditable((prevState) => !prevState); // Toggle edit mode
+  // Fetch hotel info on component mount
+  useEffect(() => {
+    const loadHotelInfo = async () => {
+      const hotelInfo = await actions.fetchHotelPersonalInfo();
+      if (hotelInfo) {
+        setFormData({
+          name: hotelInfo.name || "",
+          last_name: hotelInfo.last_name || "",
+          username: hotelInfo.username || "",
+          email: hotelInfo.email || "",
+
+        });
+      }
+      else {
+        console.log("no usuario hotel")
+        // navigate("/")
+      }
+
+    };
+
+    loadHotelInfo();
+  }, []);
+
+  const toggleEdit = () => setIsEditable((prevState) => !prevState); // Toggle edit mode
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value }); // Update local state
+  };
+
+  const handleSave = async () => {
+    const success = await actions.updateHotelPersonalInfo(formData); // Save changes to backend
+    if (success) {
+      alert("Changes saved successfully!");
+      setIsEditable(false); // Disable edit mode
+    } else {
+      alert("Failed to save changes. Please try again.");
+    }
   };
 
   return (
@@ -18,32 +64,34 @@ const HotelPersonalInfo = () => {
         <Header title="Personal Information" />
 
         <div className="content container mt-4">
-          <h2 className="text-center mb-4">User Information</h2>
+          <h2 className="text-center mb-4">Hotel User Information</h2>
 
           {/* Profile Picture */}
           <div className="d-flex justify-content-center mb-4">
             <div
               className="rounded-circle bg-secondary"
-              style={{ width: '150px', height: '150px' }}
+              style={{ width: "150px", height: "150px" }}
             >
               <img
                 src="https://via.placeholder.com/150"
                 alt="Profile"
                 className="img-fluid rounded-circle"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
             </div>
           </div>
 
           {/* Form */}
-          <form className="w-100" style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <form className="w-100" style={{ maxWidth: "800px", margin: "0 auto" }}>
             <div className="row mb-3">
               <div className="col-md-6">
                 <label className="form-label">First Name</label>
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="John"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   disabled={!isEditable}
                 />
               </div>
@@ -52,7 +100,9 @@ const HotelPersonalInfo = () => {
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="Doe"
+                  name="last_name"
+                  value={formData.last_name}
+                  onChange={handleChange}
                   disabled={!isEditable}
                 />
               </div>
@@ -64,7 +114,9 @@ const HotelPersonalInfo = () => {
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="john_doe"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
                   disabled={!isEditable}
                 />
               </div>
@@ -73,8 +125,11 @@ const HotelPersonalInfo = () => {
                 <input
                   type="email"
                   className="form-control"
-                  placeholder="john@example.com"
-                  disabled={!isEditable}
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                // placeholder="john@example.com"
+                // disabled={!isEditable}
                 />
               </div>
             </div>
@@ -108,7 +163,7 @@ const HotelPersonalInfo = () => {
                   <option>French</option>
                   <option>German</option>
                 </select>
-              </div>
+              </div>git pus
 
               <div className="col-md-6">
                 <label className="form-label">Country of Residence</label>
@@ -125,16 +180,17 @@ const HotelPersonalInfo = () => {
           {/* Buttons */}
           <div
             className="d-flex justify-content-end mt-4"
-            style={{ maxWidth: '800px', margin: '0 auto' }}
+            style={{ maxWidth: "800px", margin: "0 auto" }}
           >
             <button
-              className={`btn ${isEditable ? 'btn-secondary' : 'btn-warning'} me-2`}
+              className={`btn ${isEditable ? "btn-secondary" : "btn-warning"} me-2`}
               onClick={toggleEdit}
             >
-              {isEditable ? 'Cancel' : 'Edit Information'}
+              {isEditable ? "Cancel" : "Edit Information"}
             </button>
             <button
               className="btn btn-success"
+              onClick={handleSave}
               disabled={!isEditable}
             >
               Save Changes
