@@ -141,6 +141,7 @@ class Stay_Package(db.Model):
     # faltan las foreign keys, van acá
     #Foreign Keys
     stay_history = db.relationship("Stay_History", back_populates = "package", lazy = True)
+    # hotel_package = db.relationship("Hotel_Package", back_populates = "hotel", lazy = True)
 
     def _repr_(self):
         return f'<Stay_Package {self.id_hotel_package}>' 

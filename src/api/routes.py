@@ -314,3 +314,37 @@ def upload_image():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+#endpoint for user info to be edited and submitted
+@api.route('/personal-info', methods=['PUT'])
+@jwt_required()
+def update_personal_info():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first()
+
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+
+    if user.user_type != 'cliente':
+        return jsonify({"message": "Access denied"}), 403
+
+    # Parse the JSON request data
+    data = request.get_json()
+    if not data:
+        return jsonify({"message": "Invalid data"}), 400
+
+    # Update the fields
+    user.name = data.get("name", user.name)
+    user.last_name = data.get("last_name", user.last_name)
+    user.username = data.get("username", user.username)
+    user.email = data.get("email", user.email)
+    # user.country = data.get("country", user.country)
+    # user.language = data.get("language", user.language)
+
+    try:
+        db.session.commit()
+        return jsonify(user.serialize()), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": f"Failed to update user: {str(e)}"}), 500
