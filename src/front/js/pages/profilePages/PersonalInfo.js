@@ -30,11 +30,11 @@ const PersonalInfo = () => {
       }
     };
 
-    if (shouldReload) {
+    // if (shouldReload) {
       loadUserInfo();
-      setShouldReload(false); // Reset reload flag after loading data
-    }
-  }, [actions, shouldReload]);
+    //   setShouldReload(false); // Reset reload flag after loading data
+    // }
+  }, []);
 
   // Toggle edit mode
   const toggleEdit = () => {
