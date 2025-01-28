@@ -410,12 +410,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error updating personal info:", error);
 					return false; 
 				}
-			},			
-			
-			
-			
-					
-			
+			}
 		}
 	};
 };

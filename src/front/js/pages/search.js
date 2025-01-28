@@ -28,6 +28,11 @@ export const Search = () => {
 	
 	}, []);
 
+
+	const packageSearchFilter = () => {
+		
+	}
+
     //console.log(store.hotels)
 	return(
 		<>	
@@ -82,38 +87,40 @@ export const Search = () => {
 							</div>
 						</div>
 					</div>
-				
 			</form>
 			
-			
-			<div className="hotelPackageList col-6 d-flex justify-content-start  ms-3 h-75 mb-5 mt-5 ps-0">
-				<ul className="list-group">
-					{ store.hotel_packages ? store.hotel_packages.map((item, index) => {
-					return (
-						<li
-							key={index}
-							className="d-flex mt-4"
-							>
-							<div className="col-4 imgPackage container-fluid ">
-								<img className="" src="https://picsum.photos/536/354"/>
-							</div>
-							
 
-							<div className="col-6 packageDetails container-fluid">
-								<div className="fs-2">{item.hotel_package_name}</div>
-								<div className="fs-3 mt-3 text-break"><i className="fa-solid fa-location-dot"></i> {item.description}</div>
-								<div className="fs-4"><i className="fa-solid fa-phone"></i> {item.price}</div>
-							</div>
+			<div className="searchBackground container-fluid mt-5">
+				<div className="hotelPackageList col-6 d-flex justify-content-start  ms-3 h-75 mb-5 mt-5 ps-0">
+					<ul className="list-group">
+						{ store.hotel_packages ? store.hotel_packages.map((item, index) => {
+						return (
+							<li
+								key={index}
+								className="d-flex mt-4"
+								>
+								<div className="col-4 imgPackage container-fluid ">
+									<img className="" src="https://picsum.photos/536/354"/>
+								</div>
+								
 
-							<div className="col-2 packageButtons container-fluid d-flex justify-content-start text-break">
-								<p>aaaaaaaaaaaaaaaa</p>
-							</div>
-						</li>
-					);
-				}) : <p>No contacts right now!</p>
-			}
-				</ul>
+								<div className="col-6 packageDetails container-fluid">
+									<div className="fs-2">{item.hotel_package_name}</div>
+									<div className="fs-3 mt-3 text-break"><i className="fa-solid fa-location-dot"></i> {item.description}</div>
+									<div className="fs-4"><i className="fa-solid fa-phone"></i> {item.price}</div>
+								</div>
+
+								<div className="col-2 packageButtons container-fluid d-flex justify-content-start text-break">
+									<p>aaaaaaaaaaaaaaaa</p>
+								</div>
+							</li>
+						);
+					}) : <p>No contacts right now!</p>
+				}
+					</ul>
+				</div>
 			</div>
+			
 		</>
 		
 	)

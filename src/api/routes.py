@@ -367,3 +367,4 @@ def update_personal_info():
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": f"Failed to update user: {str(e)}"}), 500
+    
