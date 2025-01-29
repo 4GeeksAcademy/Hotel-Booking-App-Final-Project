@@ -391,6 +391,52 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return false; 
 				}
 			},			
+
+			selectPlan: async (planId) => {  
+				console.log("selectPlan called with:", planId); // ✅ Log every call
+				
+				if (!planId || isNaN(planId)) {  
+					console.error("❌ Invalid plan ID:", planId);
+					return null;
+				}
+			
+				const token = localStorage.getItem("user_session");
+				if (!token) {
+					console.error("❌ No token found!");
+					return null;
+				}
+				
+				try {
+					const body = JSON.stringify({ plan_id: planId });
+					console.log("📤 Sending request to select plan:", body); // Debugging
+					
+					const response = await fetch(`${process.env.BACKEND_URL}/api/hotel-plan`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+						body: body,
+					});
+			
+					const responseData = await response.json();
+					console.log("📥 Response from backend:", responseData); // Log backend response
+			
+					if (response.ok) {
+						return responseData.message; // Success message
+					} else {
+						console.error("⚠️ Error selecting plan:", responseData);
+						return null;
+					}
+				} catch (error) {
+					console.error("⚠️ Error selecting plan:", error);
+					return null;
+				}
+			},
+			
+			
+			
+			
 			
 			
 			

@@ -348,3 +348,62 @@ def update_personal_info():
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": f"Failed to update user: {str(e)}"}), 500
+
+@api.route('/hotel-plan', methods=['POST'])
+@jwt_required()
+def select_hotel_plan():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first()
+
+    if not user or user.user_type != 'hotel':
+        return jsonify({"message": "Access denied"}), 403
+
+    data = request.get_json()
+    plan_id = data.get("plan_id")
+
+    if not plan_id:
+        return jsonify({"message": "Plan ID is required"}), 400
+
+    # Check if the plan exists
+    plan = Hotel_Admin_Package.query.get(plan_id)
+
+    if not plan:
+        # If the requested plan does not exist, create it dynamically
+        plan_name = "Priority" if plan_id == 1 else "Basic"  # Assign name based on ID
+        plan = Hotel_Admin_Package(id_admin_package=plan_id, package_name=plan_name, description=f"{plan_name} Plan", price=0)
+        db.session.add(plan)
+        db.session.commit()
+
+    # Link the user to the plan
+    user_plan = User_Hotel_Admin_Package.query.filter_by(id_user=user.id_user).first()
+
+    if user_plan:
+        user_plan.id_hotel_Admin_Package = plan_id  # Update existing plan
+    else:
+        user_plan = User_Hotel_Admin_Package(id_user=user.id_user, id_hotel_Admin_Package=plan_id)
+        db.session.add(user_plan)
+
+    try:
+        db.session.commit()
+        return jsonify({"message": f"Plan '{plan.package_name}' selected successfully!"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": f"Error selecting plan: {str(e)}"}), 500
+
+@api.route('/hotel-packages', methods=['GET'])
+def get_all_packages():
+    # Join Stay_Package with User_Hotel_Admin_Package to determine plan
+    packages = db.session.query(
+        Stay_Package,
+        User_Hotel_Admin_Package.id_hotel_Admin_Package
+    ).join(Hotel).join(User_Hotel_Admin_Package).all()
+
+    result = [
+        {
+            "package": package.serialize(),
+            "plan": "Priority" if plan_id == 1 else "Basic"
+        }
+        for package, plan_id in packages
+    ]
+
+    return jsonify(result), 200

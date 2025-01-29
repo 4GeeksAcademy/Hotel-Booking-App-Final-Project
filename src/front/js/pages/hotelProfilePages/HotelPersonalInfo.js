@@ -2,20 +2,20 @@ import React, { useState, useEffect, useContext } from "react";
 import Header from "./Header";
 import HotelSidebar from "./HotelSidebar";
 import { Context } from "../../store/appContext";
-import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const HotelPersonalInfo = () => {
   const { actions } = useContext(Context);
-  const [isEditable, setIsEditable] = useState(false); // Toggle edit mode
+  const [isEditable, setIsEditable] = useState(false);
+  const [showPlanSelection, setShowPlanSelection] = useState(false); // Toggle for showing plan selection
+  const [selectedPlan, setSelectedPlan] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     last_name: "",
     username: "",
     email: "",
+    plan: "Basic" // Default plan (this should be fetched from backend)
   });
-  const navigate = useNavigate()
 
-  // Fetch hotel info on component mount
   useEffect(() => {
     const loadHotelInfo = async () => {
       const hotelInfo = await actions.fetchHotelPersonalInfo();
@@ -25,63 +25,62 @@ const HotelPersonalInfo = () => {
           last_name: hotelInfo.last_name || "",
           username: hotelInfo.username || "",
           email: hotelInfo.email || "",
-
+          plan: hotelInfo.plan || "Basic" // Fetching the current plan
         });
       }
-      else {
-        console.log("no usuario hotel")
-        // navigate("/")
-      }
-
     };
-
     loadHotelInfo();
   }, []);
 
-  const toggleEdit = () => setIsEditable((prevState) => !prevState); // Toggle edit mode
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value }); // Update local state
-  };
+  const toggleEdit = () => setIsEditable((prevState) => !prevState);
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSave = async () => {
-    const success = await actions.updateHotelPersonalInfo(formData); // Save changes to backend
+    const success = await actions.updateHotelPersonalInfo(formData);
     if (success) {
       alert("Changes saved successfully!");
-      setIsEditable(false); // Disable edit mode
+      setIsEditable(false);
     } else {
       alert("Failed to save changes. Please try again.");
     }
   };
 
+  const handlePlanSelection = async (plan) => {
+    setSelectedPlan(plan);
+  };
+
+  const confirmPlanSelection = async (planId) => {
+    if (!planId) {
+        console.error("Plan ID is missing!");
+        alert("Something went wrong. Please try again.");
+        return;
+    }
+
+    console.log("✅ Selected plan ID:", planId);
+
+    const result = await actions.selectPlan(planId);
+
+    if (result) {
+        alert(result); // Success message
+        setFormData({ ...formData, plan: planId === 1 ? "Priority" : "Basic" }); // Update UI
+        setShowPlanSelection(false); // Hide selection panel
+    } else {
+        alert("❌ Failed to update plan. Please try again.");
+    }
+};
+
+
+
   return (
     <div className="d-flex">
-      {/* Sidebar */}
       <HotelSidebar />
-
       <div className="flex-grow-1">
         <Header title="Personal Information" />
 
         <div className="content container mt-4">
           <h2 className="text-center mb-4">Hotel User Information</h2>
 
-          {/* Profile Picture */}
-          <div className="d-flex justify-content-center mb-4">
-            <div
-              className="rounded-circle bg-secondary"
-              style={{ width: "150px", height: "150px" }}
-            >
-              <img
-                src="https://via.placeholder.com/150"
-                alt="Profile"
-                className="img-fluid rounded-circle"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
-            </div>
-          </div>
-
-          {/* Form */}
+          {/* Profile Form */}
           <form className="w-100" style={{ maxWidth: "800px", margin: "0 auto" }}>
             <div className="row mb-3">
               <div className="col-md-6">
@@ -128,74 +127,90 @@ const HotelPersonalInfo = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                // placeholder="john@example.com"
-                // disabled={!isEditable}
                 />
               </div>
             </div>
 
+            {/* Display and Change Plan */}
             <div className="row mb-3">
               <div className="col-md-6">
-                <label className="form-label">Display Plan</label>
+                <label className="form-label">Current Plan</label>
                 <div className="d-flex align-items-center">
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Active Plan"
-                    disabled={!isEditable}
+                    value={formData.plan}
+                    disabled
                   />
-                  <a href="#" className="ms-2 text-decoration-none">
+                  <button
+                    className="btn btn-outline-primary ms-2"
+                    type="button"
+                    onClick={() => setShowPlanSelection(!showPlanSelection)}
+                  >
                     Change Plan
-                  </a>
+                  </button>
                 </div>
-              </div>
-            </div>
-
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <label className="form-label">Language</label>
-                <select
-                  className="form-select"
-                  disabled={!isEditable}
-                >
-                  <option selected>Spanish</option>
-                  <option>English</option>
-                  <option>French</option>
-                  <option>German</option>
-                </select>
-              </div>
-
-              <div className="col-md-6">
-                <label className="form-label">Country of Residence</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Spain"
-                  disabled={!isEditable}
-                />
               </div>
             </div>
           </form>
 
+          {/* Plan Selection Section (Shows when "Change Plan" is clicked) */}
+          {showPlanSelection && (
+            <div className="row mt-4">
+              <h3 className="text-center mb-3">Select a New Plan</h3>
+              <div className="col-md-6">
+                <div
+                  className={`card ${selectedPlan === "Priority" ? "border-primary" : ""}`}
+                  onClick={() => handlePlanSelection("Priority")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <div className="card-body">
+                    <h5 className="card-title">Priority Plan</h5>
+                    <p className="card-text">Get premium listing for your packages.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div
+                  className={`card ${selectedPlan === "Basic" ? "border-primary" : ""}`}
+                  onClick={() => handlePlanSelection("Basic")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <div className="card-body">
+                    <h5 className="card-title">Basic Plan</h5>
+                    <p className="card-text">Standard visibility for your packages.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="text-center mt-3">
+                <button onClick={() => {
+                  console.log("Button clicked for Priority Plan, sending ID: 1");
+                  confirmPlanSelection(1);
+                }}>
+                  Select Priority Plan
+                </button>
+
+                <button onClick={() => {
+                  console.log("Button clicked for Basic Plan, sending ID: 2");
+                  confirmPlanSelection(2);
+                }}>
+                  Select Basic Plan
+                </button>
+
+              </div>
+            </div>
+          )}
+
           {/* Buttons */}
-          <div
-            className="d-flex justify-content-end mt-4"
-            style={{ maxWidth: "800px", margin: "0 auto" }}
-          >
-            <button
-              className={`btn ${isEditable ? "btn-secondary" : "btn-warning"} me-2`}
-              onClick={toggleEdit}
-            >
+          <div className="d-flex justify-content-end mt-4" style={{ maxWidth: "800px", margin: "0 auto" }}>
+            <button className={`btn ${isEditable ? "btn-secondary" : "btn-warning"} me-2`} onClick={toggleEdit}>
               {isEditable ? "Cancel" : "Edit Information"}
             </button>
-            <button
-              className="btn btn-success"
-              onClick={handleSave}
-              disabled={!isEditable}
-            >
+            <button className="btn btn-success" onClick={handleSave} disabled={!isEditable}>
               Save Changes
             </button>
           </div>
+
         </div>
       </div>
     </div>
