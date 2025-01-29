@@ -149,6 +149,9 @@ class Stay_Package(db.Model):
     hotel = db.relationship("Hotel", back_populates="stay_packages")
     stay_history = db.relationship("Stay_History", back_populates = "package", lazy = True) #relationship with hotel
     
+    # Este lo agregué para que tenga la relación con las reservas
+    reservations = db.relationship("Reservation", back_populates="stay_package", lazy=True)
+
     # hotel_package = db.relationship("Hotel_Package", back_populates = "hotel", lazy = True)
 
     def _repr_(self):
@@ -178,6 +181,10 @@ class Reservation(db.Model):
     user_reservation = db.Column(db.Integer, db.ForeignKey(User.id_user), nullable=False)
     user = db.relationship(User)
 
+    # Agregué estas 2 líneas para reservas:
+    stay_package_id = db.Column(db.Integer, db.ForeignKey(Stay_Package.id_hotel_package), nullable=False)
+    stay_package = db.relationship(Stay_Package, back_populates="reservations")
+
     stay_history = db.relationship("Stay_History", back_populates = "reservation", lazy = True)
 
     def _repr_(self):
@@ -188,6 +195,8 @@ class Reservation(db.Model):
             "id_reservation": self.id_reservation,
             "reservation_date": self.reservation_date,
             "reservation_payment": self.reservation_payment,
+            # Este lo agregué para la reservation también:
+            "stay_package": self.stay_package.serialize()  # Serialicé la información del paquete
         }
 
 class Payment(db.Model):

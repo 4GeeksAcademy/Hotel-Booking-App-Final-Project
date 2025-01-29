@@ -38,6 +38,12 @@ export const Navbar = () => {
 					<span className="navbar-brand mb-0 h1 text-light SereniaTitle">Serenia</span>
 				</Link>
 				<div className="ml-auto">
+
+					{/* Botón carrito de reservas */}
+					<Link to="/reservationcart" className="text-light fs-3 me-3">
+						<i class="fa-solid fa-cart-shopping"></i>
+					</Link>
+
 					{/* Mostrar el botón de Logout si el usuario está logueado */}
 					{localStorage.getItem("user_session") && store.currentUser ? (
 						<>
