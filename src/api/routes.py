@@ -380,7 +380,6 @@ def create_reservation():
     return jsonify(new_reservation.serialize()), 201
 
 # OBTENER LAS RESERVAS POR USER CLIENTE
-# OBTENER LAS RESERVAS POR USER CLIENTE
 @api.route('/user/reservations', methods=['GET'])
 @jwt_required()
 def get_user_reservations():

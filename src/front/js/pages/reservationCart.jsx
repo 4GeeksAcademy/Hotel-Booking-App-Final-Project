@@ -7,9 +7,9 @@ export const ReservationCart = () => {
 
     useEffect(() => {
         actions.getUserReservations(); // Cargar las reservas
-    }, []); // Asegúrate de que esto solo se ejecute una vez
+    }, []);
 
-    // Verifica si reservations está definido antes de usarlo
+    // Verifica si reservations está definido
     if (reservations === undefined) {
         return <div>Cargando...</div>;
     }

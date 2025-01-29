@@ -394,7 +394,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			// Obtener las reservas de los usuarios en el carrito
-			// Obtener las reservas de los usuarios en el carrito
 			getUserReservations: async () => {
 				try {
 					const token = localStorage.getItem("token");
