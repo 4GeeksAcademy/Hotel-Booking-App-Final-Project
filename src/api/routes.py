@@ -8,6 +8,8 @@ from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 import os, cloudinary, cloudinary.uploader
 
+from api.models import db, User, Hotel, Stay_Package, User_Hotel_Admin_Package, Hotel_Admin_Package
+
 api = Blueprint('api', __name__)
 
 
@@ -205,7 +207,7 @@ def update_hotel_personal_info():
 @jwt_required()
 def get_user_hotels():
     current_user = get_jwt_identity()
-    print(f"Current User: {current_user}")  # Add this log
+    print(f"Current User: {current_user}") 
     user = User.query.filter_by(username=current_user).first()
 
     if not user:
@@ -369,7 +371,7 @@ def select_hotel_plan():
 
     if not plan:
         # If the requested plan does not exist, create it dynamically
-        plan_name = "Priority" if plan_id == 1 else "Basic"  # Assign name based on ID
+        plan_name = "priority" if plan_id == 1 else "basic"  # Assign name based on ID
         plan = Hotel_Admin_Package(id_admin_package=plan_id, package_name=plan_name, description=f"{plan_name} Plan", price=0)
         db.session.add(plan)
         db.session.commit()
@@ -386,24 +388,173 @@ def select_hotel_plan():
     try:
         db.session.commit()
         return jsonify({"message": f"Plan '{plan.package_name}' selected successfully!"}), 200
-    except Exception as e:
+    except Exception as e:     
         db.session.rollback()
         return jsonify({"message": f"Error selecting plan: {str(e)}"}), 500
 
 @api.route('/hotel-packages', methods=['GET'])
 def get_all_packages():
-    # Join Stay_Package with User_Hotel_Admin_Package to determine plan
-    packages = db.session.query(
-        Stay_Package,
-        User_Hotel_Admin_Package.id_hotel_Admin_Package
-    ).join(Hotel).join(User_Hotel_Admin_Package).all()
+    try:
+        packages = db.session.query(
+            Stay_Package,
+            User_Hotel_Admin_Package.id_hotel_Admin_Package
+        ).join(Hotel, Stay_Package.id_hotel == Hotel.id_hotel) \
+         .join(User_Hotel_Admin_Package, User_Hotel_Admin_Package.id_user == Hotel.id_user) \
+         .all()
 
-    result = [
-        {
-            "package": package.serialize(),
-            "plan": "Priority" if plan_id == 1 else "Basic"
-        }
-        for package, plan_id in packages
-    ]
+        result = [
+            {
+                "package": package.serialize(),
+                "plan": "priority" if plan_id == 1 else "basic"
+            }
+            for package, plan_id in packages
+        ]
 
-    return jsonify(result), 200
+        print("📥 API Response:", result)  # Debugging
+        return jsonify(result), 200
+    except Exception as e:
+        print(f"❌ Error fetching hotel packages: {str(e)}")  # Debugging
+        return jsonify({"message": f"Error fetching hotel packages: {str(e)}"}), 500
+
+
+
+
+@api.route('/user/hotels/single', methods=['GET'])
+@jwt_required()
+def get_single_user_hotel():  # ✅ Renamed function
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first()
+
+    if not user or user.user_type != 'hotel':
+        return jsonify({"message": "Access denied"}), 403
+
+    hotels = Hotel.query.filter_by(id_user=user.id_user).all()
+    return jsonify([hotel.serialize() for hotel in hotels]), 200
+
+@api.route('/hotel/<int:hotel_id>', methods=['GET'])
+@jwt_required()
+def get_hotel_details(hotel_id):
+    hotel = Hotel.query.get(hotel_id)
+    if not hotel:
+        return jsonify({"message": "Hotel not found"}), 404
+
+    return jsonify({
+        "country": hotel.country,
+        "location": hotel.location
+    }), 200
+
+
+@api.route('/hotel-packages', methods=['POST'])
+@jwt_required()
+def add_hotel_package():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first()
+
+    # ✅ Ensure the user exists and is a hotel user
+    if not user or user.user_type != 'hotel':
+        return jsonify({"message": "Access denied"}), 403
+
+    data = request.get_json()
+    print("📥 Received Data:", data)  # Debug incoming request
+
+    # ✅ Ensure required fields are present
+    required_fields = ["package_name", "hotel_id", "price", "start_date", "end_date", "description"]
+    for field in required_fields:
+        if field not in data or not data[field]:
+            print(f"❌ Missing field: {field}")  # Debug missing fields
+            return jsonify({"message": f"Missing required field: {field}"}), 400
+
+    # ✅ Validate hotel ownership
+    hotel = Hotel.query.get(data["hotel_id"])
+    if not hotel or hotel.id_user != user.id_user:
+        return jsonify({"message": "Invalid hotel selection"}), 400
+
+    try:
+        # ✅ Ensure `price` is an integer
+        new_package = Stay_Package(
+            hotel_package_name=data["package_name"],
+            id_hotel=int(data["hotel_id"]),
+            price=int(data["price"]),  # Ensure price is an integer
+            start_date=data["start_date"],
+            end_date=data["end_date"],
+            description=data["description"]
+        )
+
+        db.session.add(new_package)
+        db.session.commit()
+
+        print("✅ Package added successfully:", new_package.serialize())  # Debug success
+        return jsonify({"message": "Package added successfully!", "package": new_package.serialize()}), 201
+    except Exception as e:
+        db.session.rollback()
+        print("❌ Error adding package:", str(e))  # Debug error
+        return jsonify({"message": f"Error adding package: {str(e)}"}), 500
+
+
+
+@api.route('/hotel-packages', methods=['GET'])
+@jwt_required()
+def get_user_packages():
+    try:
+        current_user = get_jwt_identity()
+        user = User.query.filter_by(username=current_user).first()
+
+        if not user or user.user_type != 'hotel':
+            print(f"🚨 Access denied for user: {current_user}")
+            return jsonify({"message": "Access denied"}), 403
+
+        hotels = Hotel.query.filter_by(id_user=user.id_user).all()
+        if not hotels:
+            print(f"🚨 No hotels found for user: {user.username}")
+            return jsonify({"message": "No hotels found"}), 404
+
+        hotel_ids = [hotel.id_hotel for hotel in hotels]
+        print(f"🔹 Found hotels: {hotel_ids}")
+
+        packages = Stay_Package.query.filter(Stay_Package.id_hotel.in_(hotel_ids)).all()
+        if not packages:
+            print(f"🚨 No packages found for these hotels: {hotel_ids}")
+            return jsonify({"message": "No packages found"}), 404
+
+        # Serialize and return the packages
+        serialized_packages = [p.serialize() for p in packages]
+        print(f"✅ Returning packages: {serialized_packages}")
+        return jsonify(serialized_packages), 200
+
+    except Exception as e:
+        print(f"❌ Error fetching hotel packages: {str(e)}")
+        return jsonify({"message": f"Error fetching hotel packages: {str(e)}"}), 500
+
+
+
+@api.route('/hotel-packages/<int:package_id>', methods=['PUT'])
+@jwt_required()
+def edit_package(package_id):
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first()
+
+    if not user or user.user_type != 'hotel':
+        return jsonify({"message": "Access denied"}), 403
+
+    package = Stay_Package.query.get(package_id)
+    if not package:
+        return jsonify({"message": "Package not found"}), 404
+
+    # Validate that the hotel belongs to the user
+    hotel = Hotel.query.filter_by(id_hotel=package.id_hotel, id_user=user.id_user).first()
+    if not hotel:
+        return jsonify({"message": "Unauthorized"}), 403
+
+    data = request.get_json()
+    
+    package.price = data.get("price", package.price)
+    package.start_date = data.get("start_date", package.start_date)
+    package.end_date = data.get("end_date", package.end_date)
+    package.description = data.get("description", package.description)
+
+    try:
+        db.session.commit()
+        return jsonify({"message": "Package updated successfully", "package": package.serialize()}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": f"Error updating package: {str(e)}"}), 500

@@ -13,7 +13,7 @@ const HotelPersonalInfo = () => {
     last_name: "",
     username: "",
     email: "",
-    plan: "Basic" // Default plan (this should be fetched from backend)
+    plan: "basic" // Default plan (this should be fetched from backend)
   });
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const HotelPersonalInfo = () => {
           last_name: hotelInfo.last_name || "",
           username: hotelInfo.username || "",
           email: hotelInfo.email || "",
-          plan: hotelInfo.plan || "Basic" // Fetching the current plan
+          plan: hotelInfo.plan || "basic" // Fetching the current plan
         });
       }
     };
@@ -62,7 +62,7 @@ const HotelPersonalInfo = () => {
 
     if (result) {
         alert(result); // Success message
-        setFormData({ ...formData, plan: planId === 1 ? "Priority" : "Basic" }); // Update UI
+        setFormData({ ...formData, plan: planId === 1 ? "priority" : "basic" }); // Update UI
         setShowPlanSelection(false); // Hide selection panel
     } else {
         alert("❌ Failed to update plan. Please try again.");
@@ -172,8 +172,8 @@ const HotelPersonalInfo = () => {
               </div>
               <div className="col-md-6">
                 <div
-                  className={`card ${selectedPlan === "Basic" ? "border-primary" : ""}`}
-                  onClick={() => handlePlanSelection("Basic")}
+                  className={`card ${selectedPlan === "basic" ? "border-primary" : ""}`}
+                  onClick={() => handlePlanSelection("basic")}
                   style={{ cursor: "pointer" }}
                 >
                   <div className="card-body">
