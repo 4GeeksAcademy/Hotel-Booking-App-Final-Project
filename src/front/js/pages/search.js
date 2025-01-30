@@ -39,11 +39,13 @@ export const Search = () => {
 		}
 		
 		let hotel_reduced_search = hotel_packages_copy.reduce((hotel_package, details)=>{
-			if(details.hotel_package_name.includes(searchInfo.package_name) || details.price == searchInfo.price ||
-				(new Date(searchInfo.package_date).getTime() < new Date(details.end_date).getTime() && 
-					new Date(searchInfo.package_date).getTime() > new Date(details.start_date).getTime()) ||
-						details.hotel.location.includes(searchInfo.hotel_location)){
-					hotel_package.push(details);
+			if(details.hotel_package_name.includes(searchInfo.package_name) || 
+			((searchInfo.min_price ? details.price >= searchInfo.min_price : true) 
+				&& (searchInfo.max_price ? details.price <= searchInfo.max_price : true)) ||
+						(new Date(searchInfo.package_date).getTime() < new Date(details.end_date).getTime() && 
+							new Date(searchInfo.package_date).getTime() > new Date(details.start_date).getTime()) ||
+								details.hotel.location.includes(searchInfo.hotel_location)){
+							hotel_package.push(details);
 			}
 			return hotel_package;
 		}, []);
