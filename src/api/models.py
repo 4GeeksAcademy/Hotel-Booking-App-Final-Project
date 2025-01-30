@@ -160,10 +160,10 @@ class Stay_Package(db.Model):
             "hotel_package_name": self.hotel_package_name,
             "description": self.description,
             "price": self.price,
-            "start_date": self.start_date,
-            "end_date": self.end_date,
+            "start_date": self.start_date.isoformat(),
+            "end_date": self.end_date.isoformat(),
             "id_hotel": self.id_hotel,
-            "hotel": self.hotel
+            "hotel": self.hotel.serialize()
         }
 
 class Reservation(db.Model):

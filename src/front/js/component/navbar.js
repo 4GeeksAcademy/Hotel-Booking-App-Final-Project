@@ -63,7 +63,7 @@ export const Navbar = () => {
 
 							)}
 						</>
-					) : (
+					) : location.pathname == "/login" ? false : (
 						<>
 							{/* Botón de Login si no está logueado */}
 							{(

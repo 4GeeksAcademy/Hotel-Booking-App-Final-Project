@@ -79,7 +79,9 @@
 .searchBarConfig input {
     border-radius: 50px;
     min-height: 2rem;
+    width: 10rem;
     min-width: 8rem;
+    padding: 0;
     border: solid;
     border-color:rgb(226, 226, 226);
     border-width: 2px;
@@ -141,6 +143,13 @@
 .hotelPackageList li img:hover{
     box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
 }
+
+.detailsButton{
+    min-height: 2rem;
+    min-width: 8rem;
+}
+
+
 /*****************************************************************************DASHBOARD******************************************************************************/
 
 /*BOTONES DASHBOARD*/
