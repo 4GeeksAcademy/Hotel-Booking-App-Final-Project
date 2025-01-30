@@ -1,19 +1,42 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
 
 export const SignUp = () => {
-    const { actions } = useContext(Context);
-    const [name, setName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [userName, setUserName] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [password, setPassword] = useState("");
-    const [userType, setUserType] = useState("");
-    const [acceptTerms, setAcceptTerms] = useState(false);
+    const { store, actions } = useContext(Context);
+    const [name, setName] = useState(store.signupData.name ? store.signupData.name : "");
+    const [lastName, setLastName] = useState(store.signupData.lastName ? store.signupData.lastName : "");
+    const [email, setEmail] = useState(store.signupData.email ? store.signupData.email : "");
+    const [userName, setUserName] = useState(store.signupData.userName ? store.signupData.userName : "");
+    const [confirmPassword, setConfirmPassword] = useState(store.signupData.confirmPassword ? store.signupData.confirmPassword : "");
+    const [password, setPassword] = useState(store.signupData.password ? store.signupData.password : "");
+    const [userType, setUserType] = useState(store.signupData.userType ? store.signupData.userType : "");
+    const [acceptTerms, setAcceptTerms] = useState(store.signupData.acceptTerms ? store.signupData.acceptTerms : "");
     const [toastMessage, setToastMessage] = useState(null);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        // Guarda los datos en sessionStorage cuando cambien
+        actions.setSignUpData("name", name);
+        actions.setSignUpData("lastName", lastName);
+        actions.setSignUpData("email", email);
+        actions.setSignUpData("userName", userName);
+        actions.setSignUpData("password", password);
+        actions.setSignUpData("confirmPassword", confirmPassword);
+        actions.setSignUpData("userType", userType);
+        actions.setSignUpData("acceptTerms", acceptTerms);
+    }, [name, lastName, email, userName, password, confirmPassword, userType, acceptTerms]);
+
+    useEffect(() => {
+        setName(store.signupData.name && store.signupData.name)
+        setLastName(store.signupData.lastName && store.signupData.lastName)
+        setEmail(store.signupData.email && store.signupData.email)
+        setUserName(store.signupData.userName && store.signupData.userName)
+        setPassword(store.signupData.password && store.signupData.password)
+        setConfirmPassword(store.signupData.confirmPassword && store.signupData.confirmPassword)
+        setUserType(store.signupData.userType && store.signupData.userType)
+        setAcceptTerms(store.signupData.acceptTerms && store.signupData.acceptTerms)
+    }, [])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -34,6 +57,7 @@ export const SignUp = () => {
 
         if (message === "User registered successfully") {
             setToastMessage({ text: "User registered successfully.", type: "success" });
+            actions.setSignUpData("", "", true)
             setTimeout(() => navigate("/login"), 3000);
         }
 

@@ -9,6 +9,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			hotelsBasic: [],     // Almacenar hoteles con paquete básico
 			name: null,
 			personalInfo: null, // Store for personal info data
+			signupData: {},
 			demo: [
 				{
 					title: "FIRST",
@@ -120,11 +121,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 						},
 						body: JSON.stringify(formData),
 					});
-			
+
 					if (!response.ok) {
 						throw new Error("Failed to update hotel personal info");
 					}
-			
+
 					const data = await response.json();
 					console.log("Hotel personal info updated:", data);
 					return true; // Return success
@@ -133,8 +134,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return false; // Return failure
 				}
 			},
-			
-			
+
+
 
 			loginAccount: async (username, password) => {
 				try {
@@ -197,6 +198,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} catch (error) {
 					console.error("Error registering:", error);
 					return error.message || "This email or username is already registered, try it again.";
+				}
+			},
+
+			setSignUpData: (key, value, clear = false) => {
+				if (!clear) {
+					const store = getStore()
+					setStore({ signupData: { ...store.signupData, [key]: value } })
+				} else {
+					setStore({ signupData :{}})
 				}
 			},
 
@@ -273,14 +283,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 			addHotel: async (hotelData) => {
-				
+
 				const token = localStorage.getItem("user_session");
 				if (!token) {
 					console.error("No token found!");
 					return false;
 				}
 				try {
-					
+
 					const response = await fetch(`${process.env.BACKEND_URL}/api/hotels`, {
 						method: "POST",
 						headers: {
@@ -289,11 +299,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 						},
 						body: JSON.stringify(hotelData),
 					});
-			
+
 					if (!response.ok) {
 						throw new Error("Failed to add hotel");
 					}
-			
+
 					const data = await response.json();
 					console.log("Hotel successfully added:", data);
 					const actions = getActions();
@@ -304,12 +314,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return false;
 				}
 			},
-			
-			
-			
+
+
+
 			getUserHotels: async () => {
 				try {
-					const response = await fetch(`${process.env.BACKEND_URL}/api/user/hotels`, {headers:{"Authorization": 'Bearer '+localStorage.getItem('user_session')}});
+					const response = await fetch(`${process.env.BACKEND_URL}/api/user/hotels`, { headers: { "Authorization": 'Bearer ' + localStorage.getItem('user_session') } });
 					if (response.ok) {
 						const data = await response.json();
 						setStore({ userHotels: data }); // Update the hotels state
@@ -325,7 +335,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			/*deactivate hotel from hotel profile*/
 			deactivateHotel: async (hotelId) => {
 				const token = localStorage.getItem("user_session");
-				
+
 				if (!token) {
 					console.error("No token found!");
 					return false;
@@ -339,18 +349,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 						},
 						body: JSON.stringify({ is_active: false }),
 					});
-			
+
 					if (!response.ok) {
 						throw new Error("Failed to deactivate hotel");
 					}
-			
+
 					const data = await response.json();
 					console.log("Hotel successfully deactivated:", data);
-			
+
 					// Refresh the list of hotels
 					const actions = getActions();
 					await actions.getHotels();
-			
+
 					return true;
 				} catch (error) {
 					console.error("Error deactivating hotel:", error);
@@ -367,35 +377,35 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 				try {
 					const response = await fetch(`${process.env.BACKEND_URL}/api/personal-info`, {
-						method: "PUT", 
+						method: "PUT",
 						headers: {
 							"Content-Type": "application/json",
 							Authorization: `Bearer ${token}`
 						},
 						body: JSON.stringify(formData)
 					});
-			
+
 					if (!response.ok) {
 						throw new Error("Failed to update personal info");
 					}
-			
+
 					const data = await response.json();
 					console.log("Personal info updated successfully:", data);
-			
+
 					// Update the personalInfo in the store
 					setStore({ personalInfo: data });
-			
-					return true; 
+
+					return true;
 				} catch (error) {
 					console.error("Error updating personal info:", error);
-					return false; 
+					return false;
 				}
-			},			
-			
-			
-			
-					
-			
+			},
+
+
+
+
+
 		}
 	};
 };

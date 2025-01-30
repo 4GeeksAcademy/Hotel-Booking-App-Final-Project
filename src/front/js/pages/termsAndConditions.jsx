@@ -49,7 +49,7 @@ export const TermsAndConditions = () => {
 
                 <h4 className="mt-4">8. Contact Information</h4>
                 <p>
-                    If you have any questions about these terms, please contact us at <strong>support@serenia.com</strong>.
+                    If you have any questions about these terms, please contact us at <strong>support@sereniahotels.com</strong>.
                 </p>
 
                 <div className="text-center mt-4">
