@@ -424,6 +424,37 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			// Obtener las reservas de los usuarios en el carrito
+			getUserReservations: async () => {
+				const token = localStorage.getItem("user_session");
+				if (!token) {
+					console.error("No token found!");
+					return false;
+				}
+				try {
+					const response = await fetch(process.env.BACKEND_URL + "api/user/reservations", {
+						method: "GET",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`
+						},
+					});
+
+					const data = await response.json();
+					console.log('Datos de reservas:', data);  // Para depurar la respuesta
+
+					if (response.ok) {
+						// Si la respuesta es exitosa, guarda las reservas en el store
+						setStore({ reservations: data.reservations || [] });
+					} else {
+						// Si hay un error, imprime el error de la respuesta
+						console.error("Error al obtener reservas:", data.error || 'Error desconocido');
+					}
+				} catch (error) {
+					// Si algo falla, muestra el error en la consola
+					console.error("Error en la petición:", error);
+				}
+			},
+
 
 			// getUserReservations: async () => {
 			// 	try {
@@ -456,41 +487,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 			// 		console.error("Error en la petición:", error);
 			// 	}
 			// },
-			getUserReservations: async () => {
-				try {
-					const token = localStorage.getItem("token");
-					if (!token) {
-						console.error("Token no encontrado en el almacenamiento local");
-						return;
-					}
-
-					const response = await fetch(process.env.BACKEND_URL + "api/user/reservations", {
-						method: "GET",
-						headers: {
-							"Content-Type": "application/json",
-							"Authorization": "Bearer " + token
-						}
-					});
-
-					const data = await response.json();
-					console.log("Datos de reservas:", data); // Para depurar la respuesta
-
-					if (response.ok) {
-						if (data.reservations) {
-							setStore({ reservations: data.reservations });
-						} else {
-							console.warn("No se encontraron reservas en la respuesta.");
-							setStore({ reservations: [] }); // Evita errores en la vista
-						}
-					} else {
-						console.error("Error al obtener reservas:", data.error || "Error desconocido");
-					}
-				} catch (error) {
-					console.error("Error en la petición:", error);
-				}
-			},
 		}
-	};
+	}
 };
+
 
 export default getState;
