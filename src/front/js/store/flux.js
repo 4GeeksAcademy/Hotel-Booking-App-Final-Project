@@ -9,11 +9,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			hotelsBasic: [],     // Almacenar hoteles con paquete básico
 			name: null,
 			personalInfo: null, // Store for personal info data
-<<<<<<< HEAD
 			reservations: [],
-=======
 			signupData: {},
->>>>>>> 6c63ec573e36a0675ac6d509d3604d7ab402d81b
 			demo: [
 				{
 					title: "FIRST",
