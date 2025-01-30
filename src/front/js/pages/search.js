@@ -17,7 +17,7 @@ export const Search = () => {
 		}
 		
 		loadPage();
-		console.log(filterState)
+		//console.log(filterState)
 	
 	}, []);
 
@@ -27,7 +27,7 @@ export const Search = () => {
 		let hotel_packages_copy = [...store.hotel_packages]
 		//let hotel_reduced_search = []
 		
-		console.log(searchInfo)
+		//console.log(searchInfo)
 		if (Object.keys(searchInfo).length == 0){
 			setFilterState(false)
 			return false
@@ -150,9 +150,11 @@ export const Search = () => {
 							
 						</div>
 						<div className="mt-3 d-flex justify-content-center">
+							{/*Boton de limpieza de filtro */}
 							<button  className='btn btn-secondary searchButton me-2' type="button" onClick={clearFilters}>
 								<div className='text-light fw-bold'>Clear</div>
 							</button>
+							{/*Boton de busqueda */}
 							<button  className='btn btn-success searchButton ms-2' type="submit">
 								<div className='text-light fw-bold'>Search</div>
 							</button>
