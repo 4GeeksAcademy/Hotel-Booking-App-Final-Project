@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
+import moment from "moment";
 
 export const ReservationCart = () => {
     const { store, actions } = useContext(Context);
@@ -36,10 +37,12 @@ export const ReservationCart = () => {
                 reservations.map((reservation, index) => (
                     <div key={index} className="card mb-3">
                         <div className="card-body">
-                            <h5 className="card-title">Reserva #{reservation.id_reservation}</h5>
-                            <p><strong>Fecha de Reserva:</strong> {new Date(reservation.reservation_date).toLocaleString()}</p>
-                            <p><strong>Paquete de Estancia:</strong> {reservation.stay_package.name}</p>
-                            <p><strong>Monto de Pago:</strong> ${reservation.reservation_payment}</p>
+                            <h5 className="card-title">
+                                Reserva #{reservation.id_reservation}
+                            </h5>
+                            <p><strong>Fecha de Reserva:</strong> {moment(reservation.reservation_date).format("YYYY-MM-DD HH:mm:ss")}</p>
+                            <p><strong>Paquete de Estancia:</strong> {reservation.stay_package.hotel_package_name}</p>
+                            <p><strong>Monto de Pago:</strong> ${reservation.stay_package.price}</p>
 
                             {/* Botón de pago */}
                             <button className="btn btn-primary">

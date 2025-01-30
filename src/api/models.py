@@ -171,9 +171,10 @@ class Stay_Package(db.Model):
 
 class Reservation(db.Model):
     # Datos por cada Reservación
-    id_reservation = db.Column(db.Integer, primary_key=True)
-    # Día para el que se reservó para ir
-    reservation_date = db.Column(db.Date, nullable=False)
+    # id_reservation = db.Column(db.Integer, primary_key=True)
+    id_reservation = db.Column(db.Integer, primary_key=True, unique=True)
+    # reservation_date = db.Column(db.Date, nullable=False)
+    reservation_date = db.Column(db.DateTime, nullable=False)
     reservation_payment = db.Column(db.Integer, nullable=False)
 
     # faltan las foreign keys, van acá
@@ -193,7 +194,8 @@ class Reservation(db.Model):
     def serialize(self):
         return {
             "id_reservation": self.id_reservation,
-            "reservation_date": self.reservation_date,
+            # "reservation_date": self.reservation_date,
+            "reservation_date": self.reservation_date.isoformat(),
             "reservation_payment": self.reservation_payment,
             # Este lo agregué para la reservation también:
             "stay_package": self.stay_package.serialize()  # Serialicé la información del paquete
