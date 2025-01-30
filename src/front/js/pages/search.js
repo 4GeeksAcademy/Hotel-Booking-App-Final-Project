@@ -40,8 +40,9 @@ export const Search = () => {
 		
 		let hotel_reduced_search = hotel_packages_copy.reduce((hotel_package, details)=>{
 			if(details.hotel_package_name.includes(searchInfo.package_name) || 
-			((searchInfo.min_price ? details.price >= searchInfo.min_price : true) 
-				&& (searchInfo.max_price ? details.price <= searchInfo.max_price : true)) ||
+			details.hotel.name.includes(searchInfo.hotel_name ||
+			(searchInfo.min_price ? details.price >= searchInfo.min_price : searchInfo.max_price ? true : false) 
+				&& (searchInfo.max_price ? details.price <= searchInfo.max_price : searchInfo.min_price ? true : false)) ||
 						(new Date(searchInfo.package_date).getTime() < new Date(details.end_date).getTime() && 
 							new Date(searchInfo.package_date).getTime() > new Date(details.start_date).getTime()) ||
 								details.hotel.location.includes(searchInfo.hotel_location)){
@@ -201,7 +202,8 @@ export const Search = () => {
 								
 
 								<div className="col-5 packageDetails container-fluid">
-								<div className="fs-2">{item.hotel_package_name}</div>
+									<div className="fs-1">{item.hotel.name}</div>
+									<div className="fs-2">{item.hotel_package_name}</div>
 									<div className="fs-4"><i className="fa-solid fa-location-dot"></i> {item.hotel.location}</div>
 									<div className="fs-6"><i className="fa-regular fa-calendar"></i> Starting date: {item.start_date}</div>
 									<div className="fs-6"><i className="fa-solid fa-calendar"></i> Lasts until: {item.end_date}</div>
