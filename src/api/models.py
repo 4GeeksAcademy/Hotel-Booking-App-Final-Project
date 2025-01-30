@@ -166,7 +166,7 @@ class Stay_Package(db.Model):
             "start_date": self.start_date,
             "end_date": self.end_date,
             "id_hotel": self.id_hotel,
-            "hotel": self.hotel
+            "hotel": self.hotel.serialize()
         }
 
 class Reservation(db.Model):
@@ -178,7 +178,7 @@ class Reservation(db.Model):
 
     # faltan las foreign keys, van acá
     #Foreign Keys
-    user_reservation = db.Column(db.Integer, db.ForeignKey(User.id_user), nullable=False)
+    id_user = db.Column(db.Integer, db.ForeignKey(User.id_user), nullable=False)
     user = db.relationship(User)
 
     # Agregué estas 2 líneas para reservas:

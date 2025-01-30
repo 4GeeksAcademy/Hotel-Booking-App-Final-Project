@@ -368,7 +368,7 @@ def create_reservation():
 
     # Crear la nueva reserva
     new_reservation = Reservation(
-        user_reservation=current_user_id,
+        id_user=current_user_id,
         reservation_date=reservation_data["reservation_date"],
         reservation_payment=stay_package.price,
         stay_package_id=stay_package.id_hotel_package
@@ -383,19 +383,19 @@ def create_reservation():
 @api.route('/user/reservations', methods=['GET'])
 @jwt_required()
 def get_user_reservations():
-    current_user_id = get_jwt_identity()
+    current_user_username = get_jwt_identity()
     
-    user = User.query.get(current_user_id)
+    user = User.query.filter_by(username=current_user_username).first()
     if not user:
         return jsonify({"error": "Usuario no encontrado"}), 404
 
     # Verificar si el usuario tiene historial de reservas
-    stay_history = Stay_History.query.filter_by(user_stay_history=current_user_id).all()
+    reservations = Reservation.query.filter_by(id_user=user.id_user).all()
     
-    if not stay_history:
+    if not reservations:
         return jsonify({"message": "No tienes reservas activas"}), 200
 
     # Serializar las reservas
-    reservations = [stay.serialize() for stay in stay_history]
+    reservations = [reservation.serialize() for reservation in reservations]
     
     return jsonify({"reservations": reservations}), 200
