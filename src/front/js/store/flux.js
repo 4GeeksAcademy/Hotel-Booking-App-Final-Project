@@ -9,7 +9,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 			hotelsBasic: [],     // Almacenar hoteles con paquete básico
 			name: null,
 			personalInfo: null, // Store for personal info data
+<<<<<<< HEAD
 			reservations: [],
+=======
+			signupData: {},
+>>>>>>> 6c63ec573e36a0675ac6d509d3604d7ab402d81b
 			demo: [
 				{
 					title: "FIRST",
@@ -198,6 +202,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} catch (error) {
 					console.error("Error registering:", error);
 					return error.message || "This email or username is already registered, try it again.";
+				}
+			},
+
+			setSignUpData: (key, value, clear = false) => {
+				if (!clear) {
+					const store = getStore()
+					setStore({ signupData: { ...store.signupData, [key]: value } })
+				} else {
+					setStore({ signupData: {} })
 				}
 			},
 
