@@ -13,6 +13,7 @@ import injectContext from "./store/appContext";
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 import { ReservationCart } from "./pages/reservationCart.jsx";
+import { Search } from "./pages/search.js";
 
 import UserProfile from "./pages/profilePages/UserProfile";
 import PersonalInfo from "./pages/profilePages/PersonalInfo";
@@ -48,6 +49,7 @@ const Layout = () => {
                         <Route element={<LoginAccount />} path="/login" />
                         <Route element={<ContactUs />} path="/contact" />
                         <Route element={<ReservationCart />} path="/reservationcart" />
+                        <Route element={<Search />} path="/search" />
                         <Route element={<TermsAndConditions />} path="/terms" />
 
                         {/* User Profile Routes */}
@@ -72,11 +74,11 @@ const Layout = () => {
 
                         {/* Fallback Route */}
                         <Route element={<h1>Not found!</h1>} path="*" />
-                    </Routes>
+                    </Routes >
                     <Footer />
-                </ScrollToTop>
-            </BrowserRouter>
-        </div>
+                </ScrollToTop >
+            </BrowserRouter >
+        </div >
     );
 };
 

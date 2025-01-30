@@ -314,6 +314,25 @@ def upload_image():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+#paquetes en ventana de busqueda
+@api.route('/hotel_packages', methods=['GET'])
+def get_hotel_stay_packages():
+    hotel_packages = Stay_Package.query.all()
+    print (hotel_packages)
+
+    serialized_hotels = []
+
+    if not hotel_packages:
+        print("Packages not found")
+        return jsonify({"message": "Packages not found"}), 404
+    
+    serialized_hotels = [package.serialize() for package in hotel_packages]
+
+    print(serialized_hotels)
+
+    return jsonify({"hotel_packages": serialized_hotels}), 200
+    
 
 
 #endpoint for user info to be edited and submitted
