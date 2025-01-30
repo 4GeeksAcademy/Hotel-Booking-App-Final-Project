@@ -19,7 +19,7 @@ class User(db.Model):
 
     
     # faltan las foreign keys, van acá
-    hotels = db.relationship('Hotel', back_populates="user", lazy=True)
+    
     #Foreign keys
     favorites = db.relationship("Favorites", back_populates = "user", lazy = True)
     stay_history = db.relationship("Stay_History", back_populates = "user", lazy = True)
@@ -70,6 +70,7 @@ class Hotel(db.Model):
     user = db.relationship('User')
     #Foreign Keys
     favorites = db.relationship("Favorites", back_populates = "hotel", lazy = True)
+    stay_packages = db.relationship("Stay_Package", back_populates="hotel", lazy=True) #relationship to stay_packages
     #stay_history = db.relationship("Stay_History", back_populates = "hotel", lazy = True)
 
     def _repr_(self):
@@ -84,6 +85,10 @@ class Hotel(db.Model):
             "description": self.description,
             "image_url": self.image_url,
             "is_active": self.is_active
+        }
+    def serialize_stay_packages(self):
+        return {
+            "stay_packages": [package.serialize() for package in self.stay_packages]
         }
 
 class Hotel_Admin_Package(db.Model):
@@ -140,7 +145,10 @@ class Stay_Package(db.Model):
 
     # faltan las foreign keys, van acá
     #Foreign Keys
-    stay_history = db.relationship("Stay_History", back_populates = "package", lazy = True)
+    id_hotel = db.Column(db.Integer, db.ForeignKey('hotel.id_hotel'), nullable=False)
+    hotel = db.relationship("Hotel", back_populates="stay_packages")
+    stay_history = db.relationship("Stay_History", back_populates = "package", lazy = True) #relationship with hotel
+    
     # hotel_package = db.relationship("Hotel_Package", back_populates = "hotel", lazy = True)
 
     def _repr_(self):
@@ -154,6 +162,8 @@ class Stay_Package(db.Model):
             "price": self.price,
             "start_date": self.start_date,
             "end_date": self.end_date,
+            "id_hotel": self.id_hotel,
+            "hotel": self.hotel
         }
 
 class Reservation(db.Model):
