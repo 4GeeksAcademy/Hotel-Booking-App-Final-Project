@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -171,10 +172,9 @@ class Stay_Package(db.Model):
 
 class Reservation(db.Model):
     # Datos por cada Reservación
-    # id_reservation = db.Column(db.Integer, primary_key=True)
-    id_reservation = db.Column(db.Integer, primary_key=True, unique=True)
+    id_reservation = db.Column(db.Integer, primary_key=True)
     # reservation_date = db.Column(db.Date, nullable=False)
-    reservation_date = db.Column(db.DateTime, nullable=False)
+    reservation_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
     reservation_payment = db.Column(db.Integer, nullable=False)
 
     # faltan las foreign keys, van acá

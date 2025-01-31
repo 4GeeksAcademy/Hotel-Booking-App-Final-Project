@@ -38,7 +38,7 @@ export const ReservationCart = () => {
                     <div key={index} className="card mb-3">
                         <div className="card-body">
                             <h5 className="card-title">
-                                Reserva #{reservation.id_reservation}
+                                Reserva #{index + 1}
                             </h5>
                             <p><strong>Fecha de Reserva:</strong> {moment(reservation.reservation_date).format("YYYY-MM-DD HH:mm:ss")}</p>
                             <p><strong>Paquete de Estancia:</strong> {reservation.stay_package.hotel_package_name}</p>
