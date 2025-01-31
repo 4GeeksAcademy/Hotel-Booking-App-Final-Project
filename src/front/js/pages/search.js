@@ -38,21 +38,17 @@ export const Search = () => {
 			return false
 		}
 		
-		let hotel_reduced_search = hotel_packages_copy.reduce((hotel_package, details)=>
-			{
-			
-				if(details.hotel_package_name.includes(searchInfo.package_name) || 
-				details.hotel.name.includes(searchInfo.hotel_name) ||
-				((searchInfo.min_price ? details.price >= searchInfo.min_price : searchInfo.max_price ? true : false) 
-					&& (searchInfo.max_price ? details.price <= searchInfo.max_price : searchInfo.min_price ? true : false)) ||
-							(new Date(searchInfo.package_date).getTime() < new Date(details.end_date).getTime() && 
-								new Date(searchInfo.package_date).getTime() > new Date(details.start_date).getTime()) ||
-									details.hotel.location.includes(searchInfo.hotel_location)){
-										
-										hotel_package.push(details);
-				
-									}
-				return hotel_package;
+		let hotel_reduced_search = hotel_packages_copy.reduce((hotel_package, details)=>{
+			if(details.hotel_package_name.includes(searchInfo.package_name) || 
+			details.hotel.name.includes(searchInfo.hotel_name) ||
+			((searchInfo.min_price ? details.price >= searchInfo.min_price : searchInfo.max_price ? true : false) 
+				&& (searchInfo.max_price ? details.price <= searchInfo.max_price : searchInfo.min_price ? true : false)) ||
+						(new Date(searchInfo.package_date).getTime() < new Date(details.end_date).getTime() && 
+							new Date(searchInfo.package_date).getTime() > new Date(details.start_date).getTime()) ||
+								details.hotel.location.includes(searchInfo.hotel_location)){
+							hotel_package.push(details);
+			}
+			return hotel_package;
 		}, []);
 
 		console.log(hotel_reduced_search)
