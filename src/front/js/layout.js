@@ -7,10 +7,12 @@ import { Dashboard } from "./pages/dashboard.jsx";
 import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
 import { SignUp } from "./pages/signup.jsx";
+import { TermsAndConditions } from "./pages/termsAndConditions.jsx";
 import { LoginAccount } from "./pages/login";
 import injectContext from "./store/appContext";
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
+import { Search } from "./pages/search.js";
 
 import UserProfile from "./pages/profilePages/UserProfile";
 import PersonalInfo from "./pages/profilePages/PersonalInfo";
@@ -45,6 +47,8 @@ const Layout = () => {
                         <Route element={<SignUp />} path="/signup" />
                         <Route element={<LoginAccount />} path="/login" />
                         <Route element={<ContactUs />} path="/contact" />
+                        <Route element={<Search />} path="/search" />
+                        <Route element={<TermsAndConditions />} path="/terms" />
 
                         {/* User Profile Routes */}
                         <Route element={<UserProfile />} path="/profile">

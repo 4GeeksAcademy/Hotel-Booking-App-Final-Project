@@ -3,7 +3,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 from flask import Flask, request, jsonify, url_for, Blueprint, current_app
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
-from api.models import db, User, Hotel, User_Hotel_Admin_Package, Hotel_Admin_Package
+from api.models import db, User, Hotel, User_Hotel_Admin_Package, Hotel_Admin_Package, Stay_Package
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 import os, cloudinary, cloudinary.uploader
@@ -316,6 +316,25 @@ def upload_image():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+#paquetes en ventana de busqueda
+@api.route('/hotel_packages', methods=['GET'])
+def get_hotel_stay_packages():
+    hotel_packages = Stay_Package.query.all()
+    print (hotel_packages)
+
+    serialized_hotels = []
+
+    if not hotel_packages:
+        print("Packages not found")
+        return jsonify({"message": "Packages not found"}), 404
+    
+    serialized_hotels = [package.serialize() for package in hotel_packages]
+
+    print(serialized_hotels)
+
+    return jsonify({"hotel_packages": serialized_hotels}), 200
+    
 
 
 #endpoint for user info to be edited and submitted
