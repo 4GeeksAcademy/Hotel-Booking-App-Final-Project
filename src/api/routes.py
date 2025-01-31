@@ -418,3 +418,23 @@ def get_user_reservations():
     reservations = [reservation.serialize() for reservation in reservations]
     
     return jsonify({"reservations": reservations}), 200
+
+# PARA PAYPAL:
+# @api.route('/pay-reservation/<int:reservation_id>', methods=['POST'])
+# def pay_reservation(reservation_id):
+#     try:
+#         data = request.json
+#         order_id = data.get("orderID")
+
+#         # Aquí podrías validar el orderID con la API de PayPal antes de actualizar la reserva
+#         reservation = Reservation.query.get(reservation_id)
+
+#         if not reservation:
+#             return jsonify({"msg": "Reserva no encontrada"}), 404
+
+#         reservation.is_paid = True
+#         db.session.commit()
+
+#         return jsonify({"msg": "Reserva actualizada exitosamente"}), 200
+#     except Exception as e:
+#         return jsonify({"error": str(e)}), 500

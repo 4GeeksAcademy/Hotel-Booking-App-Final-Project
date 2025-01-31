@@ -176,6 +176,7 @@ class Reservation(db.Model):
     # reservation_date = db.Column(db.Date, nullable=False)
     reservation_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
     reservation_payment = db.Column(db.Integer, nullable=False)
+    is_paid = db.Column(db.Boolean, nullable=False, default=False)
 
     # faltan las foreign keys, van acá
     #Foreign Keys
@@ -194,10 +195,9 @@ class Reservation(db.Model):
     def serialize(self):
         return {
             "id_reservation": self.id_reservation,
-            # "reservation_date": self.reservation_date,
             "reservation_date": self.reservation_date.isoformat(),
             "reservation_payment": self.reservation_payment,
-            # Este lo agregué para la reservation también:
+            "is_paid": self.is_paid,
             "stay_package": self.stay_package.serialize()  # Serialicé la información del paquete
         }
 
