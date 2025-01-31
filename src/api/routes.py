@@ -6,12 +6,20 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 from api.models import db, User, Hotel, User_Hotel_Admin_Package, Hotel_Admin_Package, Stay_Package
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
+from flask_mail import Mail, Message
 import os, cloudinary, cloudinary.uploader
 
 from api.models import db, User, Hotel, Stay_Package, User_Hotel_Admin_Package, Hotel_Admin_Package
 
 api = Blueprint('api', __name__)
+mailApp = Flask(__name__)
 
+# Configure Flask-Mail with your email settings
+mailApp.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Use your SMTP email server details
+mailApp.config['MAIL_PORT'] = 587
+mailApp.config['MAIL_USE_TLS'] = True
+mailApp.config['MAIL_USE_SSL'] = False
+mail = Mail(mailApp)
 
 # Allow CORS requests to this API
 CORS(api)
@@ -580,16 +588,39 @@ def edit_package(package_id):
 
 
 @api.route('/pass-reset', methods=['POST'])
-@jwt_required()
 def password_reset():
-    current_user = request.json()
-    user_exists = User.query.filter((User.email == current_user) |  (User.username == current_user)).first()
-
+    current_user = request.json.get("user", None)
+    user_exists = User.query.filter(User.email == current_user).first()
 
     if not user_exists:
         return jsonify({"message": "account not found"}), 401
     
     return jsonify({"message": "reset link sent"}), 200
+
+@api.route('/send-email', methods=['POST'])
+def code_notification():
+    #define the users to get the email
+    recipients = request.json.get("email", None)
+    
+    # Create a Message object with subject, sender, and recipient list
+    msg = Message(subject='Hello from Flask!',
+                  sender='miguel@serenia.com',
+                  recipients=recipients)  # Pass the list of recipients here
+    
+    # HTML body content
+    msg.html = """
+    <html>
+        <body>
+            <h1>Hello from Flask-Mail!</h1>
+            <p>This is an example of an <strong>HTML</strong> email sent from a Flask application using Flask-Mail.</p>
+            <a href="https://example.com">Visit our Website</a>
+        </body>
+    </html>
+    """
+
+    mail.send(msg)
+    
+    return jsonify({"message": "email sent!"}), 200
 
     
 

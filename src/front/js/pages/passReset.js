@@ -29,19 +29,19 @@ export const PasswordReset = () => {
 
     // ,[response]) 
 
-    const loginUserHandling = async(e) => {
+    const resetPasswordHandle = async(e) => {
         e.preventDefault()
-        let response = await actions.loginAccount(data.username, data.password)
+        let response = await actions.resetAccPassword(data.username)
         //console.log(response)
-        response.msg ? alert(response.msg): navigate("/user")
     }
 
     return (
+        <>
             <div className='container-fluid w-25 border-secondary customMargins'>
-                    <form  onSubmit={loginUserHandling}>
-                        <label for="full_Name" className="form-label fw-bold">Username/E-mail</label>
+                    <form  onSubmit={resetPasswordHandle}>
+                        <label for="full_Name" className="form-label fw-bold">E-mail</label>
                         <div className="row mb-3">
-                            <input type="text" className="form-control" placeholder="Enter your username or e-mail" id="inputUser" name = "username"
+                            <input type="text" className="form-control" placeholder="Enter your e-mail" id="inputUser" name = "username"
                                 value= {data.username}  onChange={inpuntHandling}/>                            
                                 <div class="invalid-feedback"></div>
                         </div>
@@ -50,5 +50,7 @@ export const PasswordReset = () => {
                     </form>
                     <Link to="/signup" className = "text-primary">Don't have an account? Sign-up!</Link>
             </div>
+        </>
+            
         )
 }

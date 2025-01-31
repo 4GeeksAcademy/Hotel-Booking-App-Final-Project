@@ -572,12 +572,19 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return null;
 				}
 			},			
-			resetAccPassword: async () => {
+			resetAccPassword: async (userPassReset) => {
+				//Verificacion de existencia del usuario
 				try {
-					const response = await fetch(`${process.env.BACKEND_URL}/api/pass-reset`, {
+					const response = await fetch(`${process.env.BACKEND_URL}api/pass-reset`, {
+						method: "POST",
 						headers: {
-							"Authorization": `Bearer ${token}`
-						}
+							"Content-type": "application/json"
+						}, 
+						body:JSON.stringify(
+							{
+								"user": userPassReset
+							}
+						)
 					});
 			
 					if (!response.ok) {
@@ -585,12 +592,64 @@ const getState = ({ getStore, getActions, setStore }) => {
 						console.error("❌ Backend error:", errorData.message);
 						return null;
 					}
-			
+					
+					//Generacion del codigo de renicio de password con su timer de 15 minutos
+					const codeGenerated = getActions().resetCodeGen()
+					const codeTimer = Date.now() + 960;
+
+
+					setStore({resetCode: codeGenerated })
+					setStore({codeExpiration: codeTimer })
+
+					getActions().sendEmailNotification(userPassReset)
+
+
 					const data = await response.json();
-					console.log("📥 Received hotel packages:", data);
+					console.log("📥 Reset code:", getStore().resetCode );
 					return data;
 				} catch (error) {
-					console.error("❌ Error fetching hotel packages:", error);
+					console.error("❌ Error fetching password reset packages:", error);
+					return null;
+				}
+			},
+			resetCodeGen: async () => {
+				let resetCode = ''
+				const characters = 'ABCDEFGHIJKLMNOPRQSTUVWXYZ0123456789';
+				const charactersLength = 4;
+				let counter = 0;
+				while (counter < charactersLength) {
+						resetCode += characters.charAt(Math.floor(Math.random() * charactersLength));
+						counter += 1;
+				}
+				return resetCode
+			},
+			sendEmailNotification: async (userMail) => {
+				//Envio del correo con el codigo
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}api/send-email`, {
+						method: "POST",
+						headers: {
+							"Content-type": "application/json"
+						}, 
+						body:JSON.stringify(
+							{
+								"email": userMail
+							}
+						)
+					});
+			
+					if (!response.ok) {
+						const errorData = await response.json();
+						console.error("❌ Backend error:", errorData.message);
+						return null;
+					}
+
+
+					console.log("We sent it!")
+					return true;
+				}
+					catch (error) {
+					console.error("❌ Error fetching password reset packages:", error);
 					return null;
 				}
 			}
