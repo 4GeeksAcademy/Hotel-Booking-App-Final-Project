@@ -1,20 +1,55 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Header from './Header';
-import HotelSidebar from './HotelSidebar';
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import Header from "./Header";
+import HotelSidebar from "./HotelSidebar";
+import { Context } from "../../store/appContext";
 
 const AddPackage = () => {
+    const { actions, store } = useContext(Context);
     const navigate = useNavigate();
+    const [hotels, setHotels] = useState([]);
+    const [selectedHotel, setSelectedHotel] = useState(null);
     const [packageData, setPackageData] = useState({
-        packageName: '',
-        hotelName: '',
-        country: '',
-        location: '',
-        price: '',
-        startDate: '',
-        endDate: '',
-        description: ''
+        packageName: "",
+        hotelId: "",
+        country: "",
+        location: "",
+        price: "",
+        startDate: "",
+        endDate: "",
+        description: ""
     });
+
+    useEffect(() => {
+        const fetchHotels = async () => {
+            const userHotels = await actions.getUserHotels();
+            if (userHotels) {
+                setHotels(userHotels);
+            }
+        };
+
+        fetchHotels();
+    }, []);
+
+    const handleHotelChange = (e) => {
+        const selected = hotels.find(hotel => hotel.id_hotel === parseInt(e.target.value));
+
+        if (!selected) {
+            console.error("Selected hotel is undefined!");
+            return;
+        }
+
+        setSelectedHotel(selected);
+
+        setPackageData(prevData => ({
+            ...prevData,
+            hotelId: selected.id_hotel,  // ✅ Use `id_hotel`
+            country: selected.country,
+            location: selected.location
+        }));
+    };
+
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -24,11 +59,14 @@ const AddPackage = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(packageData);
-        // After successful submission, navigate back to the packages page
-        navigate('/hotel-profile/packages');
+        const success = await actions.addPackage(packageData);
+        if (success) {
+            navigate("/hotel-profile/packages");
+        } else {
+            alert("Failed to add package. Try again.");
+        }
     };
 
     return (
@@ -42,11 +80,10 @@ const AddPackage = () => {
                             <h5>Add Package</h5>
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="packageName" className="form-label">Package Name</label>
+                            <label className="form-label">Package Name</label>
                             <input
                                 type="text"
                                 className="form-control"
-                                id="packageName"
                                 name="packageName"
                                 value={packageData.packageName}
                                 onChange={handleChange}
@@ -54,104 +91,43 @@ const AddPackage = () => {
                             />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="hotelName" className="form-label">Hotel Name</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                id="hotelName"
-                                name="hotelName"
-                                value={packageData.hotelName}
-                                onChange={handleChange}
-                                required
-                            />
+                            <label className="form-label">Hotel Name</label>
+                            <select className="form-control" onChange={handleHotelChange} required>
+                                <option value="">Select a Hotel</option>
+                                {hotels.map(hotel => (
+                                    <option key={hotel.id_hotel} value={hotel.id_hotel}>
+                                        {hotel.name}
+                                    </option>
+                                ))}
+                            </select>
+
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="country" className="form-label">Country</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                id="country"
-                                name="country"
-                                value={packageData.country}
-                                onChange={handleChange}
-                                required
-                            />
+                            <label className="form-label">Country</label>
+                            <input type="text" className="form-control" value={packageData.country} disabled />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="location" className="form-label">Location</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                id="location"
-                                name="location"
-                                value={packageData.location}
-                                onChange={handleChange}
-                                required
-                            />
+                            <label className="form-label">Location</label>
+                            <input type="text" className="form-control" value={packageData.location} disabled />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="price" className="form-label">Price</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                id="price"
-                                name="price"
-                                value={packageData.price}
-                                onChange={handleChange}
-                                required
-                            />
+                            <label className="form-label">Price</label>
+                            <input type="number" className="form-control" name="price" value={packageData.price} onChange={handleChange} required />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="startDate" className="form-label">Start Date</label>
-                            <input
-                                type="date"
-                                className="form-control"
-                                id="startDate"
-                                name="startDate"
-                                value={packageData.startDate}
-                                onChange={handleChange}
-                                required
-                            />
+                            <label className="form-label">Start Date</label>
+                            <input type="date" className="form-control" name="startDate" value={packageData.startDate} onChange={handleChange} required />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="endDate" className="form-label">End Date</label>
-                            <input
-                                type="date"
-                                className="form-control"
-                                id="endDate"
-                                name="endDate"
-                                value={packageData.endDate}
-                                onChange={handleChange}
-                                required
-                            />
+                            <label className="form-label">End Date</label>
+                            <input type="date" className="form-control" name="endDate" value={packageData.endDate} onChange={handleChange} required />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="description" className="form-label">Description</label>
-                            <textarea
-                                className="form-control"
-                                id="description"
-                                name="description"
-                                value={packageData.description}
-                                onChange={handleChange}
-                                rows="3"
-                                required
-                            />
+                            <label className="form-label">Description</label>
+                            <textarea className="form-control" name="description" value={packageData.description} onChange={handleChange} rows="3" required />
                         </div>
                         <div className="mb-3">
-                            <button
-                                type="button"
-                                className="btn btn-secondary me-2"
-                                onClick={() => navigate('/hotel-profile/packages')}
-                            >
-                                Go Back
-                            </button>
-                            <button
-                                type="button"
-                                className="btn btn-danger me-2"
-                                onClick={() => navigate('/hotel-profile/packages')}
-                            >
-                                Cancel
-                            </button>
+                            <button type="button" className="btn btn-secondary me-2" onClick={() => navigate("/hotel-profile/packages")}>Go Back</button>
                             <button type="submit" className="btn btn-success">Add Package</button>
                         </div>
                     </form>
