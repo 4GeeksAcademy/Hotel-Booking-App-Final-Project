@@ -420,7 +420,158 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error updating personal info:", error);
 					return false;
 				}
-			}
+			},			
+
+			selectPlan: async (planId) => {  
+				console.log("selectPlan called with:", planId); // ✅ Log every call
+				
+				if (!planId || isNaN(planId)) {  
+					console.error("❌ Invalid plan ID:", planId);
+					return null;
+				}
+			
+				const token = localStorage.getItem("user_session");
+				if (!token) {
+					console.error("❌ No token found!");
+					return null;
+				}
+				
+				try {
+					const body = JSON.stringify({ plan_id: planId });
+					console.log("📤 Sending request to select plan:", body); // Debugging
+					
+					const response = await fetch(`${process.env.BACKEND_URL}/api/hotel-plan`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+						body: body,
+					});
+			
+					const responseData = await response.json();
+					console.log("📥 Response from backend:", responseData); // Log backend response
+			
+					if (response.ok) {
+						return responseData.message; // Success message
+					} else {
+						console.error("⚠️ Error selecting plan:", responseData);
+						return null;
+					}
+				} catch (error) {
+					console.error("⚠️ Error selecting plan:", error);
+					return null;
+				}
+			},
+
+			getUserHotels: async () => {
+				const token = localStorage.getItem("user_session");
+				if (!token) return console.error("No token found!");
+			
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/user/hotels/single`, {
+						headers: { Authorization: `Bearer ${token}` }
+					});
+			
+					if (response.ok) {
+						const data = await response.json();
+						setStore({ userHotels: data });
+						return data;
+					}
+				} catch (error) {
+					console.error("Error fetching hotels:", error);
+				}
+			},
+
+			getPackages: async () => {
+				const token = localStorage.getItem("user_session");
+				if (!token) return console.error("No token found!");
+			
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/hotel-packages`, {
+						headers: { Authorization: `Bearer ${token}` }
+					});
+			
+					if (response.ok) {
+						const data = await response.json();
+						setStore({ userPackages: data });
+						return data;
+					}
+				} catch (error) {
+					console.error("Error fetching packages:", error);
+				}
+			},
+
+			addPackage: async (packageData) => {
+				const token = localStorage.getItem("user_session");
+				if (!token) {
+					console.error("No token found!");
+					return false;
+				}
+			
+				try {
+					console.log("📤 Sending package data:", packageData); // Debugging
+			
+					const response = await fetch(`${process.env.BACKEND_URL}/api/hotel-packages`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+						body: JSON.stringify({
+							package_name: packageData.packageName,  // ✅ Matches backend field name
+							hotel_id: packageData.hotelId,          // ✅ Matches backend field name
+							price: packageData.price,               // ✅ Ensure correct format
+							start_date: packageData.startDate,
+							end_date: packageData.endDate,
+							description: packageData.description
+						}),
+					});
+			
+					const data = await response.json();
+					console.log("📥 Backend Response:", data);
+			
+					if (response.ok) {
+						return true;
+					} else {
+						console.error("❌ Error adding package:", data.message);
+						return false;
+					}
+				} catch (error) {
+					console.error("⚠️ Error adding package:", error);
+					return false;
+				}
+			},
+			
+			fetchHotelPackages: async () => {
+				const token = localStorage.getItem("user_session");
+				if (!token) {
+					console.error("❌ No token found!");
+					return null;
+				}
+			
+				try {
+					console.log("📤 Fetching hotel packages...");
+					const response = await fetch(`${process.env.BACKEND_URL}/api/hotel-packages`, {
+						headers: {
+							"Authorization": `Bearer ${token}`
+						}
+					});
+			
+					if (!response.ok) {
+						const errorData = await response.json();
+						console.error("❌ Backend error:", errorData.message);
+						return null;
+					}
+			
+					const data = await response.json();
+					console.log("📥 Received hotel packages:", data);
+					return data;
+				} catch (error) {
+					console.error("❌ Error fetching hotel packages:", error);
+					return null;
+				}
+			},			
 		}
 	};
 };
