@@ -51,9 +51,9 @@ const HotelPersonalInfo = () => {
 
   const confirmPlanSelection = async (planId) => {
     if (!planId) {
-        console.error("Plan ID is missing!");
-        alert("Something went wrong. Please try again.");
-        return;
+      console.error("Plan ID is missing!");
+      alert("Something went wrong. Please try again.");
+      return;
     }
 
     console.log("✅ Selected plan ID:", planId);
@@ -61,13 +61,13 @@ const HotelPersonalInfo = () => {
     const result = await actions.selectPlan(planId);
 
     if (result) {
-        alert(result); // Success message
-        setFormData({ ...formData, plan: planId === 1 ? "priority" : "basic" }); // Update UI
-        setShowPlanSelection(false); // Hide selection panel
+      alert(result); // Success message
+      setFormData({ ...formData, plan: planId === 1 ? "priority" : "basic" }); // Update UI
+      setShowPlanSelection(false); // Hide selection panel
     } else {
-        alert("❌ Failed to update plan. Please try again.");
+      alert("❌ Failed to update plan. Please try again.");
     }
-};
+  };
 
 
 
@@ -126,7 +126,7 @@ const HotelPersonalInfo = () => {
                   className="form-control"
                   name="email"
                   value={formData.email}
-                  onChange={handleChange}
+                  disabled
                 />
               </div>
             </div>
@@ -166,7 +166,10 @@ const HotelPersonalInfo = () => {
                 >
                   <div className="card-body">
                     <h5 className="card-title">Priority Plan</h5>
-                    <p className="card-text">Get premium listing for your packages.</p>
+                    <p className="card-text">✅Get your plans featured at the top of the main screen for more visibility.
+                      ✅Unlimited packages listed.
+                      ✅Single payment subscription.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -178,7 +181,8 @@ const HotelPersonalInfo = () => {
                 >
                   <div className="card-body">
                     <h5 className="card-title">Basic Plan</h5>
-                    <p className="card-text">Standard visibility for your packages.</p>
+                    <p className="card-text">✅Standard visibility for your packages.
+                      ✅Unlimited packages listed. </p>
                   </div>
                 </div>
               </div>
