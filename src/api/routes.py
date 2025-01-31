@@ -577,3 +577,20 @@ def edit_package(package_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": f"Error updating package: {str(e)}"}), 500
+
+
+@api.route('/pass-reset', methods=['POST'])
+@jwt_required()
+def password_reset():
+    current_user = request.json()
+    user_exists = User.query.filter((User.email == current_user) |  (User.username == current_user)).first()
+
+
+    if not user_exists:
+        return jsonify({"message": "account not found"}), 401
+    
+    return jsonify({"message": "reset link sent"}), 200
+
+    
+
+    

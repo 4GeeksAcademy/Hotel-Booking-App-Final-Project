@@ -572,6 +572,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return null;
 				}
 			},			
+			resetAccPassword: async () => {
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/pass-reset`, {
+						headers: {
+							"Authorization": `Bearer ${token}`
+						}
+					});
+			
+					if (!response.ok) {
+						const errorData = await response.json();
+						console.error("❌ Backend error:", errorData.message);
+						return null;
+					}
+			
+					const data = await response.json();
+					console.log("📥 Received hotel packages:", data);
+					return data;
+				} catch (error) {
+					console.error("❌ Error fetching hotel packages:", error);
+					return null;
+				}
+			}
 		}
 	};
 };

@@ -73,7 +73,7 @@ export const LoginAccount = () => {
                         </button>
                     </div>
                     <div className="col-12 d-flex justify-content-center">
-                        <button id="botonForgotPassword" className='mt-3 ps-4 pe-4' type="submit">
+                        <button id="botonForgotPassword" className='mt-3 ps-4 pe-4' type="submit" onClick={() => navigate("reset")}>
                             <div className='text-light fw-bold'>Forgot your password?</div>
                         </button>
                     </div>

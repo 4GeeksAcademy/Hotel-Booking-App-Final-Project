@@ -150,6 +150,15 @@
 }
 
 
+/*Estilos de la pagina de reinicio de password*/
+
+.customMargins {
+    margin-top: 15vh;
+    padding: 35px;
+    border: solid 1px;
+    border-radius: "3%";
+}
+
 /*****************************************************************************DASHBOARD******************************************************************************/
 
 /*BOTONES DASHBOARD*/
