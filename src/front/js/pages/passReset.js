@@ -8,6 +8,7 @@ export const PasswordReset = () => {
     let navigate = useNavigate()
     let response = {}
     const { store, actions } = useContext(Context);
+    const [insertedCode, setInsertedCode] = useState('')
     //console.log(store.user)
     const [data, setData] = useState({
         username: "",
@@ -34,10 +35,12 @@ export const PasswordReset = () => {
         let response = await actions.resetAccPassword(data.username)
         //console.log(response)
     }
+    console.log(insertedCode)
 
     return (
         <>
-            <div className='container-fluid w-25 border-secondary customMargins'>
+            <div className='container-fluid w-25 customMargins'>
+                {!store.resetCode && Date.now() > store.codeExpiration ? (<>
                     <form  onSubmit={resetPasswordHandle}>
                         <label for="full_Name" className="form-label fw-bold">E-mail</label>
                         <div className="row mb-3">
@@ -49,6 +52,33 @@ export const PasswordReset = () => {
                         ><div className='text-light fw-bold'>Send Request</div></button>
                     </form>
                     <Link to="/signup" className = "text-primary">Don't have an account? Sign-up!</Link>
+                </> 
+                ): (<>
+                    <h3>Reset Password</h3>
+                    <form  onSubmit={resetPasswordHandle}>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="" aria-label="digit2" aria-describedby="basic-addon1" maxlength="1"
+                                onChange={(e) => {
+                                    setInsertedCode(insertedCode + e.target.value)
+                                }}/>
+                            <input type="text" class="form-control" placeholder="" aria-label="digit3" aria-describedby="basic-addon1" maxlength="1"
+                                onChange={(e) => {
+                                    setInsertedCode(insertedCode + e.target.value)
+                                }}/>
+                            <input type="text" class="form-control" placeholder="" aria-label="digit4" aria-describedby="basic-addon1" maxlength="1"
+                                onChange={(e) => {
+                                    setInsertedCode(insertedCode + e.target.value)
+                                }}/>
+                            <input type="text" class="form-control" placeholder="" aria-label="digit5" aria-describedby="basic-addon1" maxlength="1"
+                                onChange={(e) => {
+                                    setInsertedCode(insertedCode + e.target.value)
+                                }}/>
+                        </div>
+                    </form>
+                    <p>Please input the confirmation code sent to your email.</p>
+                </>) 
+                }
+                    
             </div>
         </>
             

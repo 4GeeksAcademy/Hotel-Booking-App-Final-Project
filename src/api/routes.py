@@ -16,10 +16,14 @@ mailApp = Flask(__name__)
 
 # Configure Flask-Mail with your email settings
 mailApp.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Use your SMTP email server details
+mailApp.config['MAIL_USERNAME'] = 'smtptestingmu@gmail.com'  # Use your actual Gmail address
+mailApp.config['MAIL_PASSWORD'] = 'aopk jelp wsvv vsdn'     # Use your generated App Password
 mailApp.config['MAIL_PORT'] = 587
 mailApp.config['MAIL_USE_TLS'] = True
 mailApp.config['MAIL_USE_SSL'] = False
 mail = Mail(mailApp)
+mail.init_app(mailApp)
+
 
 # Allow CORS requests to this API
 CORS(api)
@@ -600,23 +604,31 @@ def password_reset():
 @api.route('/send-email', methods=['POST'])
 def code_notification():
     #define the users to get the email
-    recipients = request.json.get("email", None)
+    user_emails = request.json.get("email", None)
+    code = request.json.get("code", None)
+
+    recipients = []
     
+    recipients.append(user_emails)
+
     # Create a Message object with subject, sender, and recipient list
-    msg = Message(subject='Hello from Flask!',
-                  sender='miguel@serenia.com',
+    msg = Message(subject= 'Reset Password',
+                  sender='smtptestingmu@gmail.com',
                   recipients=recipients)  # Pass the list of recipients here
     
+    msg.body = "testing"
     # HTML body content
-    msg.html = """
+    msg.html = """\
     <html>
         <body>
-            <h1>Hello from Flask-Mail!</h1>
-            <p>This is an example of an <strong>HTML</strong> email sent from a Flask application using Flask-Mail.</p>
-            <a href="https://example.com">Visit our Website</a>
+            <h1>Hello Serenia!</h1>
+            <p>We've received your request to reset your password. Please click the link below to complete the reset.
+            email sent from a Flask application using Flask-Mail. Here is the code: </p>
+            <h2>{code}</h2>
+            <a href="https://example.com">Please go here to insert the code</a>
         </body>
     </html>
-    """
+    """.format(code = code)
 
     mail.send(msg)
     

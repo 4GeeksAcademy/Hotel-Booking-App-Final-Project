@@ -595,13 +595,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 					
 					//Generacion del codigo de renicio de password con su timer de 15 minutos
 					const codeGenerated = getActions().resetCodeGen()
+					
+
 					const codeTimer = Date.now() + 960;
-
-
 					setStore({resetCode: codeGenerated })
 					setStore({codeExpiration: codeTimer })
+					
 
-					getActions().sendEmailNotification(userPassReset)
+					console.log(codeGenerated)
+
+					getActions().sendEmailNotification(userPassReset, codeGenerated)
 
 
 					const data = await response.json();
@@ -612,18 +615,22 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return null;
 				}
 			},
-			resetCodeGen: async () => {
-				let resetCode = ''
+			resetCodeGen: () => {
+				let resetCodeValue = ''
 				const characters = 'ABCDEFGHIJKLMNOPRQSTUVWXYZ0123456789';
 				const charactersLength = 4;
 				let counter = 0;
 				while (counter < charactersLength) {
-						resetCode += characters.charAt(Math.floor(Math.random() * charactersLength));
+						resetCodeValue += characters.charAt(Math.floor(Math.random() * charactersLength));
 						counter += 1;
 				}
-				return resetCode
+				console.log("codigo generado" + resetCodeValue)
+
+				
+
+				return resetCodeValue
 			},
-			sendEmailNotification: async (userMail) => {
+			sendEmailNotification: async (userMail, code) => {
 				//Envio del correo con el codigo
 				try {
 					const response = await fetch(`${process.env.BACKEND_URL}api/send-email`, {
@@ -633,7 +640,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 						}, 
 						body:JSON.stringify(
 							{
-								"email": userMail
+								"email": userMail,
+								"code": code
 							}
 						)
 					});

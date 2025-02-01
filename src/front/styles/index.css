@@ -153,8 +153,8 @@
 /*Estilos de la pagina de reinicio de password*/
 
 .customMargins {
-    margin-top: 15vh;
-    padding: 35px;
+    width: 120rem;
+    margin-top: 15rem;
     border: solid 1px;
     border-radius: "3%";
 }
