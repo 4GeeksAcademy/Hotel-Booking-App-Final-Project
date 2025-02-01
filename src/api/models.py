@@ -12,6 +12,7 @@ class User(db.Model):
     username = db.Column(db.String(60), unique=True, nullable=False)
     password = db.Column(db.String(120), unique=False, nullable=False)
     user_type = db.Column(db.Enum('cliente', 'hotel', 'admin', name='user_type_enum'), nullable=False)
+    password_reset = db.Column(db.String(4), unique=True, nullable=True)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     hotels = db.relationship('Hotel', back_populates='user', lazy=True)  # Relationship to hotels
         # Campos específicos para usuarios tipo 'hotel'

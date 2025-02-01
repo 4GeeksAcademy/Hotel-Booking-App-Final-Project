@@ -15,14 +15,8 @@ api = Blueprint('api', __name__)
 mailApp = Flask(__name__)
 
 # Configure Flask-Mail with your email settings
-mailApp.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Use your SMTP email server details
-mailApp.config['MAIL_USERNAME'] = 'smtptestingmu@gmail.com'  # Use your actual Gmail address
-mailApp.config['MAIL_PASSWORD'] = 'aopk jelp wsvv vsdn'     # Use your generated App Password
-mailApp.config['MAIL_PORT'] = 587
-mailApp.config['MAIL_USE_TLS'] = True
-mailApp.config['MAIL_USE_SSL'] = False
-mail = Mail(mailApp)
-mail.init_app(mailApp)
+
+
 
 
 # Allow CORS requests to this API
@@ -33,6 +27,16 @@ cloudinary.config(
     api_key=os.environ.get("CLOUDINARY_API_KEY"),
     api_secret=os.environ.get("CLOUDINARY_API_SECRET")
 )
+
+mailApp.config["MAIL_SERVER"]='smtp.gmail.com'
+mailApp.config["MAIL_PORT"]=587
+mailApp.config["MAIL_USE_TLS"]=False
+mailApp.config["MAIL_USE_SSL"]=True
+mailApp.config["MAIL_USERNAME"]=os.environ.get("MAIL_USERNAME")
+mailApp.config["MAIL_PASSWORD"]=os.environ.get("MAIL_PASSWORD")
+
+mail = Mail(mailApp)
+mail.init_app(mailApp)
 
 @api.route('/hello', methods=['POST', 'GET'])
 def handle_hello():
