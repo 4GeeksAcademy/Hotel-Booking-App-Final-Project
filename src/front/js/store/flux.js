@@ -11,6 +11,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			name: null,
 			personalInfo: null, // Store for personal info data
 			signupData: {},
+			recovery_mail: [],
 			demo: [
 				{
 					title: "FIRST",
@@ -598,17 +599,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 					
 
 					const codeTimer = Date.now() + 960;
-					setStore({resetCode: codeGenerated })
-					setStore({codeExpiration: codeTimer })
-					
+					// setStore({resetCode: codeGenerated })
+					// setStore({codeExpiration: codeTimer })
+					setStore({recovery_mail: userPassReset})
 
 					console.log(codeGenerated)
+					console.log(codeTimer)
 
-					getActions().sendEmailNotification(userPassReset, codeGenerated)
+					getActions().sendEmailNotification(userPassReset, codeGenerated, codeTimer)
 
 
 					const data = await response.json();
-					console.log("📥 Reset code:", getStore().resetCode );
+					console.log("📥 Reset code:", codeGenerated );
 					return data;
 				} catch (error) {
 					console.error("❌ Error fetching password reset packages:", error);
@@ -630,18 +632,19 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				return resetCodeValue
 			},
-			sendEmailNotification: async (userMail, code) => {
+			sendEmailNotification: async (userMail, code, code_date) => {
 				//Envio del correo con el codigo
 				try {
 					const response = await fetch(`${process.env.BACKEND_URL}api/send-email`, {
-						method: "POST",
+						method: "PUT",
 						headers: {
 							"Content-type": "application/json"
 						}, 
 						body:JSON.stringify(
 							{
 								"email": userMail,
-								"code": code
+								"code": code,
+								"code_date": code_date
 							}
 						)
 					});
@@ -654,6 +657,39 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 					console.log("We sent it!")
+					return true;
+				}
+					catch (error) {
+					console.error("❌ Error fetching password reset packages:", error);
+					return null;
+				}
+			},
+			codeVerification: async (inputToCheck) =>{
+				//Envio del correo con el codigo
+				const code_date = Date.now()
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}api/code-verification`, {
+						method: "POST",
+						headers: {
+							"Content-type": "application/json"
+						}, 
+						body:JSON.stringify(
+							{
+								"email": getStore().recovery_mail,
+								"code": inputToCheck,
+								"code_date": code_date
+							}
+						)
+					});
+			
+					if (!response.ok) {
+						const errorData = await response.json();
+						console.error("❌ Backend error:", errorData.message);
+						return null;
+					}
+
+
+					console.log("checked!")
 					return true;
 				}
 					catch (error) {

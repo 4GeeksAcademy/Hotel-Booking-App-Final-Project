@@ -14,11 +14,6 @@ from api.models import db, User, Hotel, Stay_Package, User_Hotel_Admin_Package, 
 api = Blueprint('api', __name__)
 mailApp = Flask(__name__)
 
-# Configure Flask-Mail with your email settings
-
-
-
-
 # Allow CORS requests to this API
 CORS(api)
 
@@ -29,11 +24,12 @@ cloudinary.config(
 )
 
 mailApp.config["MAIL_SERVER"]='smtp.gmail.com'
+mailApp.config["MAIL_USERNAME"]= os.environ.get("MAIL_USERNAME")
+mailApp.config["MAIL_PASSWORD"]= os.environ.get("MAIL_PASSWORD")
 mailApp.config["MAIL_PORT"]=587
-mailApp.config["MAIL_USE_TLS"]=False
-mailApp.config["MAIL_USE_SSL"]=True
-mailApp.config["MAIL_USERNAME"]=os.environ.get("MAIL_USERNAME")
-mailApp.config["MAIL_PASSWORD"]=os.environ.get("MAIL_PASSWORD")
+mailApp.config["MAIL_USE_TLS"]=True
+mailApp.config["MAIL_USE_SSL"]=False
+
 
 mail = Mail(mailApp)
 mail.init_app(mailApp)
@@ -605,15 +601,21 @@ def password_reset():
     
     return jsonify({"message": "reset link sent"}), 200
 
-@api.route('/send-email', methods=['POST'])
+@api.route('/send-email', methods=['PUT'])
 def code_notification():
     #define the users to get the email
-    user_emails = request.json.get("email", None)
+    user_email = request.json.get("email", None)
     code = request.json.get("code", None)
+    code_date = request.json.get("code_date", None)
 
-    recipients = []
+    user_exists = User.query.filter(User.email == user_email).first()
+
+    user_exists.password_reset = code
+    user_exists.password_reset_date = code_date
+    db.session.commit()
     
-    recipients.append(user_emails)
+    recipients = []
+    recipients.append(user_email)
 
     # Create a Message object with subject, sender, and recipient list
     msg = Message(subject= 'Reset Password',
@@ -635,6 +637,23 @@ def code_notification():
     """.format(code = code)
 
     mail.send(msg)
+    
+    return jsonify({"message": "email sent!"}), 200
+
+
+@api.route('/code-verification', methods=['POST'])
+def verify_code():
+    #define the users to get the email
+    user_email = request.json.get("email", None)
+    code = request.json.get("code", None)
+    code_date = request.json.get("code_date", None)
+
+    user_exists = User.query.filter(User.email == user_email).first()
+
+    user_exists.password_reset = code
+    user_exists.password_reset_date = code_date
+    db.session.commit()
+    
     
     return jsonify({"message": "email sent!"}), 200
 

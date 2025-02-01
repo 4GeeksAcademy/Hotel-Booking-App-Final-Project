@@ -162,7 +162,7 @@
     border-color: black;
 }
 
-.customMargins input {
+.resetConfigForm  input {
     width: 5rem;
     height: 6rem;
     border-radius: 10%;
@@ -170,7 +170,7 @@
     text-align: center;
 }
 
-.customMargins input:hover {
+.resetConfigForm  input:hover {
     width: 5rem;
     height: 6rem;
     padding-top: 2px;
@@ -178,7 +178,7 @@
 }
 
 
-.customMargins button {
+.resetConfigForm  button {
     width: 10rem;
     height: 3rem;
     margin-left: 25%;

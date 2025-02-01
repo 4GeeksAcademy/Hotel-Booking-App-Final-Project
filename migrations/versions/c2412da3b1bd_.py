@@ -1,14 +1,8 @@
 """empty message
 
-<<<<<<<< HEAD:migrations/versions/afe854c9ad7b_.py
-Revision ID: afe854c9ad7b
+Revision ID: c2412da3b1bd
 Revises: 
-Create Date: 2025-01-30 02:27:58.386269
-========
-Revision ID: fa0962d6eca1
-Revises: 
-Create Date: 2025-01-30 01:25:41.291098
->>>>>>>> 68dcb3e769e23ccb5fc380a6dd6401470c604032:migrations/versions/fa0962d6eca1_.py
+Create Date: 2025-02-01 03:34:53.163625
 
 """
 from alembic import op
@@ -16,11 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-<<<<<<<< HEAD:migrations/versions/afe854c9ad7b_.py
-revision = 'afe854c9ad7b'
-========
-revision = 'fa0962d6eca1'
->>>>>>>> 68dcb3e769e23ccb5fc380a6dd6401470c604032:migrations/versions/fa0962d6eca1_.py
+revision = 'c2412da3b1bd'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -43,9 +33,13 @@ def upgrade():
     sa.Column('username', sa.String(length=60), nullable=False),
     sa.Column('password', sa.String(length=120), nullable=False),
     sa.Column('user_type', sa.Enum('cliente', 'hotel', 'admin', name='user_type_enum'), nullable=False),
+    sa.Column('password_reset', sa.String(length=4), nullable=True),
+    sa.Column('password_reset_date', sa.String(length=120), nullable=True),
     sa.Column('is_active', sa.Boolean(), nullable=False),
     sa.PrimaryKeyConstraint('id_user'),
     sa.UniqueConstraint('email'),
+    sa.UniqueConstraint('password_reset'),
+    sa.UniqueConstraint('password_reset_date'),
     sa.UniqueConstraint('username')
     )
     op.create_table('hotel',

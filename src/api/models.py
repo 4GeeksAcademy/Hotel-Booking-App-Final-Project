@@ -13,6 +13,7 @@ class User(db.Model):
     password = db.Column(db.String(120), unique=False, nullable=False)
     user_type = db.Column(db.Enum('cliente', 'hotel', 'admin', name='user_type_enum'), nullable=False)
     password_reset = db.Column(db.String(4), unique=True, nullable=True)
+    password_reset_date = db.Column(db.String(120), unique=True, nullable=True)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     hotels = db.relationship('Hotel', back_populates='user', lazy=True)  # Relationship to hotels
         # Campos específicos para usuarios tipo 'hotel'
@@ -63,8 +64,6 @@ class Hotel(db.Model):
     description = db.Column(db.String(500), unique=False, nullable=False)
     image_url = db.Column(db.String(255), nullable=True) # URL DE LA IMAGEN
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
-    
-    
 
     # faltan las foreign keys, van acá
     id_user = db.Column(db.Integer, db.ForeignKey('user.id_user'), nullable=False)

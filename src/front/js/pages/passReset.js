@@ -8,6 +8,7 @@ export const PasswordReset = () => {
     let navigate = useNavigate()
     let response = {}
     const { store, actions } = useContext(Context);
+    const [alreadyCode, setAlreadyCode] = useState(false)
     const [insertedCode, setInsertedCode] = useState({
         input1: "",
         input2: "",
@@ -31,9 +32,11 @@ export const PasswordReset = () => {
             }));
         //console.log(data);
     }
-    // useEffect(
 
-    // ,[response]) 
+     useEffect(() => {
+       
+        setAlreadyCode(false)
+     },[]) 
 
     const resetPasswordHandle = async(e) => {
         e.preventDefault()
@@ -43,33 +46,36 @@ export const PasswordReset = () => {
 
     const acceptPassReset = async(e) => {
         e.preventDefault()
-        const inputToCheck = insertedCode.inpu1 + insertedCode.inpu2 + insertedCode.inpu3 + insertedCode.inpu4
-        inputToCheck == store.resetCode ? console.log("successful!") : alert("Wrong code")
+        const inputToCheck = insertedCode.input1 + insertedCode.input2 + insertedCode.input3 + insertedCode.input4
+        let checkCode = await store.actions(inputToCheck)
     }
     console.log(insertedCode)
 
     return (
         <>
             <div className='container-fluid d-flex justify-content-center customMargins'>
-                {!store.resetCode && Date.now() > store.codeExpiration ? (<>
-                    <form  onSubmit={resetPasswordHandle}>
+                {!alreadyCode ? (<>
+                    <div>
                         <label for="full_Name" className="form-label fw-bold">E-mail</label>
-                        <div className="row mb-3">
-                            <input type="text" className="form-control" placeholder="Enter your e-mail" id="inputUser" name = "username"
-                                value= {data.username}  onChange={inpuntHandling}/>                            
-                                <div class="invalid-feedback"></div>
-                        </div>
-                        <button className='w-100 bg-primary' type="submit"
-                        ><div className='text-light fw-bold'>Send Request</div></button>
-                    </form>
-                    <Link to="/signup" className = "text-primary">Don't have an account? Sign-up!</Link>
+                        <form  onSubmit={resetPasswordHandle}>
+                            <div className="row mb-3">
+                                <input type="text" className="form-control" placeholder="Enter your e-mail" id="inputUser" name = "username"
+                                    value= {data.username}  onChange={inpuntHandling}/>                            
+                                    <div class="invalid-feedback"></div>
+                            </div>
+                        </form>
+                        <button className='w-100 bg-primary' onClick={resetPasswordHandle}
+                            ><div className='text-light fw-bold'>Send Request</div></button>
+                        <p onClick={(e) => {setAlreadyCode(true)}} className = "text-primary">Already have a code?</p>
+                    </div>
+                   
                 </> 
                 ): (<>
                     <div>
                         <h3 className="col-12">Reset Password</h3>
                         <form  onSubmit={acceptPassReset} className="col-12 d-flex justify-content-center">
-                            <div className="mt-3 mb-3">
-                                <input type="text" aria-label="digit2" aria-describedby="basic-addon1" maxlength="1"
+                            <div className="resetConfigForm mt-3 mb-3">
+                                <input type="text" aria-label="digit2" aria-describedby="basic-addon1" maxlength="1" id="inputCode" name = "code"
                                     onChange={(e) => {
                                         setInsertedCode({input1: e.target.value})
                                     }}/>
