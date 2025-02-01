@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/login.css"
@@ -11,6 +11,11 @@ export const LoginAccount = () => {
     let navigate = useNavigate()
     let response = {}
 
+
+
+    useEffect(() => {
+        store.currentUser || localStorage.getItem("user_session") ? navigate("/") : console.log("user error")
+    }, [])
 
     //console.log(store.user)
     const [data, setData] = useState({
