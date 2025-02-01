@@ -177,6 +177,9 @@ class Reservation(db.Model):
     reservation_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
     reservation_payment = db.Column(db.Integer, nullable=False)
     is_paid = db.Column(db.Boolean, nullable=False, default=False)
+    order_id = db.Column(db.String(20), nullable=True)
+    payment_id = db.Column(db.String(20), nullable=True)
+
 
     # faltan las foreign keys, van acá
     #Foreign Keys

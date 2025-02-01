@@ -425,6 +425,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			// Obtener las reservas de los usuarios en el carrito
 			getUserReservations: async () => {
+				const token = localStorage.getItem("user_session"); // Assuming the token is stored here
+				if (!token) {
+					console.error("No token found!");
+					return false;
+				}
 				try {
 					const response = await fetch(process.env.BACKEND_URL + "api/user/reservations", {
 						method: "GET",
