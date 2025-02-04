@@ -148,6 +148,7 @@ class Stay_Package(db.Model):
     id_hotel = db.Column(db.Integer, db.ForeignKey('hotel.id_hotel'), nullable=False)
     hotel = db.relationship("Hotel", back_populates="stay_packages")
     stay_history = db.relationship("Stay_History", back_populates = "package", lazy = True) #relationship with hotel
+    favorites = db.relationship("Favorites", back_populates = "stay_package", lazy = True) #relationship with hotel
     
     # hotel_package = db.relationship("Hotel_Package", back_populates = "hotel", lazy = True)
 
@@ -220,6 +221,9 @@ class Favorites(db.Model):
     user = db.relationship(User)
     hotel_favorites = db.Column(db.Integer, db.ForeignKey(Hotel.id_hotel), nullable=True)
     hotel = db.relationship(Hotel)
+    stay_package_favorites = db.Column(db.Integer, db.ForeignKey(Stay_Package.id_hotel_package), nullable=True)
+    stay_package = db.relationship(Stay_Package)
+    
 
     def _repr_(self):
         return '<Favorites %r>' % self.id_favorites
