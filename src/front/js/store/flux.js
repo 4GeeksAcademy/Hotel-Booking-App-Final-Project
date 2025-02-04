@@ -357,11 +357,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 			/*deactivate hotel from hotel profile*/
 			deactivateHotel: async (hotelId) => {
 				const token = localStorage.getItem("user_session");
-
+			
 				if (!token) {
 					console.error("No token found!");
 					return false;
 				}
+			
 				try {
 					const response = await fetch(`${process.env.BACKEND_URL}/api/hotels/${hotelId}`, {
 						method: "PUT",
@@ -371,21 +372,61 @@ const getState = ({ getStore, getActions, setStore }) => {
 						},
 						body: JSON.stringify({ is_active: false }),
 					});
-
+			
 					if (!response.ok) {
 						throw new Error("Failed to deactivate hotel");
 					}
-
+			
 					const data = await response.json();
-					console.log("Hotel successfully deactivated:", data);
-
-					// Refresh the list of hotels
-					const actions = getActions();
-					await actions.getHotels();
-
+					console.log("✅ Hotel successfully deactivated:", data);
+					
+					// Update store state
+					const updatedHotels = getStore().userHotels.map((hotel) =>
+						hotel.id_hotel === hotelId ? { ...hotel, is_active: false } : hotel
+					);
+					setStore({ userHotels: updatedHotels });
+			
 					return true;
 				} catch (error) {
 					console.error("Error deactivating hotel:", error);
+					return false;
+				}
+			},
+
+			reactivateHotel: async (hotelId) => {
+				const token = localStorage.getItem("user_session");
+			
+				if (!token) {
+					console.error("No token found!");
+					return false;
+				}
+			
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/hotels/${hotelId}/status`, {
+						method: "PUT",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+						body: JSON.stringify({ is_active: true }),
+					});
+			
+					if (!response.ok) {
+						throw new Error("Failed to reactivate hotel");
+					}
+			
+					const data = await response.json();
+					console.log("✅ Hotel successfully reactivated:", data);
+					
+					// Update store state
+					const updatedHotels = getStore().userHotels.map((hotel) =>
+						hotel.id_hotel === hotelId ? { ...hotel, is_active: true } : hotel
+					);
+					setStore({ userHotels: updatedHotels });
+			
+					return true;
+				} catch (error) {
+					console.error("Error reactivating hotel:", error);
 					return false;
 				}
 			},

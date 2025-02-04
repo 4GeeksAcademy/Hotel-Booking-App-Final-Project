@@ -275,39 +275,67 @@ def add_hotel():
 @api.route('/hotels/<int:hotel_id>', methods=['PUT'])
 @jwt_required()
 def update_hotel_status(hotel_id):
-    # Debug the incoming request
-    current_user = get_jwt_identity()
-    print("Current User:", current_user)  # Should print the 'sub' (subject) from the JWT
-
-    # Ensure the user exists in the database
-    user = User.query.filter_by(username=current_user).first()
-    if not user:
-        print("User not found in the database")  # Debugging log
-        return jsonify({"message": "User not found"}), 404
-
-    # Check if the user has 'hotel' privileges
-    if user.user_type != 'hotel':
-        print("Access denied for non-hotel user")  # Debugging log
-        return jsonify({"message": "Access denied"}), 403
-
-    # Fetch the hotel by ID
-    hotel = Hotel.query.get(hotel_id)
-    if not hotel:
-        print("Hotel not found")  # Debugging log
-        return jsonify({"message": "Hotel not found"}), 404
-
-    # Update the 'is_active' field
-    data = request.get_json()
-    hotel.is_active = data.get("is_active", hotel.is_active)
-
     try:
+        current_user = get_jwt_identity()
+        user = User.query.filter_by(username=current_user).first()
+
+        if not user:
+            return jsonify({"message": "User not found"}), 404
+
+       
+        if user.user_type != 'hotel':
+            return jsonify({"message": "Access denied"}), 403
+
+        # Find the hotel
+        hotel = Hotel.query.filter_by(id_hotel=hotel_id, id_user=user.id_user).first()
+        if not hotel:
+            return jsonify({"message": "Hotel not found or unauthorized"}), 404
+
+        # Get request data
+        data = request.get_json()
+        if "is_active" in data:
+            hotel.is_active = data["is_active"]  #  Set to False for deactivation
+
         db.session.commit()
-        print("Hotel successfully deactivated")  # Debugging log
-        return jsonify(hotel.serialize()), 200
+        return jsonify({"message": "Hotel updated successfully", "hotel": hotel.serialize()}), 200
+
     except Exception as e:
         db.session.rollback()
-        print("Error deactivating hotel:", str(e))  # Debugging log
         return jsonify({"message": f"Error updating hotel: {str(e)}"}), 500
+
+        
+        
+@api.route('/hotels/<int:hotel_id>/status', methods=['PUT'])
+@jwt_required()
+def update_hotel_status_readd(hotel_id):
+    try:
+        current_user = get_jwt_identity()
+        user = User.query.filter_by(username=current_user).first()
+
+        if not user:
+            return jsonify({"message": "User not found"}), 404
+
+        
+        if user.user_type != 'hotel':
+            return jsonify({"message": "Access denied"}), 403
+
+        
+        hotel = Hotel.query.filter_by(id_hotel=hotel_id, id_user=user.id_user).first()
+        if not hotel:
+            return jsonify({"message": "Hotel not found or unauthorized"}), 404
+
+        
+        data = request.get_json()
+        if "is_active" in data:
+            hotel.is_active = data["is_active"]  # ✅ Toggle activation
+
+        db.session.commit()
+        return jsonify({"message": f"Hotel {'activated' if data['is_active'] else 'deactivated'} successfully", "hotel": hotel.serialize()}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": f"Error updating hotel: {str(e)}"}), 500
+
 
 # CLOUDINARY
 @api.route('/upload', methods=['POST'])
@@ -453,7 +481,7 @@ def get_all_packages():
 
 @api.route('/user/hotels/single', methods=['GET'])
 @jwt_required()
-def get_single_user_hotel():  # ✅ Renamed function
+def get_single_user_hotel():  #  Renamed function
     current_user = get_jwt_identity()
     user = User.query.filter_by(username=current_user).first()
 
@@ -535,6 +563,7 @@ def get_user_packages():
             print(f"🚨 Access denied for user: {current_user}")
             return jsonify({"message": "Access denied"}), 403
 
+        # Find hotels owned by the logged-in user
         hotels = Hotel.query.filter_by(id_user=user.id_user).all()
         if not hotels:
             print(f"🚨 No hotels found for user: {user.username}")
@@ -543,6 +572,7 @@ def get_user_packages():
         hotel_ids = [hotel.id_hotel for hotel in hotels]
         print(f"🔹 Found hotels: {hotel_ids}")
 
+        # Fetch only the packages for those hotels
         packages = Stay_Package.query.filter(Stay_Package.id_hotel.in_(hotel_ids)).all()
         if not packages:
             print(f"🚨 No packages found for these hotels: {hotel_ids}")
@@ -556,6 +586,7 @@ def get_user_packages():
     except Exception as e:
         print(f"❌ Error fetching hotel packages: {str(e)}")
         return jsonify({"message": f"Error fetching hotel packages: {str(e)}"}), 500
+
 
 
 
