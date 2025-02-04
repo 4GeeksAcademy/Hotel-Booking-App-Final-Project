@@ -631,6 +631,38 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			/*remove favorite hotel*/
+			removeFavoriteHotel: async (hotelId) => {
+				const token = localStorage.getItem("user_session");
+				if (!token) {
+				  console.error("No token found!");
+				  return false;
+				}
+				
+				try {
+				  const response = await fetch(`${process.env.BACKEND_URL}/api/user/favorites/${hotelId}`, {
+					method: "DELETE",
+					headers: {
+					  Authorization: `Bearer ${token}`
+					}
+				  });
+			  
+				  if (!response.ok) {
+					throw new Error("Failed to remove favorite hotel");
+				  }
+			  
+				  
+				  const updatedFavorites = getStore().favoriteHotels.filter((hotel) => hotel.id_hotel !== hotelId);
+				  setStore({ favoriteHotels: updatedFavorites });
+			  
+				  return true;
+				} catch (error) {
+				  console.error("Error removing favorite hotel:", error);
+				  return false;
+				}
+			  },
+			  
+
 		}
 	};
 };

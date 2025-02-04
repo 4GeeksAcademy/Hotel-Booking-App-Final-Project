@@ -586,14 +586,13 @@ def edit_package(package_id):
 def get_favorite_hotels():
     try:
         current_user = get_jwt_identity()
-        print(f"🔹 Authenticated user: {current_user}")  # ✅ Debugging
-        
+        print(f"🔹 Authenticated user: {current_user}")  
         user = User.query.filter_by(username=current_user).first()
         if not user:
             print("❌ User not found")
             return jsonify({"message": "User not found"}), 404
 
-        print(f"📌 User ID: {user.id_user}")  # ✅ Ensure we got the user ID
+        print(f"📌 User ID: {user.id_user}") 
         
         # Fetch favorite hotels
         favorite_hotels = Favorites.query.filter_by(user_favorites=user.id_user).all()
@@ -603,13 +602,13 @@ def get_favorite_hotels():
             return jsonify([]), 200
 
         hotels_data = [fav.hotel.serialize() for fav in favorite_hotels if fav.hotel]
-        print(f"✅ Hotels Data: {hotels_data}")  # ✅ Print final data before returning
+        print(f"✅ Hotels Data: {hotels_data}")  
 
         return jsonify(hotels_data), 200
     except Exception as e:
-        print(f"🔥 ERROR: {e}")  # ✅ Log the exact error
+        print(f"🔥 ERROR: {e}") 
         import traceback
-        traceback.print_exc()  # ✅ Print full traceback
+        traceback.print_exc()  
         return jsonify({"error": "Internal Server Error", "details": str(e)}), 500
 
 
@@ -631,3 +630,45 @@ def remove_favorite_hotel(hotel_id):
     db.session.commit()
     
     return jsonify({"message": "Hotel removed from favorites"}), 200
+
+@api.route('/user/favorites', methods=['POST'])
+@jwt_required()
+def add_favorite_hotel():
+    try:
+        current_user = get_jwt_identity()
+        user = User.query.filter_by(username=current_user).first()
+
+        if not user:
+            return jsonify({"message": "User not found"}), 404
+
+        data = request.get_json()
+        hotel_id = data.get("hotel_id")
+
+        if not hotel_id:
+            return jsonify({"message": "Hotel ID is required"}), 400
+
+       
+        hotel = Hotel.query.get(hotel_id)
+        if not hotel:
+            return jsonify({"message": "Hotel not found"}), 404
+
+        
+        existing_favorite = Favorites.query.filter_by(
+            user_favorites=user.id_user, 
+            hotel_favorites=hotel_id
+        ).first()
+
+        if existing_favorite:
+            return jsonify({"message": "Hotel is already in favorites"}), 400
+
+        # Add favorite
+        new_favorite = Favorites(user_favorites=user.id_user, hotel_favorites=hotel_id)
+        db.session.add(new_favorite)
+        db.session.commit()
+
+        return jsonify({"message": "Hotel added to favorites"}), 201
+
+    except Exception as e:
+        return jsonify({"error": "Internal Server Error", "details": str(e)}), 500
+    
+
