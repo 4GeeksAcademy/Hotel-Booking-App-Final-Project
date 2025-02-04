@@ -7,6 +7,7 @@ from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_bcrypt import Bcrypt
+from flask_mail import Mail, Message
 from api.utils import APIException, generate_sitemap
 from api.models import db, User, Favorites, Stay_History, Hotel, Hotel_Admin_Package, Payment, Reservation, Stay_Package
 from api.routes import api
@@ -80,3 +81,4 @@ def serve_any_other_file(path):
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3001))
     app.run(host='0.0.0.0', port=PORT, debug=True)
+

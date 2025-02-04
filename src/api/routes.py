@@ -6,13 +6,14 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 from api.models import db, User, Hotel, User_Hotel_Admin_Package, Hotel_Admin_Package, Stay_Package
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
+from flask_mail import Mail, Message
 import os, cloudinary, cloudinary.uploader
 from api.models import db, User, Hotel, Favorites  # ✅ Add Favorites
 
 from api.models import db, User, Hotel, Stay_Package, User_Hotel_Admin_Package, Hotel_Admin_Package
 
 api = Blueprint('api', __name__)
-
+mailApp = Flask(__name__)
 
 # Allow CORS requests to this API
 CORS(api)
@@ -22,6 +23,17 @@ cloudinary.config(
     api_key=os.environ.get("CLOUDINARY_API_KEY"),
     api_secret=os.environ.get("CLOUDINARY_API_SECRET")
 )
+
+mailApp.config["MAIL_SERVER"]='smtp.gmail.com'
+mailApp.config["MAIL_USERNAME"]= os.environ.get("MAIL_USERNAME")
+mailApp.config["MAIL_PASSWORD"]= os.environ.get("MAIL_PASSWORD")
+mailApp.config["MAIL_PORT"]=587
+mailApp.config["MAIL_USE_TLS"]=True
+mailApp.config["MAIL_USE_SSL"]=False
+
+
+mail = Mail(mailApp)
+mail.init_app(mailApp)
 
 @api.route('/hello', methods=['POST', 'GET'])
 def handle_hello():
@@ -579,6 +591,76 @@ def edit_package(package_id):
         db.session.rollback()
         return jsonify({"message": f"Error updating package: {str(e)}"}), 500
 
+
+@api.route('/pass-reset', methods=['POST'])
+def password_reset():
+    current_user = request.json.get("user", None)
+    user_exists = User.query.filter(User.email == current_user).first()
+
+    if not user_exists:
+        return jsonify({"message": "account not found"}), 401
+    
+    return jsonify({"message": "reset link sent"}), 200
+
+@api.route('/send-email', methods=['PUT'])
+def code_notification():
+    #define the users to get the email
+    user_email = request.json.get("email", None)
+    code = request.json.get("code", None)
+    code_date = request.json.get("code_date", None)
+
+    user_exists = User.query.filter(User.email == user_email).first()
+
+    user_exists.password_reset = code
+    user_exists.password_reset_date = code_date
+    db.session.commit()
+    
+    recipients = []
+    recipients.append(user_email)
+
+    # Create a Message object with subject, sender, and recipient list
+    msg = Message(subject= 'Reset Password',
+                  sender='smtptestingmu@gmail.com',
+                  recipients=recipients)  # Pass the list of recipients here
+    
+    msg.body = "testing"
+    # HTML body content
+    msg.html = """\
+    <html>
+        <body>
+            <h1>Hello Serenia!</h1>
+            <p>We've received your request to reset your password. Please click the link below to complete the reset.
+            email sent from a Flask application using Flask-Mail. Here is the code: </p>
+            <h2>{code}</h2>
+            <a href="https://example.com">Please go here to insert the code</a>
+        </body>
+    </html>
+    """.format(code = code)
+
+    mail.send(msg)
+    
+    return jsonify({"message": "email sent!"}), 200
+
+
+@api.route('/code-verification', methods=['POST'])
+def verify_code():
+    #define the users to get the email
+    user_email = request.json.get("email", None)
+    code = request.json.get("code", None)
+    code_date = request.json.get("code_date", None)
+
+    user_exists = User.query.filter(User.email == user_email).first()
+
+    user_exists.password_reset = code
+    user_exists.password_reset_date = code_date
+    db.session.commit()
+    
+    
+    return jsonify({"message": "email sent!"}), 200
+
+    
+
+    
 #rutas de favoritos para perfil de usuario
 
 @api.route('/user/favorites', methods=['GET'])

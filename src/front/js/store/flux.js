@@ -11,6 +11,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			name: null,
 			personalInfo: null, // Store for personal info data
 			signupData: {},
+			recovery_mail: [],
 			demo: [
 				{
 					title: "FIRST",
@@ -571,6 +572,131 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("❌ Error fetching hotel packages:", error);
 					return null;
 				}
+			},			
+			resetAccPassword: async (userPassReset) => {
+				//Verificacion de existencia del usuario
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}api/pass-reset`, {
+						method: "POST",
+						headers: {
+							"Content-type": "application/json"
+						}, 
+						body:JSON.stringify(
+							{
+								"user": userPassReset
+							}
+						)
+					});
+			
+					if (!response.ok) {
+						const errorData = await response.json();
+						console.error("❌ Backend error:", errorData.message);
+						return null;
+					}
+					
+					//Generacion del codigo de renicio de password con su timer de 15 minutos
+					const codeGenerated = getActions().resetCodeGen()
+					
+
+					const codeTimer = Date.now() + 960;
+					// setStore({resetCode: codeGenerated })
+					// setStore({codeExpiration: codeTimer })
+					setStore({recovery_mail: userPassReset})
+
+					console.log(codeGenerated)
+					console.log(codeTimer)
+
+					getActions().sendEmailNotification(userPassReset, codeGenerated, codeTimer)
+
+
+					const data = await response.json();
+					console.log("📥 Reset code:", codeGenerated );
+					return data;
+				} catch (error) {
+					console.error("❌ Error fetching password reset packages:", error);
+					return null;
+				}
+			},
+			resetCodeGen: () => {
+				let resetCodeValue = ''
+				const characters = 'ABCDEFGHIJKLMNOPRQSTUVWXYZ0123456789';
+				const charactersLength = 4;
+				let counter = 0;
+				while (counter < charactersLength) {
+						resetCodeValue += characters.charAt(Math.floor(Math.random() * charactersLength));
+						counter += 1;
+				}
+				console.log("codigo generado" + resetCodeValue)
+
+				
+
+				return resetCodeValue
+			},
+			sendEmailNotification: async (userMail, code, code_date) => {
+				//Envio del correo con el codigo
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}api/send-email`, {
+						method: "PUT",
+						headers: {
+							"Content-type": "application/json"
+						}, 
+						body:JSON.stringify(
+							{
+								"email": userMail,
+								"code": code,
+								"code_date": code_date
+							}
+						)
+					});
+			
+					if (!response.ok) {
+						const errorData = await response.json();
+						console.error("❌ Backend error:", errorData.message);
+						return null;
+					}
+
+
+					console.log("We sent it!")
+					return true;
+				}
+					catch (error) {
+					console.error("❌ Error fetching password reset packages:", error);
+					return null;
+				}
+			},
+			codeVerification: async (inputToCheck) =>{
+				//Envio del correo con el codigo
+				const code_date = Date.now()
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}api/code-verification`, {
+						method: "POST",
+						headers: {
+							"Content-type": "application/json"
+						}, 
+						body:JSON.stringify(
+							{
+								"email": getStore().recovery_mail,
+								"code": inputToCheck,
+								"code_date": code_date
+							}
+						)
+					});
+			
+					if (!response.ok) {
+						const errorData = await response.json();
+						console.error("❌ Backend error:", errorData.message);
+						return null;
+					}
+
+
+					console.log("checked!")
+					return true;
+				}
+					catch (error) {
+					console.error("❌ Error fetching password reset packages:", error);
+					return null;
+				}
+			}
 			},
 
 			/*favorite hotels profile page fetching*/
@@ -629,41 +755,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error removing favorite hotel:", error);
 					return false;
 				}
-			},
-
-			/*remove favorite hotel*/
-			removeFavoriteHotel: async (hotelId) => {
-				const token = localStorage.getItem("user_session");
-				if (!token) {
-				  console.error("No token found!");
-				  return false;
-				}
-				
-				try {
-				  const response = await fetch(`${process.env.BACKEND_URL}/api/user/favorites/${hotelId}`, {
-					method: "DELETE",
-					headers: {
-					  Authorization: `Bearer ${token}`
-					}
-				  });
-			  
-				  if (!response.ok) {
-					throw new Error("Failed to remove favorite hotel");
-				  }
-			  
-				  
-				  const updatedFavorites = getStore().favoriteHotels.filter((hotel) => hotel.id_hotel !== hotelId);
-				  setStore({ favoriteHotels: updatedFavorites });
-			  
-				  return true;
-				} catch (error) {
-				  console.error("Error removing favorite hotel:", error);
-				  return false;
-				}
-			  },
-			  
-
-		}
+			}
 	};
 };
 
