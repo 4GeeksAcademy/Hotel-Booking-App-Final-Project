@@ -469,7 +469,7 @@ def get_all_packages():
 
 @api.route('/user/hotels/single', methods=['GET'])
 @jwt_required()
-def get_single_user_hotel():  # ✅ Renamed function
+def get_single_user_hotel():  #  Renamed function
     current_user = get_jwt_identity()
     user = User.query.filter_by(username=current_user).first()
 
@@ -551,6 +551,7 @@ def get_user_packages():
             print(f"🚨 Access denied for user: {current_user}")
             return jsonify({"message": "Access denied"}), 403
 
+        # Find hotels owned by the logged-in user
         hotels = Hotel.query.filter_by(id_user=user.id_user).all()
         if not hotels:
             print(f"🚨 No hotels found for user: {user.username}")
@@ -559,6 +560,7 @@ def get_user_packages():
         hotel_ids = [hotel.id_hotel for hotel in hotels]
         print(f"🔹 Found hotels: {hotel_ids}")
 
+        # Fetch only the packages for those hotels
         packages = Stay_Package.query.filter(Stay_Package.id_hotel.in_(hotel_ids)).all()
         if not packages:
             print(f"🚨 No packages found for these hotels: {hotel_ids}")
@@ -572,6 +574,7 @@ def get_user_packages():
     except Exception as e:
         print(f"❌ Error fetching hotel packages: {str(e)}")
         return jsonify({"message": f"Error fetching hotel packages: {str(e)}"}), 500
+
 
 
 
