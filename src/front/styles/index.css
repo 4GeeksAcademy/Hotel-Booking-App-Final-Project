@@ -162,6 +162,16 @@
     border-color: black;
 }
 
+#emailAsk{
+    width: 20rem;
+    height: 14rem;
+    margin-top: 12rem;
+    padding: 2rem;
+    border: solid 2px;
+    border-radius: 3%;
+    border-color: black;
+}
+
 .resetConfigForm  input {
     width: 5rem;
     height: 6rem;

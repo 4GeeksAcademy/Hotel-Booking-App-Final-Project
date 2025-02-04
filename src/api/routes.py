@@ -73,10 +73,20 @@ def signup():
         is_active=True  # Suponiendo que el usuario estará activo por defecto
     )
 
+    admin_package = Hotel_Admin_Package.query.filter_by(package_name = 'basic').first()
+
     # Guardar el usuario en la base de datos
     try:
         db.session.add(new_user)
         db.session.commit()
+        new_admin_package = User_Hotel_Admin_Package(
+        id_user = new_user.id_user,
+        id_hotel_Admin_Package = admin_package.id_admin_package
+        )
+
+        db.session.add(new_admin_package)
+        db.session.commit()
+
         return jsonify({"message": "User registered successfully"}), 201
     except Exception as e:
         db.session.rollback()
@@ -525,7 +535,7 @@ def add_hotel_package():
 
 
 
-@api.route('/', methods=['GET'])
+@api.route('/hotel-packages', methods=['GET'])
 @jwt_required()
 def get_user_packages():
     try:
@@ -539,7 +549,7 @@ def get_user_packages():
         hotels = Hotel.query.filter_by(id_user=user.id_user).all()
         if not hotels:
             print(f"🚨 No hotels found for user: {user.username}")
-            return jsonify({"message": "No hotels found"}), 4hotel-packages04
+            return jsonify({"message": "No hotels found"}), 404
 
         hotel_ids = [hotel.id_hotel for hotel in hotels]
         print(f"🔹 Found hotels: {hotel_ids}")
@@ -629,7 +639,7 @@ def code_notification():
     msg.html = """\
     <html>
         <body>
-            <h1>Hello Serenia!</h1>
+            <h1>Hello from Serenia!</h1>
             <p>We've received your request to reset your password. Please click the link below to complete the reset.
             email sent from a Flask application using Flask-Mail. Here is the code: </p>
             <h2>{code}</h2>
@@ -663,7 +673,6 @@ def verify_code():
 
     
 #rutas de favoritos para perfil de usuario
-
 @api.route('/user/favorites', methods=['GET'])
 @jwt_required()
 def get_favorite_hotels():
@@ -754,4 +763,66 @@ def add_favorite_hotel():
     except Exception as e:
         return jsonify({"error": "Internal Server Error", "details": str(e)}), 500
     
+@api.route('/pass-reset-check', methods = ['PUT'])
+def verification_code_date():
+    data = request.get_json()
+    print(data)
+    
+    try:
+        verified_user = User.query.filter_by(email = data["email"]).first()
+        code_date =  int(verified_user.password_reset_date)
+
+        print(verified_user.password_reset, data["code"])
+        print(verified_user.password_reset_date, data["code_date"])
+
+        if not verified_user:
+            return jsonify({"message": "This email is not registered within the system"}), 401
+        
+        if not verified_user.password_reset:
+            return jsonify({"message": "A code has yet to be requested"}), 402
+        
+        if not code_date > data["code_date"]:
+            return jsonify({"message": "The code has expired"}), 403
+
+        if verified_user.password_reset == data["code"] and (code_date > data["code_date"]):
+            print("Correct!")
+            verified_user.password_reset = ""
+            verified_user.password_reset_date = ""
+            db.session.commit()
+            return jsonify({"Code": True})
+        
+    except Exception as e:
+         return jsonify({"error": "Internal Server Error", "details": str(e)}), 500
+    
+
+@api.route('/change-password', methods = ['PUT'])
+def password_change():
+    data = request.get_json()
+    
+    try:
+        verified_user = User.query.filter_by(email = data["email"]).first()
+        code_date =  int(verified_user.password_reset_date)
+
+        print(verified_user.password_reset, data["code"])
+        print(verified_user.password_reset_date, data["code_date"])
+
+        if not verified_user:
+            return jsonify({"message": "This email is not registered within the system"}), 401
+        
+        if not verified_user.password_reset:
+            return jsonify({"message": "A code has yet to be requested"}), 402
+        
+        if not code_date > data["code_date"]:
+            return jsonify({"message": "The code has expired"}), 403
+
+        if verified_user.password_reset == data["code"] and (code_date > data["code_date"]):
+            print("Correct!")
+            verified_user.password_reset = ""
+            verified_user.password_reset_date = ""
+            db.session.commit()
+            return jsonify({"Code": True})
+        
+    except Exception as e:
+         return jsonify({"error": "Internal Server Error", "details": str(e)}), 500
+
 
