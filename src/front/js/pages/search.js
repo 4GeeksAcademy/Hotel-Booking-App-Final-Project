@@ -188,7 +188,7 @@ export const Search = () => {
 			
 
 			<div className="searchBackground container-fluid mt-5">
-				<div className="hotelPackageList col-7 d-flex justify-content-start  ms-3 h-75 mb-5 mt-5 ps-0">
+				<div className="overflow-auto hotelPackageList col-7 d-flex justify-content-start  ms-3 h-75 mb-5 mt-5 ps-0">
 					<ul className="list-group">
 						{ filteredData ? filteredData.map((item, index) => {
 						return (

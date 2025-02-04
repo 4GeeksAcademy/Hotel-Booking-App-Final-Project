@@ -424,6 +424,7 @@ def select_hotel_plan():
         db.session.rollback()
         return jsonify({"message": f"Error selecting plan: {str(e)}"}), 500
 
+#Hoteles de la busqueda
 @api.route('/hotel-packages', methods=['GET'])
 def get_all_packages():
     try:
@@ -524,7 +525,7 @@ def add_hotel_package():
 
 
 
-@api.route('/hotel-packages', methods=['GET'])
+@api.route('/', methods=['GET'])
 @jwt_required()
 def get_user_packages():
     try:
@@ -538,7 +539,7 @@ def get_user_packages():
         hotels = Hotel.query.filter_by(id_user=user.id_user).all()
         if not hotels:
             print(f"🚨 No hotels found for user: {user.username}")
-            return jsonify({"message": "No hotels found"}), 404
+            return jsonify({"message": "No hotels found"}), 4hotel-packages04
 
         hotel_ids = [hotel.id_hotel for hotel in hotels]
         print(f"🔹 Found hotels: {hotel_ids}")
