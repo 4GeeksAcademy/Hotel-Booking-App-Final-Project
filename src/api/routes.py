@@ -263,39 +263,67 @@ def add_hotel():
 @api.route('/hotels/<int:hotel_id>', methods=['PUT'])
 @jwt_required()
 def update_hotel_status(hotel_id):
-    # Debug the incoming request
-    current_user = get_jwt_identity()
-    print("Current User:", current_user)  # Should print the 'sub' (subject) from the JWT
-
-    # Ensure the user exists in the database
-    user = User.query.filter_by(username=current_user).first()
-    if not user:
-        print("User not found in the database")  # Debugging log
-        return jsonify({"message": "User not found"}), 404
-
-    # Check if the user has 'hotel' privileges
-    if user.user_type != 'hotel':
-        print("Access denied for non-hotel user")  # Debugging log
-        return jsonify({"message": "Access denied"}), 403
-
-    # Fetch the hotel by ID
-    hotel = Hotel.query.get(hotel_id)
-    if not hotel:
-        print("Hotel not found")  # Debugging log
-        return jsonify({"message": "Hotel not found"}), 404
-
-    # Update the 'is_active' field
-    data = request.get_json()
-    hotel.is_active = data.get("is_active", hotel.is_active)
-
     try:
+        current_user = get_jwt_identity()
+        user = User.query.filter_by(username=current_user).first()
+
+        if not user:
+            return jsonify({"message": "User not found"}), 404
+
+       
+        if user.user_type != 'hotel':
+            return jsonify({"message": "Access denied"}), 403
+
+        # Find the hotel
+        hotel = Hotel.query.filter_by(id_hotel=hotel_id, id_user=user.id_user).first()
+        if not hotel:
+            return jsonify({"message": "Hotel not found or unauthorized"}), 404
+
+        # Get request data
+        data = request.get_json()
+        if "is_active" in data:
+            hotel.is_active = data["is_active"]  #  Set to False for deactivation
+
         db.session.commit()
-        print("Hotel successfully deactivated")  # Debugging log
-        return jsonify(hotel.serialize()), 200
+        return jsonify({"message": "Hotel updated successfully", "hotel": hotel.serialize()}), 200
+
     except Exception as e:
         db.session.rollback()
-        print("Error deactivating hotel:", str(e))  # Debugging log
         return jsonify({"message": f"Error updating hotel: {str(e)}"}), 500
+
+        
+        
+@api.route('/hotels/<int:hotel_id>/status', methods=['PUT'])
+@jwt_required()
+def update_hotel_status_readd(hotel_id):
+    try:
+        current_user = get_jwt_identity()
+        user = User.query.filter_by(username=current_user).first()
+
+        if not user:
+            return jsonify({"message": "User not found"}), 404
+
+        
+        if user.user_type != 'hotel':
+            return jsonify({"message": "Access denied"}), 403
+
+        
+        hotel = Hotel.query.filter_by(id_hotel=hotel_id, id_user=user.id_user).first()
+        if not hotel:
+            return jsonify({"message": "Hotel not found or unauthorized"}), 404
+
+        
+        data = request.get_json()
+        if "is_active" in data:
+            hotel.is_active = data["is_active"]  # ✅ Toggle activation
+
+        db.session.commit()
+        return jsonify({"message": f"Hotel {'activated' if data['is_active'] else 'deactivated'} successfully", "hotel": hotel.serialize()}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": f"Error updating hotel: {str(e)}"}), 500
+
 
 # CLOUDINARY
 @api.route('/upload', methods=['POST'])
