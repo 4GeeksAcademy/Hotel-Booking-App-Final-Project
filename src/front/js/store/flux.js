@@ -789,35 +789,36 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error removing favorite hotel:", error);
 					return false;
 				}
-			}
-		},
-		changePassword: async (newPassword, email) => {
-			const response = await fetch(`${process.env.BACKEND_URL}api/change-password`, {
-				method: "PUT",
-					headers: {
-						"Content-type": "application/json"
-					}, 
-					body:JSON.stringify(
-						{
-							"newPassword": newPassword,
-						}
-					)
-			});
-
-			if (!response.ok) {
-				const errorData = await response.json();
-				console.error("❌ Backend error:", errorData.message);
-				return null;
-			}
-
-			try {
-				const data = response.json()
-				console.log(data)
-				return data;
-			}
-			catch (error){
-				console.error("Error removing favorite hotel:", error);
-				return false;
+			},
+			changePassword: async (newPassword, email) => {
+				const response = await fetch(`${process.env.BACKEND_URL}api/change-password`, {
+					method: "PUT",
+						headers: {
+							"Content-type": "application/json"
+						}, 
+						body:JSON.stringify(
+							{
+								"newPassword": newPassword,
+								"email": email
+							}
+						)
+				});
+	
+				if (!response.ok) {
+					const errorData = await response.json();
+					console.error("❌ Backend error:", errorData.message);
+					return null;
+				}
+	
+				try {
+					const data = response.json()
+					console.log(data)
+					return data;
+				}
+				catch (error){
+					console.error("Error removing favorite hotel:", error);
+					return false;
+				}
 			}
 		}
 	};

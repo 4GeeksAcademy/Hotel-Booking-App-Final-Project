@@ -76,8 +76,13 @@ export const PasswordReset = () => {
     
     //creacion de nueva password
     const handlePassChange = async (e) => {
-        passChange.newPassword === passChange.confirm_password && (passChange.newPassword !== ""  &&passChange.confirm_password !== "")
-            ? actions.changePassword(passChange, email) : alert("Incorrect!")
+        if (passChange.newPassword === passChange.confirm_password && (passChange.newPassword !== ""  &&passChange.confirm_password !== "")){
+            actions.changePassword(passChange.newPassword, email)
+            alert("Successfully changed!")
+            navigate("/")
+            return true
+        }
+        alert("An error has occured")
     }
 
     return (
@@ -147,19 +152,19 @@ export const PasswordReset = () => {
                             <div className="mt-3 mb-3">
                                 <div className="row">
                                     <label><p className="fw-bold m-0 p-0">New Password</p></label>
-                                    <input className = "mt-2"type="text" aria-label="digit2" aria-describedby="basic-addon1"  id="inputCode" name = "newPassword" value = {passChange.newPassword}
+                                    <input className = "mt-2" type="password" aria-label="digit2" aria-describedby="basic-addon1"  id="inputCode" name = "newPassword" value = {passChange.newPassword}
                                             onChange={
                                                 handleNewPassword
                                             }/>
                                 </div>    
                                 <div className="row mt-4">
                                 <label><p className="fw-bold m-0 p-0">Confirm Password</p></label>
-                                    <input type="text" aria-label="digit2" aria-describedby="basic-addon1"  id="inputCode" name = "confirm_password" value = {passChange.confirm_password}
+                                    <input type="password" aria-label="digit2" aria-describedby="basic-addon1"  id="inputCode" name = "confirm_password" value = {passChange.confirm_password}
                                             onChange={
                                                 handleNewPassword
                                             }/>
                                 </div>   
-                                <button className='w-100 bg-primary mt-5' onClick={handlePassChange}
+                                <button className='w-100 bg-primary mt-5 mb-2' onClick={handlePassChange}
                                      ><div className='text-light fw-bold'>Reset Password</div></button>
                             </div>
                         </div>

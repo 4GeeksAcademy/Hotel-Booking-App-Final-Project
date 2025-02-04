@@ -798,29 +798,15 @@ def verification_code_date():
 @api.route('/change-password', methods = ['PUT'])
 def password_change():
     data = request.get_json()
-    
+    print(data)
     try:
         verified_user = User.query.filter_by(email = data["email"]).first()
-        code_date =  int(verified_user.password_reset_date)
+        password =  current_app.bcrypt.generate_password_hash(data["newPassword"]).decode('utf-8')
 
-        print(verified_user.password_reset, data["code"])
-        print(verified_user.password_reset_date, data["code_date"])
-
-        if not verified_user:
-            return jsonify({"message": "This email is not registered within the system"}), 401
+        verified_user.password = password
         
-        if not verified_user.password_reset:
-            return jsonify({"message": "A code has yet to be requested"}), 402
-        
-        if not code_date > data["code_date"]:
-            return jsonify({"message": "The code has expired"}), 403
-
-        if verified_user.password_reset == data["code"] and (code_date > data["code_date"]):
-            print("Correct!")
-            verified_user.password_reset = ""
-            verified_user.password_reset_date = ""
-            db.session.commit()
-            return jsonify({"Code": True})
+        db.session.commit()
+        return jsonify({"message": "Successfully reset the password!"})
         
     except Exception as e:
          return jsonify({"error": "Internal Server Error", "details": str(e)}), 500
