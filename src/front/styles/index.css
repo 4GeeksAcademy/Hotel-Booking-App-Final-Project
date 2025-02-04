@@ -63,6 +63,10 @@
     border-color: transparent transparent #ffff transparent;
 }
 
+.colorTitle{
+    color: #30728A; 
+}
+
 /*CSS del boton de funciones de perfil en el navBar*/
 .navBarProfileButton{
     background-color: #ffff;
@@ -91,6 +95,7 @@
 .searchBarConfig label {
     font-weight: bold;
 }
+
 
 .searchBarConfig input:hover {
     border-color: black;

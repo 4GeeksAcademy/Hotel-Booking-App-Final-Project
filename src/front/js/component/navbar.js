@@ -37,19 +37,20 @@ export const Navbar = () => {
 				<Link to="/" className="SereniaTitle">
 					<span className="navbar-brand mb-0 h1 text-light SereniaTitle">Serenia</span>
 				</Link>
-				<div className="ml-auto">
+				<div className="ml-auto d-flex">
 					{/* Mostrar el botón de Logout si el usuario está logueado */}
+					<p className = "mt-2 mb-0  text-light" onClick={() => {navigate("/search")}}> Browse </p>
 					{localStorage.getItem("user_session") && store.currentUser ? (
 						<>
 							{/* Botón de funciones de usuario */}
 							{localStorage.getItem("user_session") && (
 								<div className="mb-0 navBar Dropdown-Setup row d-flex justify-contente-start">
 									{/* Mensaje saludando al usuario */}
-									<p className="mb-0 pb-0 w-75 fw-none text-light text-end">Hello, {store.currentUser && store.currentUser.name}</p>
+									<p className="mb-0 pb-0 w-75 mt-2 fw-none text-light text-end">Hello, {store.currentUser && store.currentUser.name}</p>
 									{/* Funciones especificas del usuario a traves del navBar */}
-									<div className="dropdown mb-0 w-25 d-flex justify-content-start">
+									<div className="dropdown w-25 d-flex justify-content-start">
 										<a className="dropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-											<i className="fs-2 mb-0 fa-solid fa-circle-user text-light"></i>
+											<i className="fs-2  mt-2 fa-solid fa-circle-user text-light"></i>
 										</a>
 										<ul class="dropdown-menu dropdown-menu-end userProfileButton bg-light">
 											<li><button className="navBarProfileButton text-start w-100 h-100"

@@ -8,6 +8,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			hotelsPriority: [],  // Almacena hoteles con paquete prioritario
 			hotelsBasic: [],     // Almacenar hoteles con paquete básico
 			hotel_packages: [], // Almacenamiento de los paquetes de estadia de los hoteles
+			clicked_hotel: "",
 			name: null,
 			personalInfo: null, // Store for personal info data
 			signupData: {},

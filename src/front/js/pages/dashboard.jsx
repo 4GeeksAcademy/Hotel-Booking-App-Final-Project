@@ -1,7 +1,9 @@
 import React, { useEffect, useContext, useState } from "react";
 import { Context } from "../store/appContext";
+import { useNavigate } from "react-router-dom";
 
 export const Dashboard = () => {
+    const navigate = useNavigate()
     const { actions, store } = useContext(Context);
     const [priorityHotels, setPriorityHotels] = useState([]);
     const [basicHotels, setBasicHotels] = useState([]);
@@ -96,8 +98,12 @@ export const Dashboard = () => {
                                                     Reserve
                                                 </button>
                                             )}
-                                            <button className="btn custom-btn ms-3 align-self-start mt-n4">
-                                                View Details
+                                            <button className="btn custom-btn ms-3 align-self-start mt-n4" onClick={() => {
+                                                store.clicked_hotel = hotel.name
+                                                navigate("/search")
+                                            }}>
+                                                View Packages
+                                                
                                             </button>
                                         </div>
                                     </div>
@@ -152,7 +158,14 @@ export const Dashboard = () => {
                                                 Reserve
                                             </button>
                                         )}
-                                        <button className="btn custom-btn">View Details</button>
+                                         <button className="btn custom-btn ms-3 align-self-start mt-n4" onClick={() => {
+                                                store.clicked_hotel = hotel.name
+                                                console.log(store.clicked_hotel)
+                                                navigate("/search")
+                                            }}>
+                                                View Packages
+                                                
+                                            </button>
                                     </div>
                                 </div>
                             </div>

@@ -5,7 +5,7 @@ import {Context} from '../store/appContext.js'
 
 
 export const PasswordReset = () => {
-    let navigate = useNavigate()
+    const navigate = useNavigate()
     let response = {}
     const { store, actions } = useContext(Context);
     const [alreadyCode, setAlreadyCode] = useState(false)
@@ -87,6 +87,7 @@ export const PasswordReset = () => {
 
     return (
         <>
+            {/*Form para envio de codigo*/}
             <div className='container-fluid d-flex justify-content-center'>
                 {!alreadyCode ? (<>
                     <div id="emailAsk">
@@ -106,6 +107,7 @@ export const PasswordReset = () => {
                     </div>
                 </> 
                 ): !validCode ? (<>
+                    {/*Form para verificacion del codigo*/}
                     <div className="customMargins">
                         {/*Revision de codigo del usuario */}
                         <h3 className="col-12">Reset Password</h3>
@@ -139,17 +141,21 @@ export const PasswordReset = () => {
                             </div>
                             
                         </form>
-                        <p className="col-12 mt-3">Please input the confirmation code sent to your email.</p>
-                        <button className="btn btn-success" onClick={acceptPassReset}>Reset Password</button>
+                        <p className="col-12 mt-3 text-center">Please input the confirmation code sent to your email.</p>
+                        <div className="d-flex justify-content-center">   
+                            <button className="btn btn-success" onClick={acceptPassReset}>Reset Password</button>
+                        </div>
+                        
                     </div>
     
                 </>): 
 
                     (<>
+                        {/*Form para reinicio de password*/}
                         <div className="customMargins">
                             <h3 className="col-12">Set password for &nbsp;</h3>
                             <h6 className="col-12 mt-3">{email}</h6>
-                            <div className="mt-3 mb-3">
+                            <div className="mt-3 mb-3 ">
                                 <div className="row">
                                     <label><p className="fw-bold m-0 p-0">New Password</p></label>
                                     <input className = "mt-2" type="password" aria-label="digit2" aria-describedby="basic-addon1"  id="inputCode" name = "newPassword" value = {passChange.newPassword}
@@ -164,8 +170,10 @@ export const PasswordReset = () => {
                                                 handleNewPassword
                                             }/>
                                 </div>   
-                                <button className='w-100 bg-primary mt-5 mb-2' onClick={handlePassChange}
-                                     ><div className='text-light fw-bold'>Reset Password</div></button>
+
+                                <button className='bg-primary mt-5 mb-2' onClick={handlePassChange}>
+                                    <div className='text-light fw-bold'>Reset Password</div>
+                                </button>
                             </div>
                         </div>
 
