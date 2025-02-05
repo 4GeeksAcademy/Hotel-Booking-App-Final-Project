@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { Context } from "../../store/appContext";
 
 const AddHotel = () => {
   const navigate = useNavigate();
@@ -9,26 +11,76 @@ const AddHotel = () => {
   const [hotelLocation, setHotelLocation] = useState('');
   const [hotelCountry, setHotelCountry] = useState('');
   const [hotelDescription, setHotelDescription] = useState('');
+  const { actions } = useContext(Context); 
+  const [myImage, setMyImage] = useState(null);
 
   // Function to handle form submission
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    
- 
+
+
     const newHotel = {
       name: hotelName,
       location: hotelLocation,
       country: hotelCountry,
       description: hotelDescription,
+      image_url: myImage
     };
+
+    console.log("Submitting hotel data:", newHotel); // Debugging log to ensure data is prepared
+
+    const success = await actions.addHotel(newHotel); // Call the addHotel action
+    if (success) {
+        navigate('/hotel-profile/hotels'); // Redirect on success
+    } else {
+        alert("Failed to add the hotel. Please try again.");
+    }
+
+
 
     // call an API to add the hotel or update state
 
-    console.log("New Hotel Added:", newHotel); 
+    console.log("New Hotel Added:", newHotel);
 
     // Navigate to the Hotels page after submission
     navigate('/hotel-profile/hotels');
   };
+
+  // ********************************** SUBIR CON CLOUDINARY***************************************
+  const uploadImage = async (e) => {
+    try {
+      const file = e.target.files[0];
+      if (!file) {
+        console.error("No file selected");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('image', file);
+
+      // Asegúrate de que tu URL de backend esté correcta
+      const response = await fetch(`${process.env.BACKEND_URL}/api/upload`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error uploading image:", errorData.error);
+        return;
+      }
+
+      const data = await response.json();
+      console.log("Uploaded image:", data);
+
+      // Actualiza el estado con la URL segura de la imagen
+      setMyImage(data.image_url); // Guarda la URL en el estado
+
+    } catch (error) {
+      console.error("Error in uploadImage:", error);
+    }
+  };
+  // ********************************** CIERRE DEL SUBIR CON CLOUDINARY***************************************
 
   return (
     <div className="container">
@@ -81,14 +133,20 @@ const AddHotel = () => {
           />
         </div>
 
+        <div className="mb-3">
+          <label htmlFor="hotelImage" className="form-label">Hotel Image</label>
+          <input
+            id="hotelImage"
+            type='file'
+            className="form-control"
+            onChange={uploadImage}
+            required
+          />
+          <img src={myImage} />
+        </div>
+
         <div>
-          <button
-            type="button"
-            className="btn btn-secondary me-2"
-            onClick={() => navigate(-1)} // Go back to the previous page
-          >
-            Go Back
-          </button>
+          
           <button
             type="button"
             className="btn btn-danger me-2"

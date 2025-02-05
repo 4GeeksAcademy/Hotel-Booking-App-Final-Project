@@ -14,6 +14,21 @@ export const Navbar = () => {
 
 	}
 
+	const handleUserProfile = (e) => {
+		e.preventDefault()
+		if (store.currentUser) {
+			if (store.currentUser.user_type == "cliente") {
+				navigate("/profile")
+			}
+			else if (store.currentUser.user_type == "hotel") {
+				navigate("/hotel-profile/personal-info")
+			}
+			else if (store.currentUser.user_type == "admin") {
+				navigate("/admin/personal-info")
+			}
+		}
+	}
+
 
 
 	return (
@@ -24,29 +39,34 @@ export const Navbar = () => {
 				</Link>
 				<div className="ml-auto">
 					{/* Mostrar el botón de Logout si el usuario está logueado */}
-					{localStorage.getItem("user_session") ? (
+					{localStorage.getItem("user_session") && store.currentUser ? (
 						<>
-							{/* Botón de Logout */}
-							{location.pathname === "/" && localStorage.getItem("user_session") && (
-								<div className="navBar Dropdown-Setup">
-									<p>Hola, {store.user_fName}</p>
-									<div class="dropdown">
-										<a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-											<i className="fa-solid fa-circle-user text-light"></i>
+							{/* Botón de funciones de usuario */}
+							{localStorage.getItem("user_session") && (
+								<div className="mb-0 navBar Dropdown-Setup row d-flex justify-contente-start">
+									{/* Mensaje saludando al usuario */}
+									<p className="mb-0 pb-0 w-75 fw-none text-light text-end">Hello, {store.currentUser && store.currentUser.name}</p>
+									{/* Funciones especificas del usuario a traves del navBar */}
+									<div className="dropdown mb-0 w-25 d-flex justify-content-start">
+										<a className="dropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+											<i className="fs-2 mb-0 fa-solid fa-circle-user text-light"></i>
 										</a>
-										<ul class="dropdown-menu userProfileButton">
-											<li><a className=" text-warning"
-												onClick={handleLogOut} href="#">Logout</a></li>
+										<ul class="dropdown-menu dropdown-menu-end userProfileButton bg-light">
+											<li><button className="navBarProfileButton text-start w-100 h-100"
+												onClick={handleUserProfile} href="#">User profile</button></li>
+											<li><hr className="dropdown-divider bg-dark mb-0"></hr></li>
+											<li><button className="navBarProfileButton text-start text-danger mt-0 w-100 h-100"
+												onClick={handleLogOut} href="#">Logout</button></li>
 										</ul>
 									</div>
 								</div>
-								
+
 							)}
 						</>
-					) : (
+					) : location.pathname == "/login" ? false : (
 						<>
 							{/* Botón de Login si no está logueado */}
-							{location.pathname === "/" && (
+							{(
 								<button
 									className="btndashboard-signup"
 									onClick={() => navigate("/login")}
@@ -55,26 +75,7 @@ export const Navbar = () => {
 								</button>
 							)}
 
-							{/* Botón de Login dentro de Vista SignUp */}
-							{location.pathname === "/signup" && (
-								<button
-									className="btnlogin-signup"
-									onClick={() => navigate("/login")}
-								>
-									Login
-								</button>
-							)}
 						</>
-					)}
-
-					{/* Botón de Dashboard en Vista SignUp */}
-					{location.pathname === "/signup" && (
-						<button
-							className="btndashboard-signup"
-							onClick={() => navigate("/")}
-						>
-							Dashboard
-						</button>
 					)}
 				</div>
 			</div>

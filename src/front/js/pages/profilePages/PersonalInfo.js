@@ -12,8 +12,9 @@ const PersonalInfo = () => {
     country: "",
     language: ""
   });
+  const [shouldReload, setShouldReload] = useState(true); // State to control data reload
 
-  // Fetch user data when the component loads
+  // Fetch user data when the component loads or shouldReload is true
   useEffect(() => {
     const loadUserInfo = async () => {
       const personalInfo = await actions.fetchPersonalInfo(); // Fetch personal info from backend
@@ -29,8 +30,11 @@ const PersonalInfo = () => {
       }
     };
 
-    loadUserInfo();
-  }, [actions]);
+    // if (shouldReload) {
+      loadUserInfo();
+    //   setShouldReload(false); // Reset reload flag after loading data
+    // }
+  }, []);
 
   // Toggle edit mode
   const toggleEdit = () => {
@@ -44,6 +48,16 @@ const PersonalInfo = () => {
       ...prevState,
       [name]: value
     }));
+  };
+
+  // Handle Save Changes button click
+  const handleSaveChanges = async () => {
+    // Save the updated formData to the backend
+    const success = await actions.savePersonalInfo(formData);
+    if (success) {
+      setIsEditable(false); // Exit edit mode
+      setShouldReload(true); // Trigger reload of user data
+    }
   };
 
   return (
@@ -105,12 +119,12 @@ const PersonalInfo = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              disabled={!isEditable}
+              disabled
             />
           </div>
         </div>
         <div className="row mb-3">
-          <div className="col-md-6">
+          {/* <div className="col-md-6">
             <label className="form-label">Country of Residence</label>
             <input
               type="text"
@@ -131,7 +145,7 @@ const PersonalInfo = () => {
               onChange={handleChange}
               disabled={!isEditable}
             />
-          </div>
+          </div> */}
         </div>
       </form>
 
@@ -146,7 +160,11 @@ const PersonalInfo = () => {
         >
           {isEditable ? "Cancel" : "Edit Info"}
         </button>
-        <button className="btn btn-success" disabled={!isEditable}>
+        <button
+          className="btn btn-success"
+          disabled={!isEditable}
+          onClick={handleSaveChanges}
+        >
           Save Changes
         </button>
       </div>
