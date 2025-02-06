@@ -15,7 +15,7 @@ class User(db.Model):
     user_type = db.Column(db.Enum('cliente', 'hotel', 'admin', name='user_type_enum'), nullable=False)
     password_reset = db.Column(db.String(4), unique=True, nullable=True)
     password_reset_date = db.Column(db.String(120), unique=True, nullable=True)
-    phone_number = db.Column(db.String(20), nullable=False)
+    phone_number = db.Column(db.String(20), unique=True, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     hotels = db.relationship('Hotel', back_populates='user', lazy=True)  # Relationship to hotels
         # Campos específicos para usuarios tipo 'hotel'
@@ -146,7 +146,7 @@ class Stay_Package(db.Model):
     # faltan las foreign keys, van acá
     #Foreign Keys
     id_hotel = db.Column(db.Integer, db.ForeignKey('hotel.id_hotel'), nullable=False)
-    hotel = db.relationship("Hotel", back_populates="stay_packages")
+    hotel = db.relationship("Hotel")
     stay_history = db.relationship("Stay_History", back_populates = "package", lazy = True) #relationship with hotel
     favorites = db.relationship("Favorites", back_populates = "stay_package", lazy = True) #relationship with hotel
     
@@ -188,7 +188,7 @@ class Reservation(db.Model):
 
     # Agregué estas 2 líneas para reservas:
     stay_package_id = db.Column(db.Integer, db.ForeignKey(Stay_Package.id_hotel_package), nullable=False)
-    stay_package = db.relationship(Stay_Package, back_populates="reservations")
+    stay_package = db.relationship(Stay_Package)
 
     stay_history = db.relationship("Stay_History", back_populates = "reservation", lazy = True)
 
@@ -201,7 +201,8 @@ class Reservation(db.Model):
             "reservation_date": self.reservation_date.isoformat(),
             "reservation_payment": self.reservation_payment,
             "is_paid": self.is_paid,
-            "stay_package": self.stay_package.serialize()  # Serialicé la información del paquete
+            "stay_package": self.stay_package.serialize(),  # Serialicé la información del paquete
+            "phone_number": self.stay_package.hotel.user.phone_number
         }
 
 class Payment(db.Model):

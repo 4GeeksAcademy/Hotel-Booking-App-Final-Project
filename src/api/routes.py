@@ -50,17 +50,20 @@ def signup():
     data = request.get_json()
 
     # Verifica que los datos necesarios estén presentes
-    if not all(k in data for k in ("name", "last_name", "email", "username", "password", "user_type")):
+    if not all(k in data for k in ("name", "last_name", "email", "username", "password", "user_type", "phone_number")):
         return jsonify({"message": "Faltan datos obligatorios"}), 400
 
     # Verifica si el correo o el nombre de usuario ya están registrados
     existing_user_email = User.query.filter_by(email=data['email']).first()
     existing_user_username = User.query.filter_by(username=data['username']).first()
+    existing_user_phone = User.query.filter_by(phone_number=data['phone_number']).first()
 
     if existing_user_email:
         return jsonify({"message": "This email is already registered. Please use another email address.."}), 400
     if existing_user_username:
         return jsonify({"message": "This username is already in use. Please choose another one."}), 400
+    if existing_user_phone:
+        return jsonify({"message": "This phone number is already registered. Please use another phone number."}), 400
 
     # Crear una nueva instancia de User
     new_user = User(
@@ -70,6 +73,7 @@ def signup():
         username=data['username'],
         password=current_app.bcrypt.generate_password_hash(data["password"]).decode('utf-8'),  
         user_type=data['user_type'],
+        phone_number=data['phone_number'],
         is_active=True  # Suponiendo que el usuario estará activo por defecto
     )
 

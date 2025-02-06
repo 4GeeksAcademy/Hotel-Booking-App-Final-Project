@@ -46,6 +46,13 @@ export const SignUp = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Validación del campo teléfono
+        if (!phoneNumber) {
+            setToastMessage({ text: "Phone number is required.", type: "danger" });
+            setTimeout(() => setToastMessage(null), 3000);
+            return;
+        }
+
         if (!acceptTerms) {
             setToastMessage({ text: "You must accept the Terms and Conditions.", type: "danger" });
             setTimeout(() => setToastMessage(null), 3000);
@@ -58,7 +65,7 @@ export const SignUp = () => {
             return;
         }
 
-        const message = await actions.signUp(name, lastName, email, userName, password, userType, phoneNumber);
+        const message = await actions.signUp(name, lastName, email, userName, password, userType, "+" + phoneNumber);
 
         if (message === "User registered successfully") {
             setToastMessage({ text: "User registered successfully.", type: "success" });
@@ -68,6 +75,7 @@ export const SignUp = () => {
 
         setTimeout(() => setToastMessage(null), 1000);
     };
+    console.log(phoneNumber);
 
     return (
         <div className="FontDesign container py-5">
@@ -97,8 +105,8 @@ export const SignUp = () => {
                     <PhoneInput
                         country={"us"}
                         value={phoneNumber}
-                        onChange={setPhoneNumber}
                         inputClass="form-control rounded-pill"
+                        onChange={phone => setPhoneNumber(phone)}
                         required
                     />
 

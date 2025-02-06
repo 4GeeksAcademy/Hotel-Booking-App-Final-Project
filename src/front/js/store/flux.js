@@ -170,8 +170,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			signUp: async (name, last_name, email, username, password, user_type) => {
-				console.log(name, last_name, email, username, password, user_type);
+			signUp: async (name, last_name, email, username, password, user_type, phone_number) => {
+				console.log(name, last_name, email, username, password, user_type, phone_number);
 
 				try {
 					const response = await fetch(process.env.BACKEND_URL + "api/signup", {
@@ -185,7 +185,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 							email: email,
 							username: username,
 							password: password,
-							user_type: user_type // Puede ser 'cliente' o 'hotel'
+							user_type: user_type,
+							phone_number: phone_number
 						})
 					});
 
