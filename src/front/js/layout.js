@@ -14,6 +14,7 @@ import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 import { ReservationCart } from "./pages/reservationCart.jsx";
 import { Search } from "./pages/search.js";
+import {PasswordReset} from "./pages/passReset.js"
 
 import UserProfile from "./pages/profilePages/UserProfile";
 import PersonalInfo from "./pages/profilePages/PersonalInfo";
@@ -47,6 +48,7 @@ const Layout = () => {
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<SignUp />} path="/signup" />
                         <Route element={<LoginAccount />} path="/login" />
+                        <Route element={<PasswordReset />} path="/login/reset" />
                         <Route element={<ContactUs />} path="/contact" />
                         <Route element={<ReservationCart />} path="/reservationcart" />
                         <Route element={<Search />} path="/search" />

@@ -119,7 +119,7 @@ const PersonalInfo = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              disabled={!isEditable}
+              disabled
             />
           </div>
         </div>

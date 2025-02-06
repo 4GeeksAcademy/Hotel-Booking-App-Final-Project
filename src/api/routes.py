@@ -6,12 +6,14 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 from api.models import db, User, Hotel, User_Hotel_Admin_Package, Hotel_Admin_Package, Stay_History, Stay_Package, Reservation
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
+from flask_mail import Mail, Message
 import os, cloudinary, cloudinary.uploader
+from api.models import db, User, Hotel, Favorites  # ✅ Add Favorites
 
 from api.models import db, User, Hotel, Stay_Package, User_Hotel_Admin_Package, Hotel_Admin_Package
 
 api = Blueprint('api', __name__)
-
+mailApp = Flask(__name__)
 
 # Allow CORS requests to this API
 CORS(api)
@@ -21,6 +23,17 @@ cloudinary.config(
     api_key=os.environ.get("CLOUDINARY_API_KEY"),
     api_secret=os.environ.get("CLOUDINARY_API_SECRET")
 )
+
+mailApp.config["MAIL_SERVER"]='smtp.gmail.com'
+mailApp.config["MAIL_USERNAME"]= os.environ.get("MAIL_USERNAME")
+mailApp.config["MAIL_PASSWORD"]= os.environ.get("MAIL_PASSWORD")
+mailApp.config["MAIL_PORT"]=587
+mailApp.config["MAIL_USE_TLS"]=True
+mailApp.config["MAIL_USE_SSL"]=False
+
+
+mail = Mail(mailApp)
+mail.init_app(mailApp)
 
 @api.route('/hello', methods=['POST', 'GET'])
 def handle_hello():
@@ -262,39 +275,67 @@ def add_hotel():
 @api.route('/hotels/<int:hotel_id>', methods=['PUT'])
 @jwt_required()
 def update_hotel_status(hotel_id):
-    # Debug the incoming request
-    current_user = get_jwt_identity()
-    print("Current User:", current_user)  # Should print the 'sub' (subject) from the JWT
-
-    # Ensure the user exists in the database
-    user = User.query.filter_by(username=current_user).first()
-    if not user:
-        print("User not found in the database")  # Debugging log
-        return jsonify({"message": "User not found"}), 404
-
-    # Check if the user has 'hotel' privileges
-    if user.user_type != 'hotel':
-        print("Access denied for non-hotel user")  # Debugging log
-        return jsonify({"message": "Access denied"}), 403
-
-    # Fetch the hotel by ID
-    hotel = Hotel.query.get(hotel_id)
-    if not hotel:
-        print("Hotel not found")  # Debugging log
-        return jsonify({"message": "Hotel not found"}), 404
-
-    # Update the 'is_active' field
-    data = request.get_json()
-    hotel.is_active = data.get("is_active", hotel.is_active)
-
     try:
+        current_user = get_jwt_identity()
+        user = User.query.filter_by(username=current_user).first()
+
+        if not user:
+            return jsonify({"message": "User not found"}), 404
+
+       
+        if user.user_type != 'hotel':
+            return jsonify({"message": "Access denied"}), 403
+
+        # Find the hotel
+        hotel = Hotel.query.filter_by(id_hotel=hotel_id, id_user=user.id_user).first()
+        if not hotel:
+            return jsonify({"message": "Hotel not found or unauthorized"}), 404
+
+        # Get request data
+        data = request.get_json()
+        if "is_active" in data:
+            hotel.is_active = data["is_active"]  #  Set to False for deactivation
+
         db.session.commit()
-        print("Hotel successfully deactivated")  # Debugging log
-        return jsonify(hotel.serialize()), 200
+        return jsonify({"message": "Hotel updated successfully", "hotel": hotel.serialize()}), 200
+
     except Exception as e:
         db.session.rollback()
-        print("Error deactivating hotel:", str(e))  # Debugging log
         return jsonify({"message": f"Error updating hotel: {str(e)}"}), 500
+
+        
+        
+@api.route('/hotels/<int:hotel_id>/status', methods=['PUT'])
+@jwt_required()
+def update_hotel_status_readd(hotel_id):
+    try:
+        current_user = get_jwt_identity()
+        user = User.query.filter_by(username=current_user).first()
+
+        if not user:
+            return jsonify({"message": "User not found"}), 404
+
+        
+        if user.user_type != 'hotel':
+            return jsonify({"message": "Access denied"}), 403
+
+        
+        hotel = Hotel.query.filter_by(id_hotel=hotel_id, id_user=user.id_user).first()
+        if not hotel:
+            return jsonify({"message": "Hotel not found or unauthorized"}), 404
+
+        
+        data = request.get_json()
+        if "is_active" in data:
+            hotel.is_active = data["is_active"]  # ✅ Toggle activation
+
+        db.session.commit()
+        return jsonify({"message": f"Hotel {'activated' if data['is_active'] else 'deactivated'} successfully", "hotel": hotel.serialize()}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": f"Error updating hotel: {str(e)}"}), 500
+
 
 # CLOUDINARY
 @api.route('/upload', methods=['POST'])
@@ -514,7 +555,7 @@ def get_all_packages():
 
 @api.route('/user/hotels/single', methods=['GET'])
 @jwt_required()
-def get_single_user_hotel():  # ✅ Renamed function
+def get_single_user_hotel():  #  Renamed function
     current_user = get_jwt_identity()
     user = User.query.filter_by(username=current_user).first()
 
@@ -596,6 +637,7 @@ def get_user_packages():
             print(f"🚨 Access denied for user: {current_user}")
             return jsonify({"message": "Access denied"}), 403
 
+        # Find hotels owned by the logged-in user
         hotels = Hotel.query.filter_by(id_user=user.id_user).all()
         if not hotels:
             print(f"🚨 No hotels found for user: {user.username}")
@@ -604,6 +646,7 @@ def get_user_packages():
         hotel_ids = [hotel.id_hotel for hotel in hotels]
         print(f"🔹 Found hotels: {hotel_ids}")
 
+        # Fetch only the packages for those hotels
         packages = Stay_Package.query.filter(Stay_Package.id_hotel.in_(hotel_ids)).all()
         if not packages:
             print(f"🚨 No packages found for these hotels: {hotel_ids}")
@@ -617,6 +660,7 @@ def get_user_packages():
     except Exception as e:
         print(f"❌ Error fetching hotel packages: {str(e)}")
         return jsonify({"message": f"Error fetching hotel packages: {str(e)}"}), 500
+
 
 
 
@@ -651,3 +695,167 @@ def edit_package(package_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": f"Error updating package: {str(e)}"}), 500
+
+
+@api.route('/pass-reset', methods=['POST'])
+def password_reset():
+    current_user = request.json.get("user", None)
+    user_exists = User.query.filter(User.email == current_user).first()
+
+    if not user_exists:
+        return jsonify({"message": "account not found"}), 401
+    
+    return jsonify({"message": "reset link sent"}), 200
+
+@api.route('/send-email', methods=['PUT'])
+def code_notification():
+    #define the users to get the email
+    user_email = request.json.get("email", None)
+    code = request.json.get("code", None)
+    code_date = request.json.get("code_date", None)
+
+    user_exists = User.query.filter(User.email == user_email).first()
+
+    user_exists.password_reset = code
+    user_exists.password_reset_date = code_date
+    db.session.commit()
+    
+    recipients = []
+    recipients.append(user_email)
+
+    # Create a Message object with subject, sender, and recipient list
+    msg = Message(subject= 'Reset Password',
+                  sender='smtptestingmu@gmail.com',
+                  recipients=recipients)  # Pass the list of recipients here
+    
+    msg.body = "testing"
+    # HTML body content
+    msg.html = """\
+    <html>
+        <body>
+            <h1>Hello Serenia!</h1>
+            <p>We've received your request to reset your password. Please click the link below to complete the reset.
+            email sent from a Flask application using Flask-Mail. Here is the code: </p>
+            <h2>{code}</h2>
+            <a href="https://example.com">Please go here to insert the code</a>
+        </body>
+    </html>
+    """.format(code = code)
+
+    mail.send(msg)
+    
+    return jsonify({"message": "email sent!"}), 200
+
+
+@api.route('/code-verification', methods=['POST'])
+def verify_code():
+    #define the users to get the email
+    user_email = request.json.get("email", None)
+    code = request.json.get("code", None)
+    code_date = request.json.get("code_date", None)
+
+    user_exists = User.query.filter(User.email == user_email).first()
+
+    user_exists.password_reset = code
+    user_exists.password_reset_date = code_date
+    db.session.commit()
+    
+    
+    return jsonify({"message": "email sent!"}), 200
+
+    
+
+    
+#rutas de favoritos para perfil de usuario
+
+@api.route('/user/favorites', methods=['GET'])
+@jwt_required()
+def get_favorite_hotels():
+    try:
+        current_user = get_jwt_identity()
+        print(f"🔹 Authenticated user: {current_user}")  
+        user = User.query.filter_by(username=current_user).first()
+        if not user:
+            print("❌ User not found")
+            return jsonify({"message": "User not found"}), 404
+
+        print(f"📌 User ID: {user.id_user}") 
+        
+        # Fetch favorite hotels
+        favorite_hotels = Favorites.query.filter_by(user_favorites=user.id_user).all()
+        
+        if not favorite_hotels:
+            print("⚠️ No favorite hotels found")
+            return jsonify([]), 200
+
+        hotels_data = [fav.hotel.serialize() for fav in favorite_hotels if fav.hotel]
+        print(f"✅ Hotels Data: {hotels_data}")  
+
+        return jsonify(hotels_data), 200
+    except Exception as e:
+        print(f"🔥 ERROR: {e}") 
+        import traceback
+        traceback.print_exc()  
+        return jsonify({"error": "Internal Server Error", "details": str(e)}), 500
+
+
+@api.route('/user/favorites/<int:hotel_id>', methods=['DELETE'])
+@jwt_required()
+def remove_favorite_hotel(hotel_id):
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first()
+
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+
+    favorite = Favorites.query.filter_by(user_favorites=user.id_user, hotel_favorites=hotel_id).first()
+    
+    if not favorite:
+        return jsonify({"message": "Favorite hotel not found"}), 404
+    
+    db.session.delete(favorite)
+    db.session.commit()
+    
+    return jsonify({"message": "Hotel removed from favorites"}), 200
+
+@api.route('/user/favorites', methods=['POST'])
+@jwt_required()
+def add_favorite_hotel():
+    try:
+        current_user = get_jwt_identity()
+        user = User.query.filter_by(username=current_user).first()
+
+        if not user:
+            return jsonify({"message": "User not found"}), 404
+
+        data = request.get_json()
+        hotel_id = data.get("hotel_id")
+
+        if not hotel_id:
+            return jsonify({"message": "Hotel ID is required"}), 400
+
+       
+        hotel = Hotel.query.get(hotel_id)
+        if not hotel:
+            return jsonify({"message": "Hotel not found"}), 404
+
+        
+        existing_favorite = Favorites.query.filter_by(
+            user_favorites=user.id_user, 
+            hotel_favorites=hotel_id
+        ).first()
+
+        if existing_favorite:
+            return jsonify({"message": "Hotel is already in favorites"}), 400
+
+        # Add favorite
+        new_favorite = Favorites(user_favorites=user.id_user, hotel_favorites=hotel_id)
+        db.session.add(new_favorite)
+        db.session.commit()
+
+        return jsonify({"message": "Hotel added to favorites"}), 201
+
+    except Exception as e:
+        return jsonify({"error": "Internal Server Error", "details": str(e)}), 500
+    
+

@@ -150,6 +150,44 @@
 }
 
 
+/*Estilos de la pagina de reinicio de password*/
+
+.customMargins {
+    width: 30rem;
+    height: 22rem;
+    margin-top: 12rem;
+    padding: 2rem;
+    border: solid 2px;
+    border-radius: 3%;
+    border-color: black;
+}
+
+.resetConfigForm  input {
+    width: 5rem;
+    height: 6rem;
+    border-radius: 10%;
+    font-size: 4rem ;
+    text-align: center;
+}
+
+.resetConfigForm  input:hover {
+    width: 5rem;
+    height: 6rem;
+    padding-top: 2px;
+    box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+}
+
+
+.resetConfigForm  button {
+    width: 10rem;
+    height: 3rem;
+    margin-left: 25%;
+    margin-right: 25%;
+    border-radius: 50rem;
+    background-color: #30728A;
+    border: none;
+}
+
 /*****************************************************************************DASHBOARD******************************************************************************/
 
 /*BOTONES DASHBOARD*/

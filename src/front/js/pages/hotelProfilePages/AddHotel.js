@@ -146,13 +146,7 @@ const AddHotel = () => {
         </div>
 
         <div>
-          <button
-            type="button"
-            className="btn btn-secondary me-2"
-            onClick={() => navigate(-1)} // Go back to the previous page
-          >
-            Go Back
-          </button>
+          
           <button
             type="button"
             className="btn btn-danger me-2"

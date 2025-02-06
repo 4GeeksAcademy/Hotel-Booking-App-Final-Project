@@ -13,6 +13,8 @@ class User(db.Model):
     username = db.Column(db.String(60), unique=True, nullable=False)
     password = db.Column(db.String(120), unique=False, nullable=False)
     user_type = db.Column(db.Enum('cliente', 'hotel', 'admin', name='user_type_enum'), nullable=False)
+    password_reset = db.Column(db.String(4), unique=True, nullable=True)
+    password_reset_date = db.Column(db.String(120), unique=True, nullable=True)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     hotels = db.relationship('Hotel', back_populates='user', lazy=True)  # Relationship to hotels
         # Campos específicos para usuarios tipo 'hotel'
@@ -63,8 +65,6 @@ class Hotel(db.Model):
     description = db.Column(db.String(500), unique=False, nullable=False)
     image_url = db.Column(db.String(255), nullable=True) # URL DE LA IMAGEN
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
-    
-    
 
     # faltan las foreign keys, van acá
     id_user = db.Column(db.Integer, db.ForeignKey('user.id_user'), nullable=False)
@@ -149,6 +149,7 @@ class Stay_Package(db.Model):
     id_hotel = db.Column(db.Integer, db.ForeignKey('hotel.id_hotel'), nullable=False)
     hotel = db.relationship("Hotel", back_populates="stay_packages")
     stay_history = db.relationship("Stay_History", back_populates = "package", lazy = True) #relationship with hotel
+    favorites = db.relationship("Favorites", back_populates = "stay_package", lazy = True) #relationship with hotel
     
     # Este lo agregué para que tenga la relación con las reservas
     reservations = db.relationship("Reservation", back_populates="stay_package", lazy=True)
@@ -234,6 +235,9 @@ class Favorites(db.Model):
     user = db.relationship(User)
     hotel_favorites = db.Column(db.Integer, db.ForeignKey(Hotel.id_hotel), nullable=True)
     hotel = db.relationship(Hotel)
+    stay_package_favorites = db.Column(db.Integer, db.ForeignKey(Stay_Package.id_hotel_package), nullable=True)
+    stay_package = db.relationship(Stay_Package)
+    
 
     def _repr_(self):
         return '<Favorites %r>' % self.id_favorites
