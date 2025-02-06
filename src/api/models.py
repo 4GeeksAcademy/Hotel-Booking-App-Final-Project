@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -150,6 +151,9 @@ class Stay_Package(db.Model):
     stay_history = db.relationship("Stay_History", back_populates = "package", lazy = True) #relationship with hotel
     favorites = db.relationship("Favorites", back_populates = "stay_package", lazy = True) #relationship with hotel
     
+    # Este lo agregué para que tenga la relación con las reservas
+    reservations = db.relationship("Reservation", back_populates="stay_package", lazy=True)
+
     # hotel_package = db.relationship("Hotel_Package", back_populates = "hotel", lazy = True)
 
     def _repr_(self):
@@ -170,14 +174,22 @@ class Stay_Package(db.Model):
 class Reservation(db.Model):
     # Datos por cada Reservación
     id_reservation = db.Column(db.Integer, primary_key=True)
-    # Día para el que se reservó para ir
-    reservation_date = db.Column(db.Date, nullable=False)
+    # reservation_date = db.Column(db.Date, nullable=False)
+    reservation_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
     reservation_payment = db.Column(db.Integer, nullable=False)
+    is_paid = db.Column(db.Boolean, nullable=False, default=False)
+    order_id = db.Column(db.String(20), nullable=True)
+    payment_id = db.Column(db.String(20), nullable=True)
+
 
     # faltan las foreign keys, van acá
     #Foreign Keys
-    user_reservation = db.Column(db.Integer, db.ForeignKey(User.id_user), nullable=False)
+    id_user = db.Column(db.Integer, db.ForeignKey(User.id_user), nullable=False)
     user = db.relationship(User)
+
+    # Agregué estas 2 líneas para reservas:
+    stay_package_id = db.Column(db.Integer, db.ForeignKey(Stay_Package.id_hotel_package), nullable=False)
+    stay_package = db.relationship(Stay_Package, back_populates="reservations")
 
     stay_history = db.relationship("Stay_History", back_populates = "reservation", lazy = True)
 
@@ -187,8 +199,10 @@ class Reservation(db.Model):
     def serialize(self):
         return {
             "id_reservation": self.id_reservation,
-            "reservation_date": self.reservation_date,
+            "reservation_date": self.reservation_date.isoformat(),
             "reservation_payment": self.reservation_payment,
+            "is_paid": self.is_paid,
+            "stay_package": self.stay_package.serialize()  # Serialicé la información del paquete
         }
 
 class Payment(db.Model):

@@ -23,21 +23,36 @@ const Hotels = () => {
         setHotels(store.userHotels);
     }, [store.userHotels]);
 
-    const goToAddHotel = () => {
-        navigate('/hotel-profile/add-hotel');
-    };
-
-    const editHotel = (hotelId) => {
-        navigate(`/hotel-profile/edit-hotel/${hotelId}`);
-    };
-
     const deactivateHotel = async (hotelId) => {
         const success = await actions.deactivateHotel(hotelId);
         if (success) {
+            setHotels((prevHotels) =>
+                prevHotels.map((hotel) =>
+                    hotel.id_hotel === hotelId ? { ...hotel, is_active: false } : hotel
+                )
+            );
             alert("Hotel deactivated successfully!");
         } else {
             alert("Failed to deactivate the hotel. Please try again.");
         }
+    };
+
+    const reactivateHotel = async (hotelId) => {
+        const success = await actions.reactivateHotel(hotelId);
+        if (success) {
+            setHotels((prevHotels) =>
+                prevHotels.map((hotel) =>
+                    hotel.id_hotel === hotelId ? { ...hotel, is_active: true } : hotel
+                )
+            );
+            alert("Hotel reactivated successfully!");
+        } else {
+            alert("Failed to reactivate the hotel. Please try again.");
+        }
+    };
+
+    const goToAddHotel = () => {
+        navigate('/hotel-profile/add-hotel');
     };
 
     return (
@@ -65,18 +80,15 @@ const Hotels = () => {
                                         <p className="mb-0 text-muted">País: {hotel.country}</p>
                                     </div>
                                     <div>
-                                        <button
-                                            className="btn btn-primary me-2"
-                                            onClick={() => editHotel(hotel.id_hotel)}
-                                        >
-                                            Edit details
-                                        </button>
-                                        <button
-                                            className="btn btn-danger"
-                                            onClick={() => deactivateHotel(hotel.id_hotel)}
-                                        >
-                                            Deactivate
-                                        </button>
+                                        {hotel.is_active ? (
+                                            <button className="btn btn-danger" onClick={() => deactivateHotel(hotel.id_hotel)}>
+                                                Deactivate
+                                            </button>
+                                        ) : (
+                                            <button className="btn btn-success" onClick={() => reactivateHotel(hotel.id_hotel)}>
+                                                Reactivate
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             ))

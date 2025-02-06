@@ -1,10 +1,5 @@
 """empty message
 
-<<<<<<< HEAD:migrations/versions/a1600c59a0f0_.py
-Revision ID: a1600c59a0f0
-Revises: 
-Create Date: 2025-02-04 01:14:02.347121
-=======
 <<<<<<<< HEAD:migrations/versions/db0a46c5e3c4_.py
 Revision ID: db0a46c5e3c4
 Revises: 
@@ -14,7 +9,6 @@ Revision ID: 0a56151e6551
 Revises: 
 Create Date: 2025-02-04 00:57:35.774611
 >>>>>>>> cffdac45d15be69f92c8dbb69ed053e3949ceb85:migrations/versions/0a56151e6551_.py
->>>>>>> cf20d559096e9cdce23603fc2d8d7afe5d864490:migrations/versions/0a56151e6551_.py
 
 """
 from alembic import op
@@ -22,15 +16,11 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-<<<<<<< HEAD:migrations/versions/a1600c59a0f0_.py
-revision = 'a1600c59a0f0'
-=======
 <<<<<<<< HEAD:migrations/versions/db0a46c5e3c4_.py
 revision = 'db0a46c5e3c4'
 ========
 revision = '0a56151e6551'
 >>>>>>>> cffdac45d15be69f92c8dbb69ed053e3949ceb85:migrations/versions/0a56151e6551_.py
->>>>>>> cf20d559096e9cdce23603fc2d8d7afe5d864490:migrations/versions/0a56151e6551_.py
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -92,8 +82,8 @@ def upgrade():
     )
     op.create_table('stay__package',
     sa.Column('id_hotel_package', sa.Integer(), nullable=False),
-    sa.Column('hotel_package_name', sa.String(length=100), nullable=False),
-    sa.Column('description', sa.String(length=1000), nullable=False),
+    sa.Column('hotel_package_name', sa.String(length=20), nullable=False),
+    sa.Column('description', sa.String(length=500), nullable=False),
     sa.Column('price', sa.Integer(), nullable=False),
     sa.Column('start_date', sa.Date(), nullable=False),
     sa.Column('end_date', sa.Date(), nullable=False),
