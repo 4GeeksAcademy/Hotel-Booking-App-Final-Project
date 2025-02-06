@@ -10,6 +10,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			hotel_packages: [], // Almacenamiento de los paquetes de estadia de los hoteles
 			name: null,
 			personalInfo: null, // Store for personal info data
+			reservations: [],
 			signupData: {},
 			recovery_mail: [],
 			demo: [
@@ -357,12 +358,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 			/*deactivate hotel from hotel profile*/
 			deactivateHotel: async (hotelId) => {
 				const token = localStorage.getItem("user_session");
-			
+
 				if (!token) {
 					console.error("No token found!");
 					return false;
 				}
-			
+
 				try {
 					const response = await fetch(`${process.env.BACKEND_URL}/api/hotels/${hotelId}`, {
 						method: "PUT",
@@ -372,20 +373,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 						},
 						body: JSON.stringify({ is_active: false }),
 					});
-			
+
 					if (!response.ok) {
 						throw new Error("Failed to deactivate hotel");
 					}
-			
+
 					const data = await response.json();
 					console.log("✅ Hotel successfully deactivated:", data);
-					
+
 					// Update store state
 					const updatedHotels = getStore().userHotels.map((hotel) =>
 						hotel.id_hotel === hotelId ? { ...hotel, is_active: false } : hotel
 					);
 					setStore({ userHotels: updatedHotels });
-			
+
 					return true;
 				} catch (error) {
 					console.error("Error deactivating hotel:", error);
@@ -395,12 +396,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			reactivateHotel: async (hotelId) => {
 				const token = localStorage.getItem("user_session");
-			
+
 				if (!token) {
 					console.error("No token found!");
 					return false;
 				}
-			
+
 				try {
 					const response = await fetch(`${process.env.BACKEND_URL}/api/hotels/${hotelId}/status`, {
 						method: "PUT",
@@ -410,20 +411,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 						},
 						body: JSON.stringify({ is_active: true }),
 					});
-			
+
 					if (!response.ok) {
 						throw new Error("Failed to reactivate hotel");
 					}
-			
+
 					const data = await response.json();
 					console.log("✅ Hotel successfully reactivated:", data);
-					
+
 					// Update store state
 					const updatedHotels = getStore().userHotels.map((hotel) =>
 						hotel.id_hotel === hotelId ? { ...hotel, is_active: true } : hotel
 					);
 					setStore({ userHotels: updatedHotels });
-			
+
 					return true;
 				} catch (error) {
 					console.error("Error reactivating hotel:", error);
@@ -462,6 +463,39 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error updating personal info:", error);
 					return false;
 				}
+			},
+
+			// Obtener las reservas de los usuarios en el carrito
+			getUserReservations: async () => {
+				const token = localStorage.getItem("user_session"); // Assuming the token is stored here
+				if (!token) {
+					console.error("No token found!");
+					return false;
+				}
+				try {
+					const response = await fetch(process.env.BACKEND_URL + "api/user/reservations", {
+						method: "GET",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`
+						},
+					});
+
+					const data = await response.json();
+					console.log('Datos de reservas:', data);  // Para depurar la respuesta
+					console.log('Usuario:', token);
+
+
+					if (response.ok) {
+						setStore({ reservations: data.reservations || [] });
+						console.log("Reservas almacenadas en el store:", data.reservations); // Verifica lo que se guarda en el store
+					} else {
+						console.error("Error al obtener reservas:", data.error || 'Error desconocido');
+					}
+				} catch (error) {
+					console.error("Error en la petición:", error);
+				}
+
 			},
 
 			selectPlan: async (planId) => {
@@ -613,7 +647,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("❌ Error fetching hotel packages:", error);
 					return null;
 				}
-			},			
+			},
 			resetAccPassword: async (userPassReset) => {
 				//Verificacion de existencia del usuario
 				try {
@@ -621,28 +655,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 						method: "POST",
 						headers: {
 							"Content-type": "application/json"
-						}, 
-						body:JSON.stringify(
+						},
+						body: JSON.stringify(
 							{
 								"user": userPassReset
 							}
 						)
 					});
-			
+
 					if (!response.ok) {
 						const errorData = await response.json();
 						console.error("❌ Backend error:", errorData.message);
 						return null;
 					}
-					
+
 					//Generacion del codigo de renicio de password con su timer de 15 minutos
 					const codeGenerated = getActions().resetCodeGen()
-					
+
 
 					const codeTimer = Date.now() + 960;
 					// setStore({resetCode: codeGenerated })
 					// setStore({codeExpiration: codeTimer })
-					setStore({recovery_mail: userPassReset})
+					setStore({ recovery_mail: userPassReset })
 
 					console.log(codeGenerated)
 					console.log(codeTimer)
@@ -651,7 +685,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 					const data = await response.json();
-					console.log("📥 Reset code:", codeGenerated );
+					console.log("📥 Reset code:", codeGenerated);
 					return data;
 				} catch (error) {
 					console.error("❌ Error fetching password reset packages:", error);
@@ -664,12 +698,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const charactersLength = 4;
 				let counter = 0;
 				while (counter < charactersLength) {
-						resetCodeValue += characters.charAt(Math.floor(Math.random() * charactersLength));
-						counter += 1;
+					resetCodeValue += characters.charAt(Math.floor(Math.random() * charactersLength));
+					counter += 1;
 				}
 				console.log("codigo generado" + resetCodeValue)
 
-				
+
 
 				return resetCodeValue
 			},
@@ -680,8 +714,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 						method: "PUT",
 						headers: {
 							"Content-type": "application/json"
-						}, 
-						body:JSON.stringify(
+						},
+						body: JSON.stringify(
 							{
 								"email": userMail,
 								"code": code,
@@ -689,7 +723,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 							}
 						)
 					});
-			
+
 					if (!response.ok) {
 						const errorData = await response.json();
 						console.error("❌ Backend error:", errorData.message);
@@ -700,12 +734,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("We sent it!")
 					return true;
 				}
-					catch (error) {
+				catch (error) {
 					console.error("❌ Error fetching password reset packages:", error);
 					return null;
 				}
 			},
-			codeVerification: async (inputToCheck) =>{
+			codeVerification: async (inputToCheck) => {
 				//Envio del correo con el codigo
 				const code_date = Date.now()
 				try {
@@ -713,8 +747,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 						method: "POST",
 						headers: {
 							"Content-type": "application/json"
-						}, 
-						body:JSON.stringify(
+						},
+						body: JSON.stringify(
 							{
 								"email": getStore().recovery_mail,
 								"code": inputToCheck,
@@ -722,7 +756,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 							}
 						)
 					});
-			
+
 					if (!response.ok) {
 						const errorData = await response.json();
 						console.error("❌ Backend error:", errorData.message);
@@ -733,70 +767,70 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("checked!")
 					return true;
 				}
-					catch (error) {
+				catch (error) {
 					console.error("❌ Error fetching password reset packages:", error);
 					return null;
 				}
 			}
-			},
+		},
 
-			/*favorite hotels profile page fetching*/
-			getFavoriteHotels: async () => {
-				const token = localStorage.getItem("user_session");
-				if (!token) {
-					console.error("No token found!");
-					return;
-				}
-
-				try {
-					console.log("Fetching favorites from:", process.env.BACKEND_URL + "/api/user/favorites");
-
-					const backendURL = process.env.BACKEND_URL.replace(/\/$/, "");  // Remove trailing slash
-
-					const response = await fetch(`${backendURL}/api/user/favorites`, {
-						headers: { Authorization: `Bearer ${token}` }
-					});
-
-					console.log("Response status:", response.status);
-
-					if (!response.ok) {
-						throw new Error(`Failed to fetch favorite hotels: ${response.status} ${response.statusText}`);
-					}
-
-					const data = await response.json();
-					console.log("Fetched favorite hotels:", data);
-
-					setStore({ favoriteHotels: Array.isArray(data) ? data : [] });
-				} catch (error) {
-					console.error("Error fetching favorite hotels:", error);
-				}
-			},
-
-
-
-			removeFavoriteHotel: async (hotelId) => {
-				const token = localStorage.getItem("user_session");
-				if (!token) {
-					console.error("No token found!");
-					return false;
-				}
-				try {
-					const response = await fetch(`${process.env.BACKEND_URL}/api/user/favorites/${hotelId}`, {
-						method: "DELETE",
-						headers: {
-							Authorization: `Bearer ${token}`
-						}
-					});
-					if (!response.ok) {
-						throw new Error("Failed to remove favorite hotel");
-					}
-					getActions().getFavoriteHotels();
-					return true;
-				} catch (error) {
-					console.error("Error removing favorite hotel:", error);
-					return false;
-				}
+		/*favorite hotels profile page fetching*/
+		getFavoriteHotels: async () => {
+			const token = localStorage.getItem("user_session");
+			if (!token) {
+				console.error("No token found!");
+				return;
 			}
+
+			try {
+				console.log("Fetching favorites from:", process.env.BACKEND_URL + "/api/user/favorites");
+
+				const backendURL = process.env.BACKEND_URL.replace(/\/$/, "");  // Remove trailing slash
+
+				const response = await fetch(`${backendURL}/api/user/favorites`, {
+					headers: { Authorization: `Bearer ${token}` }
+				});
+
+				console.log("Response status:", response.status);
+
+				if (!response.ok) {
+					throw new Error(`Failed to fetch favorite hotels: ${response.status} ${response.statusText}`);
+				}
+
+				const data = await response.json();
+				console.log("Fetched favorite hotels:", data);
+
+				setStore({ favoriteHotels: Array.isArray(data) ? data : [] });
+			} catch (error) {
+				console.error("Error fetching favorite hotels:", error);
+			}
+		},
+
+
+
+		removeFavoriteHotel: async (hotelId) => {
+			const token = localStorage.getItem("user_session");
+			if (!token) {
+				console.error("No token found!");
+				return false;
+			}
+			try {
+				const response = await fetch(`${process.env.BACKEND_URL}/api/user/favorites/${hotelId}`, {
+					method: "DELETE",
+					headers: {
+						Authorization: `Bearer ${token}`
+					}
+				});
+				if (!response.ok) {
+					throw new Error("Failed to remove favorite hotel");
+				}
+				getActions().getFavoriteHotels();
+				return true;
+			} catch (error) {
+				console.error("Error removing favorite hotel:", error);
+				return false;
+			}
+		}
 	};
 };
 

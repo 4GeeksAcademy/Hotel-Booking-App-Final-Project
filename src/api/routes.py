@@ -3,7 +3,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 from flask import Flask, request, jsonify, url_for, Blueprint, current_app
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
-from api.models import db, User, Hotel, User_Hotel_Admin_Package, Hotel_Admin_Package, Stay_Package
+from api.models import db, User, Hotel, User_Hotel_Admin_Package, Hotel_Admin_Package, Stay_History, Stay_Package, Reservation
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_mail import Mail, Message
@@ -410,6 +410,80 @@ def update_personal_info():
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": f"Failed to update user: {str(e)}"}), 500
+
+# PARA CREAR UNA RESERVA, NO SE HA PROBADO:
+@api.route('/user/reserve', methods=['POST'])
+@jwt_required()
+def create_reservation():
+    current_user_id = get_jwt_identity()
+    
+    user = User.query.get(current_user_id)
+    if not user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    # Obtener los datos de la reserva desde el cuerpo de la solicitud
+    reservation_data = request.get_json()
+
+    stay_package = Stay_Package.query.get(reservation_data["stay_package_id"])
+    if not stay_package:
+        return jsonify({"error": "Paquete de estadía no encontrado"}), 404
+
+    # Crear la nueva reserva
+    new_reservation = Reservation(
+        id_user=current_user_id,
+        reservation_date=reservation_data["reservation_date"],
+        reservation_payment=stay_package.price,
+        stay_package_id=stay_package.id_hotel_package
+    )
+
+    db.session.add(new_reservation)
+    db.session.commit()
+
+    return jsonify(new_reservation.serialize()), 201
+
+# OBTENER LAS RESERVAS POR USER CLIENTE
+@api.route('/user/reservations', methods=['GET'])
+@jwt_required()
+def get_user_reservations():
+    current_user_username = get_jwt_identity()
+    
+    user = User.query.filter_by(username=current_user_username).first()
+    if not user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    # Verificar si el usuario tiene historial de reservas
+    reservations = Reservation.query.filter_by(id_user=user.id_user).all()
+    
+    if not reservations:
+        return jsonify({"message": "No tienes reservas activas"}), 200
+
+    # Serializar las reservas
+    reservations = [reservation.serialize() for reservation in reservations]
+    
+    return jsonify({"reservations": reservations}), 200
+
+# PARA PAYPAL:
+@api.route('/pay-reservation/<int:reservation_id>', methods=['PUT'])
+def pay_reservation(reservation_id):
+    try:
+        data = request.json
+        order_id = data.get("orderID")
+        payment_id = data.get("paymentID")
+
+        # Aquí podrías validar el orderID con la API de PayPal antes de actualizar la reserva
+        reservation = Reservation.query.get(reservation_id)
+
+        if not reservation:
+            return jsonify({"msg": "Reserva no encontrada"}), 404
+
+        reservation.is_paid = True
+        reservation.order_id = order_id
+        reservation.payment_id = payment_id
+        db.session.commit()
+
+        return jsonify({"msg": "Reserva actualizada exitosamente"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @api.route('/hotel-plan', methods=['POST'])
 @jwt_required()
