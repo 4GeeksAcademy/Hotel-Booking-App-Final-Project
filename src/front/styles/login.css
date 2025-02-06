@@ -1,11 +1,11 @@
 #welcomePageTitleLogin{
-    font-size:48px;
+    font-size: 7vw;
     font-weight: bold;
     Color: rgb(0,0,0)
 }
 
 #sereniaPageTitleLogin{
-    font-size:48px;
+    font-size:3rem;
     font-weight:bold; 
     color:#30728A;
 }
@@ -16,7 +16,8 @@
 }
 
 .loginInputData {
-    min-width:400px;
+    min-width: 14rem;
+    width: 30vw;
     border:solid; 
     border-radius: 20px; 
     border-width:2px;

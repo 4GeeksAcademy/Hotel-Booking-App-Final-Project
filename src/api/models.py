@@ -138,8 +138,8 @@ class User_Hotel_Admin_Package(db.Model):
 class Stay_Package(db.Model):
     # Datos de los Paquetes de estadia a ofrecer a usuarios clientes
     id_hotel_package = db.Column(db.Integer, primary_key=True) 
-    hotel_package_name = db.Column(db.String(20), nullable=False) 
-    description = db.Column(db.String(500), unique=False, nullable=False)
+    hotel_package_name = db.Column(db.String(100), nullable=False) 
+    description = db.Column(db.String(1000), unique=False, nullable=False)
     price = db.Column(db.Integer, unique=False, nullable=False)
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)

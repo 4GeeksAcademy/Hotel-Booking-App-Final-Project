@@ -14,20 +14,27 @@ export const Search = () => {
 
 	useEffect(()=> {
 		const loadPage = async () => {
+			
+
 			let base_packages = await actions.loadHotelPackages()
 			if(base_packages){
 				setFilterData([...store.hotel_packages])
+			}
+			if (store.clicked_hotel){
+				searchInfo.hotel_name = store.clicked_hotel
+				packageSearchFilter()
 			}
 		}
 		
 		loadPage();
 		//console.log(filterState)
-	
+		
+
 	}, []);
 
 
 	const packageSearchFilter = (e) => {
-		e.preventDefault()
+		e ? e.preventDefault() : false 
 		let hotel_packages_copy = [...store.hotel_packages]
 		//let hotel_reduced_search = []
 		
@@ -188,7 +195,7 @@ export const Search = () => {
 			
 
 			<div className="searchBackground container-fluid mt-5">
-				<div className="hotelPackageList col-7 d-flex justify-content-start  ms-3 h-75 mb-5 mt-5 ps-0">
+				<div className="overflow-auto hotelPackageList col-7 d-flex justify-content-start  ms-3 h-75 mb-5 mt-5 ps-0">
 					<ul className="list-group">
 						{ filteredData ? filteredData.map((item, index) => {
 						return (
@@ -203,7 +210,7 @@ export const Search = () => {
 
 								<div className="col-5 packageDetails container-fluid">
 									<div className="fs-1">{item.hotel.name}</div>
-									<div className="fs-2">{item.hotel_package_name}</div>
+									<div className="fs-4 text-nowrap"><p>{item.hotel_package_name}</p></div>
 									<div className="fs-4"><i className="fa-solid fa-location-dot"></i> {item.hotel.location}</div>
 									<div className="fs-6"><i className="fa-regular fa-calendar"></i> Starting date: {item.start_date}</div>
 									<div className="fs-6"><i className="fa-solid fa-calendar"></i> Lasts until: {item.end_date}</div>
