@@ -33,16 +33,11 @@ export const Navbar = () => {
 
 	return (
 		<nav className="navbar navBarConfig p-0 FontDesign container-fluid">
-			<div className="container-fluid d-flex justify-content-between ms-5 me-5">
+			<div className="container-fluid d-flex justify-content-between align-items-center ms-5 me-5">
 				<Link to="/" className="SereniaTitle">
 					<span className="navbar-brand mb-0 h1 text-light SereniaTitle">Serenia</span>
 				</Link>
-				<div className="ml-auto">
-
-					{/* Botón carrito de reservas */}
-					<Link to="/reservationcart" className="text-light fs-3 me-3">
-						<i class="fa-solid fa-cart-shopping"></i>
-					</Link>
+				<div className="d-flex align-items-center gap-3">
 
 					{/* Mostrar el botón de Logout si el usuario está logueado */}
 					{localStorage.getItem("user_session") && store.currentUser ? (
@@ -80,11 +75,16 @@ export const Navbar = () => {
 									Login
 								</button>
 							)}
-
 						</>
+					)}
+					{/* Botón del carrito de reservas, solo en "/" y para clientes */}
+					{location.pathname === "/" && store.currentUser?.user_type === "cliente" && (
+						<Link to="/reservationcart" className="text-light fs-3 ms-3">
+							<i className="fa-solid fa-cart-shopping"></i>
+						</Link>
 					)}
 				</div>
 			</div>
-		</nav>
+		</nav >
 	);
 };
