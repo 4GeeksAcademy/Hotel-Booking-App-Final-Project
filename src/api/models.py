@@ -15,11 +15,10 @@ class User(db.Model):
     user_type = db.Column(db.Enum('cliente', 'hotel', 'admin', name='user_type_enum'), nullable=False)
     password_reset = db.Column(db.String(4), unique=True, nullable=True)
     password_reset_date = db.Column(db.String(120), unique=True, nullable=True)
+    phone_number = db.Column(db.String(20), nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     hotels = db.relationship('Hotel', back_populates='user', lazy=True)  # Relationship to hotels
         # Campos específicos para usuarios tipo 'hotel'
-  
-
     
     # faltan las foreign keys, van acá
     
@@ -41,7 +40,7 @@ class User(db.Model):
             "email": self.email,
             "username": self.username,
             "user_type": self.user_type,
-           
+            "phone_number": self.phone_number,
             "is_active": self.is_active,
         }
 
