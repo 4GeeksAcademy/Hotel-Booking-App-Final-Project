@@ -22,7 +22,8 @@ flask-jwt-extended = "==4.6.0"
 wtforms = "==3.1.2"
 flask-bcrypt = "*"
 paypalrestsdk = "*"
-flask-mail = "*"
+flask-mail = "==0.9.0"
+moment = "*"
 
 [requires]
 python_version = "3.10"

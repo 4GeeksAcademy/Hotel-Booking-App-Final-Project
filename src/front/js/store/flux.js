@@ -8,6 +8,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			hotelsPriority: [],  // Almacena hoteles con paquete prioritario
 			hotelsBasic: [],     // Almacenar hoteles con paquete básico
 			hotel_packages: [], // Almacenamiento de los paquetes de estadia de los hoteles
+			clicked_hotel: "",
 			name: null,
 			personalInfo: null, // Store for personal info data
 			reservations: [],
@@ -674,7 +675,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const codeGenerated = getActions().resetCodeGen()
 
 
-					const codeTimer = Date.now() + 960;
+					const codeTimer = Date.now() + 900000;
 					// setStore({resetCode: codeGenerated })
 					// setStore({codeExpiration: codeTimer })
 					setStore({ recovery_mail: userPassReset })
@@ -745,7 +746,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const code_date = Date.now()
 				try {
 					const response = await fetch(`${process.env.BACKEND_URL}api/code-verification`, {
-						method: "POST",
+						method: "PUT",
 						headers: {
 							"Content-type": "application/json"
 						},
@@ -771,6 +772,129 @@ const getState = ({ getStore, getActions, setStore }) => {
 				catch (error) {
 					console.error("❌ Error fetching password reset packages:", error);
 					return null;
+				}
+			},
+
+			/*favorite hotels profile page fetching*/
+			getFavoriteHotels: async () => {
+				const token = localStorage.getItem("user_session");
+				if (!token) {
+					console.error("No token found!");
+					return;
+				}
+
+				try {
+					console.log("Fetching favorites from:", process.env.BACKEND_URL + "/api/user/favorites");
+
+					const backendURL = process.env.BACKEND_URL.replace(/\/$/, "");  // Remove trailing slash
+
+					const response = await fetch(`${backendURL}/api/user/favorites`, {
+						headers: { Authorization: `Bearer ${token}` }
+					});
+
+					console.log("Response status:", response.status);
+
+					if (!response.ok) {
+						throw new Error(`Failed to fetch favorite hotels: ${response.status} ${response.statusText}`);
+					}
+
+					const data = await response.json();
+					console.log("Fetched favorite hotels:", data);
+
+					setStore({ favoriteHotels: Array.isArray(data) ? data : [] });
+				} catch (error) {
+					console.error("Error fetching favorite hotels:", error);
+				}
+			},
+
+
+
+			removeFavoriteHotel: async (hotelId) => {
+				const token = localStorage.getItem("user_session");
+				if (!token) {
+					console.error("No token found!");
+					return false;
+				}
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/user/favorites/${hotelId}`, {
+						method: "DELETE",
+						headers: {
+							Authorization: `Bearer ${token}`
+						}
+					});
+					if (!response.ok) {
+						throw new Error("Failed to remove favorite hotel");
+					}
+					getActions().getFavoriteHotels();
+					
+					return true;
+
+				} catch (error) {
+					console.error("Error removing favorite hotel:", error);
+					return false;
+				}
+			},
+			checkPasswordRecovery: async (email, verificationCode) => {
+				const recoveryDate = Date.now()
+
+				const response = await fetch(`${process.env.BACKEND_URL}api/pass-reset-check`, {
+					method: "PUT",
+						headers: {
+							"Content-type": "application/json"
+						}, 
+						body:JSON.stringify(
+							{
+								"email": email,
+								"code": verificationCode,
+								"code_date": recoveryDate
+							}
+						)
+				});
+
+				if (!response.ok) {
+					const errorData = await response.json();
+					console.error("❌ Backend error:", errorData.message);
+					return null;
+				}
+
+				try {
+					const data = response.json()
+					console.log(data)
+					return data;
+				}
+				catch (error){
+					console.error("Error removing favorite hotel:", error);
+					return false;
+				}
+			},
+			changePassword: async (newPassword, email) => {
+				const response = await fetch(`${process.env.BACKEND_URL}api/change-password`, {
+					method: "PUT",
+						headers: {
+							"Content-type": "application/json"
+						}, 
+						body:JSON.stringify(
+							{
+								"newPassword": newPassword,
+								"email": email
+							}
+						)
+				});
+	
+				if (!response.ok) {
+					const errorData = await response.json();
+					console.error("❌ Backend error:", errorData.message);
+					return null;
+				}
+	
+				try {
+					const data = response.json()
+					console.log(data)
+					return data;
+				}
+				catch (error){
+					console.error("Error removing favorite hotel:", error);
+					return false;
 				}
 			}
 		},
@@ -834,5 +958,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 		}
 	};
 };
+
 
 export default getState;
