@@ -896,43 +896,38 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error removing favorite hotel:", error);
 					return false;
 				}
-			}
-		},
-
-		/*favorite hotels profile page fetching*/
-		getFavoriteHotels: async () => {
-			const token = localStorage.getItem("user_session");
-			if (!token) {
-				console.error("No token found!");
-				return;
-			}
-
-			try {
-				console.log("Fetching favorites from:", process.env.BACKEND_URL + "/api/user/favorites");
-
-				const backendURL = process.env.BACKEND_URL.replace(/\/$/, "");  // Remove trailing slash
-
-				const response = await fetch(`${backendURL}/api/user/favorites`, {
-					headers: { Authorization: `Bearer ${token}` }
-				});
-
-				console.log("Response status:", response.status);
-
-				if (!response.ok) {
-					throw new Error(`Failed to fetch favorite hotels: ${response.status} ${response.statusText}`);
+			},
+			/*favorite hotels profile page fetching*/
+			getFavoriteHotels: async () => {
+				const token = localStorage.getItem("user_session");
+				if (!token) {
+					console.error("No token found!");
+					return;
 				}
 
-				const data = await response.json();
-				console.log("Fetched favorite hotels:", data);
+				try {
+					console.log("Fetching favorites from:", process.env.BACKEND_URL + "/api/user/favorites");
 
-				setStore({ favoriteHotels: Array.isArray(data) ? data : [] });
-			} catch (error) {
-				console.error("Error fetching favorite hotels:", error);
-			}
+					const backendURL = process.env.BACKEND_URL.replace(/\/$/, "");  // Remove trailing slash
+
+					const response = await fetch(`${backendURL}/api/user/favorites`, {
+						headers: { Authorization: `Bearer ${token}` }
+					});
+
+					console.log("Response status:", response.status);
+
+					if (!response.ok) {
+						throw new Error(`Failed to fetch favorite hotels: ${response.status} ${response.statusText}`);
+					}
+
+					const data = await response.json();
+					console.log("Fetched favorite hotels:", data);
+
+					setStore({ favoriteHotels: Array.isArray(data) ? data : [] });
+				} catch (error) {
+					console.error("Error fetching favorite hotels:", error);
+				}
 		},
-
-
-
 		removeFavoriteHotel: async (hotelId) => {
 			const token = localStorage.getItem("user_session");
 			if (!token) {
@@ -955,6 +950,30 @@ const getState = ({ getStore, getActions, setStore }) => {
 				console.error("Error removing favorite hotel:", error);
 				return false;
 			}
+		},
+		getGoogleInformation: async (credentialResponse) => {
+			console.log("AAAAAA")
+			try {
+				const response = await fetch("https://www.googleapis.com/oauth2/v1/userinfo?alt=json", {
+					method: "GET",
+					headers: {
+						Authorization: `Bearer ${credentialResponse.credential}`
+					}
+				});
+				if (response.ok) {
+
+					const data = await response.json();
+					console.log(data);
+					
+					return data; // Retornar los hoteles básicos
+				} else {
+					console.error("Error fetching basic hotels:", response.status);
+				}
+			} catch (error) {
+				console.error("Error fetching basic hotels:", error);
+			}
+			
+		},
 		}
 	};
 };

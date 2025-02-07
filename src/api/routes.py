@@ -9,6 +9,7 @@ from flask_cors import CORS
 from flask_mail import Mail, Message
 import os, cloudinary, cloudinary.uploader
 from api.models import db, User, Hotel, Favorites  # ✅ Add Favorites
+from oauthlib.oauth2 import WebApplicationClient
 
 from api.models import db, User, Hotel, Stay_Package, User_Hotel_Admin_Package, Hotel_Admin_Package
 
@@ -18,12 +19,25 @@ mailApp = Flask(__name__)
 # Allow CORS requests to this API
 CORS(api)
 
+#Configuracion de Google API
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
+GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
+GOOGLE_DISCOVERY_URL = (
+    "https://accounts.google.com/.well-known/openid-configuration"
+)
+
+# OAuth 2 client setup
+client = WebApplicationClient(GOOGLE_CLIENT_ID)
+
+
+#configuracion de Cloudinary
 cloudinary.config(
     cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
     api_key=os.environ.get("CLOUDINARY_API_KEY"),
     api_secret=os.environ.get("CLOUDINARY_API_SECRET")
 )
 
+#Configuracion de SMTP
 mailApp.config["MAIL_SERVER"]='smtp.gmail.com'
 mailApp.config["MAIL_USERNAME"]= os.environ.get("MAIL_USERNAME")
 mailApp.config["MAIL_PASSWORD"]= os.environ.get("MAIL_PASSWORD")
@@ -83,13 +97,15 @@ def signup():
     try:
         db.session.add(new_user)
         db.session.commit()
-        new_admin_package = User_Hotel_Admin_Package(
-        id_user = new_user.id_user,
-        id_hotel_Admin_Package = admin_package.id_admin_package
-        )
+        # print(data["user_type"])
+        if data["user_type"] == "hotel":
+            new_admin_package = User_Hotel_Admin_Package(
+            id_user = new_user.id_user,
+            id_hotel_Admin_Package = admin_package.id_admin_package
+            )
+            db.session.add(new_admin_package)
+            db.session.commit()
 
-        db.session.add(new_admin_package)
-        db.session.commit()
 
         return jsonify({"message": "User registered successfully"}), 201
     except Exception as e:
