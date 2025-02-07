@@ -1,6 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
 
 export const SignUp = () => {
     const { store, actions } = useContext(Context);
@@ -12,6 +14,7 @@ export const SignUp = () => {
     const [password, setPassword] = useState(store.signupData.password ? store.signupData.password : "");
     const [userType, setUserType] = useState(store.signupData.userType ? store.signupData.userType : "");
     const [acceptTerms, setAcceptTerms] = useState(store.signupData.acceptTerms ? store.signupData.acceptTerms : "");
+    const [phoneNumber, setPhoneNumber] = useState(store.signupData.phoneNumber || "");
     const [toastMessage, setToastMessage] = useState(null);
     const navigate = useNavigate();
 
@@ -25,7 +28,8 @@ export const SignUp = () => {
         actions.setSignUpData("confirmPassword", confirmPassword);
         actions.setSignUpData("userType", userType);
         actions.setSignUpData("acceptTerms", acceptTerms);
-    }, [name, lastName, email, userName, password, confirmPassword, userType, acceptTerms]);
+        actions.setSignUpData("phoneNumber", phoneNumber);
+    }, [name, lastName, email, userName, password, confirmPassword, userType, acceptTerms, phoneNumber]);
 
     useEffect(() => {
         setName(store.signupData.name && store.signupData.name)
@@ -36,10 +40,18 @@ export const SignUp = () => {
         setConfirmPassword(store.signupData.confirmPassword && store.signupData.confirmPassword)
         setUserType(store.signupData.userType && store.signupData.userType)
         setAcceptTerms(store.signupData.acceptTerms && store.signupData.acceptTerms)
+        setPhoneNumber(store.signupData.phoneNumber && store.signupData.phoneNumber)
     }, [])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validación del campo teléfono
+        if (!phoneNumber) {
+            setToastMessage({ text: "Phone number is required.", type: "danger" });
+            setTimeout(() => setToastMessage(null), 3000);
+            return;
+        }
 
         if (!acceptTerms) {
             setToastMessage({ text: "You must accept the Terms and Conditions.", type: "danger" });
@@ -53,7 +65,7 @@ export const SignUp = () => {
             return;
         }
 
-        const message = await actions.signUp(name, lastName, email, userName, password, userType);
+        const message = await actions.signUp(name, lastName, email, userName, password, userType, "+" + phoneNumber);
 
         if (message === "User registered successfully") {
             setToastMessage({ text: "User registered successfully.", type: "success" });
@@ -63,6 +75,7 @@ export const SignUp = () => {
 
         setTimeout(() => setToastMessage(null), 1000);
     };
+    console.log(phoneNumber);
 
     return (
         <div className="FontDesign container py-5">
@@ -87,6 +100,15 @@ export const SignUp = () => {
 
                     <h5 className="fs-6 mt-4">Confirm Password</h5>
                     <input type="password" className="form-control rounded-pill" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+
+                    <h5 className="fs-6 mt-4">Phone Number</h5>
+                    <PhoneInput
+                        country={"us"}
+                        value={phoneNumber}
+                        inputClass="form-control rounded-pill"
+                        onChange={phone => setPhoneNumber(phone)}
+                        required
+                    />
 
                     <h5 className="fs-6 mt-4">Purpose of registration</h5>
                     <div className="form-check">
