@@ -69,12 +69,18 @@ export const Navbar = () => {
 						<>
 							{/* Botón de Login si no está logueado */}
 							{(
-								<button
-									className="btndashboard-signup"
-									onClick={() => navigate("/login")}
-								>
-									Login
-								</button>
+								<>
+									<div className="col mb-0 navBar w-100 Dropdown-Setup row d-flex justify-content-start">
+										<p className = "col m-auto h-100 fw-none text-light text-end" onClick={() => {navigate("/search")}}> Browse </p>
+									</div>
+									<button
+										className="btndashboard-signup"
+										onClick={() => navigate("/login")}
+									>
+										Login
+									</button>
+								</>
+								
 							)}
 						</>
 					)}

@@ -293,10 +293,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					const data = await response.json();
 
-
+					console.log(data);
 					await setStore({ hotel_packages: data.hotel_packages })
 
-					console.log(data);
+					
 
 
 					return data;
@@ -952,12 +952,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 			}
 		},
 		getGoogleInformation: async (credentialResponse) => {
-			console.log("AAAAAA")
+			//console.log("AAAAAA")
 			try {
 				const response = await fetch("https://www.googleapis.com/oauth2/v1/userinfo?alt=json", {
 					method: "GET",
 					headers: {
-						Authorization: `Bearer ${credentialResponse.credential}`
+						Authorization: `Bearer ${credentialResponse}`
 					}
 				});
 				if (response.ok) {
@@ -974,6 +974,37 @@ const getState = ({ getStore, getActions, setStore }) => {
 			}
 			
 		},
+		addToCart: async (package_data) => {
+			const token = localStorage.getItem("user_session");
+			if (!token) {
+				console.error("No token found!");
+				return false;
+			}
+			console.log(package_data)
+			try {
+				const response = await fetch(`${process.env.BACKEND_URL}api/user/reserve`, {
+					method: "POST",
+					headers: {
+						"Content-type": "application/json",
+						Authorization: `Bearer ${token}`
+					},
+					body:JSON.stringify(
+						{
+							"package_data": package_data
+						}
+					)
+				});
+				if (!response.ok) {
+					throw new Error("Failed to add item");
+				}
+				const data = response.json()
+
+				return data;
+			} catch (error) {
+				console.error("Error adding item to cart:", error);
+				return false;
+			}
+		}
 		}
 	};
 };

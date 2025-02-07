@@ -10,7 +10,7 @@ from flask_mail import Mail, Message
 import os, cloudinary, cloudinary.uploader
 from api.models import db, User, Hotel, Favorites  # ✅ Add Favorites
 from oauthlib.oauth2 import WebApplicationClient
-
+from datetime import datetime
 from api.models import db, User, Hotel, Stay_Package, User_Hotel_Admin_Package, Hotel_Admin_Package
 
 api = Blueprint('api', __name__)
@@ -447,23 +447,29 @@ def update_personal_info():
 def create_reservation():
     current_user_id = get_jwt_identity()
     
-    user = User.query.get(current_user_id)
+    user = User.query.filter_by(username=current_user_id).first()
     if not user:
         return jsonify({"error": "Usuario no encontrado"}), 404
 
     # Obtener los datos de la reserva desde el cuerpo de la solicitud
     reservation_data = request.get_json()
+    print(user.id_user) 
+    
 
-    stay_package = Stay_Package.query.get(reservation_data["stay_package_id"])
+    package_data = reservation_data["package_data"]
+
+    stay_package = Stay_Package.query.filter_by(id_hotel_package= package_data["id_hotel_package"]).first()
+
     if not stay_package:
         return jsonify({"error": "Paquete de estadía no encontrado"}), 404
 
     # Crear la nueva reserva
     new_reservation = Reservation(
-        id_user=current_user_id,
-        reservation_date=reservation_data["reservation_date"],
+        id_user= user.id_user,
+        reservation_date= datetime.now(),
         reservation_payment=stay_package.price,
-        stay_package_id=stay_package.id_hotel_package
+        stay_package_id=stay_package.id_hotel_package,
+        is_paid = False
     )
 
     db.session.add(new_reservation)
@@ -935,5 +941,8 @@ def password_change():
         
     except Exception as e:
          return jsonify({"error": "Internal Server Error", "details": str(e)}), 500
+
+    
+
 
 

@@ -72,6 +72,11 @@ export const Search = () => {
 		setFilterData([...store.hotel_packages])
 	}
 
+	const handleAddToCart = async (package_info) => {
+		console.log('entered')
+		await actions.addToCart(package_info)
+	}
+
     //console.log(store.hotels)
 	return(
 		<>	
@@ -221,10 +226,16 @@ export const Search = () => {
 								<div className="col-2 container-fluid d-flex justify-content-end text-break mt-auto ">
 									
 									<div>
-										
-										<button className="btn custom-btn detailsButton ms-2 mb-2">
-											Add to cart
-										</button>
+										{store.currentUser ? (store.currentUser.user_type == "cliente"? (<>
+											<button className="btn custom-btn detailsButton ms-2 mb-2" onClick={() =>{
+												handleAddToCart(item)
+												}}> 
+												Add to cart
+											</button>
+										</>
+											):  false) : false
+										} 
+											
 										<button className="btn custom-btn detailsButton ms-2 mb-2">
 											View details
 										</button>
