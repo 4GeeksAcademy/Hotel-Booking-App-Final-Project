@@ -3,8 +3,10 @@ import { Context } from "../store/appContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 export const Dashboard = () => {
+    const navigate = useNavigate()
     const { actions, store } = useContext(Context);
     const [priorityHotels, setPriorityHotels] = useState([]);
     const [basicHotels, setBasicHotels] = useState([]);
@@ -126,8 +128,12 @@ export const Dashboard = () => {
                                                     Reserve
                                                 </button>
                                             )}
-                                            <button className="btn custom-btn ms-3 align-self-start mt-n4">
-                                                View Details
+                                            <button className="btn custom-btn ms-3 align-self-start mt-n4" onClick={() => {
+                                                store.clicked_hotel = hotel.name
+                                                navigate("/search")
+                                            }}>
+                                                View Packages
+                                                
                                             </button>
                                         </div>
                                     </div>
@@ -184,6 +190,21 @@ export const Dashboard = () => {
                                     <p className="card-text">
                                         {hotel.location}, {hotel.country}
                                     </p>
+                                    <div className="d-flex justify-content-between mt-auto">
+                                        {!isHotelUser && (
+                                            <button className="btn custom-btn" onClick={() => handleReserve(hotel.name)}>
+                                                Reserve
+                                            </button>
+                                        )}
+                                         <button className="btn custom-btn ms-3 align-self-start mt-n4" onClick={() => {
+                                                store.clicked_hotel = hotel.name
+                                                console.log(store.clicked_hotel)
+                                                navigate("/search")
+                                            }}>
+                                                View Packages
+                                                
+                                            </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

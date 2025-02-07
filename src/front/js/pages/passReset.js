@@ -5,10 +5,17 @@ import {Context} from '../store/appContext.js'
 
 
 export const PasswordReset = () => {
-    let navigate = useNavigate()
+    const navigate = useNavigate()
     let response = {}
     const { store, actions } = useContext(Context);
     const [alreadyCode, setAlreadyCode] = useState(false)
+    const [validCode, setValidCode] = useState(false)
+    const [email, setEmail] = useState("")
+    const [passChange, setPassChange] = useState({
+        newPassword: "",
+        confirm_password: ""
+    })
+
     const [insertedCode, setInsertedCode] = useState({
         input1: "",
         input2: "",
@@ -16,88 +23,161 @@ export const PasswordReset = () => {
         input4: "",
     })
     //console.log(store.user)
-    const [data, setData] = useState({
-        username: "",
-        password: "",
-      });
 
 
-    //getting the user values
-    const inpuntHandling = e => {
-        e.preventDefault()
-        const {name, value} = e.target;
-        setData(prevInfo => (
-            {
-                ...prevInfo, [name]:value
-            }));
-        //console.log(data);
-    }
-
-     useEffect(() => {
-       
+    useEffect(() => {
         setAlreadyCode(false)
      },[]) 
 
+    
+     //getting the user values
+    const inpuntHandling = e => {
+        e.preventDefault()
+        const {name, value} = e.target;
+        setEmail(value);
+        //console.log(data);
+    }
+     
+
     const resetPasswordHandle = async(e) => {
         e.preventDefault()
-        let response = await actions.resetAccPassword(data.username)
-        //console.log(response)
+        let response = await actions.resetAccPassword(email)   
     }
 
+    console.log(passChange)
+
+
+    //Verificacion del codigo 
     const acceptPassReset = async(e) => {
         e.preventDefault()
         const inputToCheck = insertedCode.input1 + insertedCode.input2 + insertedCode.input3 + insertedCode.input4
-        let checkCode = await store.actions(inputToCheck)
+        console.log(inputToCheck)
+        const checkCode = await actions.checkPasswordRecovery(email, inputToCheck)
+        checkCode.Code == true ? setValidCode(true) : false
     }
-    console.log(insertedCode)
+
+
+    //tomar codigo de verificacion
+    const handleCode = e => {
+        const { name, value } = e.target;
+        setInsertedCode(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
+    const handleNewPassword = e => {
+        const { name, value } = e.target;
+        setPassChange(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+    
+    //creacion de nueva password
+    const handlePassChange = async (e) => {
+        if (passChange.newPassword === passChange.confirm_password && (passChange.newPassword !== ""  &&passChange.confirm_password !== "")){
+            actions.changePassword(passChange.newPassword, email)
+            alert("Successfully changed!")
+            navigate("/")
+            return true
+        }
+        alert("An error has occured")
+    }
 
     return (
         <>
-            <div className='container-fluid d-flex justify-content-center customMargins'>
+            {/*Form para envio de codigo*/}
+            <div className='container-fluid d-flex justify-content-center'>
                 {!alreadyCode ? (<>
-                    <div>
+                    <div id="emailAsk">
                         <label for="full_Name" className="form-label fw-bold">E-mail</label>
                         <form  onSubmit={resetPasswordHandle}>
                             <div className="row mb-3">
                                 <input type="text" className="form-control" placeholder="Enter your e-mail" id="inputUser" name = "username"
-                                    value= {data.username}  onChange={inpuntHandling}/>                            
+                                    value= {email}  onChange={inpuntHandling}/>                            
                                     <div class="invalid-feedback"></div>
                             </div>
                         </form>
                         <button className='w-100 bg-primary' onClick={resetPasswordHandle}
                             ><div className='text-light fw-bold'>Send Request</div></button>
-                        <p onClick={(e) => {setAlreadyCode(true)}} className = "text-primary">Already have a code?</p>
+                        <p onClick={(e) => {
+                            setAlreadyCode(true)
+                            }} className = "text-primary">Already have a code?</p>
                     </div>
-                   
                 </> 
-                ): (<>
-                    <div>
+                ): !validCode ? (<>
+                    {/*Form para verificacion del codigo*/}
+                    <div className="customMargins">
+                        {/*Revision de codigo del usuario */}
                         <h3 className="col-12">Reset Password</h3>
                         <form  onSubmit={acceptPassReset} className="col-12 d-flex justify-content-center">
-                            <div className="resetConfigForm mt-3 mb-3">
-                                <input type="text" aria-label="digit2" aria-describedby="basic-addon1" maxlength="1" id="inputCode" name = "code"
-                                    onChange={(e) => {
-                                        setInsertedCode({input1: e.target.value})
-                                    }}/>
-                                <input type="text" className="ms-3" aria-label="digit3" aria-describedby="basic-addon1" maxlength="1"
-                                    onChange={(e) => {
-                                        setInsertedCode({input2: e.target.value})
-                                    }}/>
-                                <input type="text" className="ms-3" aria-label="digit4" aria-describedby="basic-addon1" maxlength="1"
-                                    onChange={(e) => {
-                                        setInsertedCode({input3: e.target.value})
-                                    }}/>
-                                <input type="text" className="ms-3" aria-label="digit5" aria-describedby="basic-addon1" maxlength="1"
-                                    onChange={(e) => {
-                                        setInsertedCode({input4: e.target.value})
-                                    }}/>
+                            <div>
+                                {!email || alreadyCode ? 
+                                    <input class="w-100"type="text" placeholder="Enter your e-mail" aria-label="digit2" aria-describedby="basic-addon1" name = "code" value = {email}
+                                     onChange={
+                                            inpuntHandling
+                                        }/>
+                                    : false
+                                    }
+                                <div className="resetConfigForm mt-3 mb-3">
+                                    <input type="text" aria-label="digit2" aria-describedby="basic-addon1" maxlength="1" id="inputCode" name = "input1" value = {insertedCode.input1}
+                                        onChange={
+                                            handleCode
+                                        }/>
+                                    <input type="text" className="ms-3" aria-label="digit3" aria-describedby="basic-addon1" maxlength="1" name = "input2" value = {insertedCode.input2}
+                                        onChange={
+                                            handleCode
+                                        }/>
+                                    <input type="text" className="ms-3" aria-label="digit4" aria-describedby="basic-addon1" maxlength="1" name = "input3" value = {insertedCode.input3}
+                                        onChange={
+                                            handleCode
+                                        }/>
+                                    <input type="text" className="ms-3" aria-label="digit5" aria-describedby="basic-addon1" maxlength="1" name = "input4" value = {insertedCode.input4}
+                                        onChange={
+                                            handleCode
+                                        }/>
+                                </div>
                             </div>
+                            
                         </form>
-                        <p className="col-12 mt-3">Please input the confirmation code sent to your email.</p>
-                        <button className="text-light" onClick={acceptPassReset}>Reset Password</button>
+                        <p className="col-12 mt-3 text-center">Please input the confirmation code sent to your email.</p>
+                        <div className="d-flex justify-content-center">   
+                            <button className="btn btn-success" onClick={acceptPassReset}>Reset Password</button>
+                        </div>
+                        
                     </div>
     
-                </>) 
+                </>): 
+
+                    (<>
+                        {/*Form para reinicio de password*/}
+                        <div className="customMargins">
+                            <h3 className="col-12">Set password for &nbsp;</h3>
+                            <h6 className="col-12 mt-3">{email}</h6>
+                            <div className="mt-3 mb-3 ">
+                                <div className="row">
+                                    <label><p className="fw-bold m-0 p-0">New Password</p></label>
+                                    <input className = "mt-2" type="password" aria-label="digit2" aria-describedby="basic-addon1"  id="inputCode" name = "newPassword" value = {passChange.newPassword}
+                                            onChange={
+                                                handleNewPassword
+                                            }/>
+                                </div>    
+                                <div className="row mt-4">
+                                <label><p className="fw-bold m-0 p-0">Confirm Password</p></label>
+                                    <input type="password" aria-label="digit2" aria-describedby="basic-addon1"  id="inputCode" name = "confirm_password" value = {passChange.confirm_password}
+                                            onChange={
+                                                handleNewPassword
+                                            }/>
+                                </div>   
+
+                                <button className='bg-primary mt-5 mb-2' onClick={handlePassChange}>
+                                    <div className='text-light fw-bold'>Reset Password</div>
+                                </button>
+                            </div>
+                        </div>
+
+                    </>)
                 }
                     
             </div>

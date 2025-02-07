@@ -3,7 +3,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 from flask import Flask, request, jsonify, url_for, Blueprint, current_app
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
-from api.models import db, User, Hotel, User_Hotel_Admin_Package, Hotel_Admin_Package, Stay_Package
+from api.models import db, User, Hotel, User_Hotel_Admin_Package, Hotel_Admin_Package, Stay_History, Stay_Package, Reservation
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_mail import Mail, Message
@@ -73,10 +73,20 @@ def signup():
         is_active=True  # Suponiendo que el usuario estará activo por defecto
     )
 
+    admin_package = Hotel_Admin_Package.query.filter_by(package_name = 'basic').first()
+
     # Guardar el usuario en la base de datos
     try:
         db.session.add(new_user)
         db.session.commit()
+        new_admin_package = User_Hotel_Admin_Package(
+        id_user = new_user.id_user,
+        id_hotel_Admin_Package = admin_package.id_admin_package
+        )
+
+        db.session.add(new_admin_package)
+        db.session.commit()
+
         return jsonify({"message": "User registered successfully"}), 201
     except Exception as e:
         db.session.rollback()
@@ -411,6 +421,80 @@ def update_personal_info():
         db.session.rollback()
         return jsonify({"message": f"Failed to update user: {str(e)}"}), 500
 
+# PARA CREAR UNA RESERVA, NO SE HA PROBADO:
+@api.route('/user/reserve', methods=['POST'])
+@jwt_required()
+def create_reservation():
+    current_user_id = get_jwt_identity()
+    
+    user = User.query.get(current_user_id)
+    if not user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    # Obtener los datos de la reserva desde el cuerpo de la solicitud
+    reservation_data = request.get_json()
+
+    stay_package = Stay_Package.query.get(reservation_data["stay_package_id"])
+    if not stay_package:
+        return jsonify({"error": "Paquete de estadía no encontrado"}), 404
+
+    # Crear la nueva reserva
+    new_reservation = Reservation(
+        id_user=current_user_id,
+        reservation_date=reservation_data["reservation_date"],
+        reservation_payment=stay_package.price,
+        stay_package_id=stay_package.id_hotel_package
+    )
+
+    db.session.add(new_reservation)
+    db.session.commit()
+
+    return jsonify(new_reservation.serialize()), 201
+
+# OBTENER LAS RESERVAS POR USER CLIENTE
+@api.route('/user/reservations', methods=['GET'])
+@jwt_required()
+def get_user_reservations():
+    current_user_username = get_jwt_identity()
+    
+    user = User.query.filter_by(username=current_user_username).first()
+    if not user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    # Verificar si el usuario tiene historial de reservas
+    reservations = Reservation.query.filter_by(id_user=user.id_user).all()
+    
+    if not reservations:
+        return jsonify({"message": "No tienes reservas activas"}), 200
+
+    # Serializar las reservas
+    reservations = [reservation.serialize() for reservation in reservations]
+    
+    return jsonify({"reservations": reservations}), 200
+
+# PARA PAYPAL:
+@api.route('/pay-reservation/<int:reservation_id>', methods=['PUT'])
+def pay_reservation(reservation_id):
+    try:
+        data = request.json
+        order_id = data.get("orderID")
+        payment_id = data.get("paymentID")
+
+        # Aquí podrías validar el orderID con la API de PayPal antes de actualizar la reserva
+        reservation = Reservation.query.get(reservation_id)
+
+        if not reservation:
+            return jsonify({"msg": "Reserva no encontrada"}), 404
+
+        reservation.is_paid = True
+        reservation.order_id = order_id
+        reservation.payment_id = payment_id
+        db.session.commit()
+
+        return jsonify({"msg": "Reserva actualizada exitosamente"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @api.route('/hotel-plan', methods=['POST'])
 @jwt_required()
 def select_hotel_plan():
@@ -452,6 +536,7 @@ def select_hotel_plan():
         db.session.rollback()
         return jsonify({"message": f"Error selecting plan: {str(e)}"}), 500
 
+#Hoteles de la busqueda
 @api.route('/hotel-packages', methods=['GET'])
 def get_all_packages():
     try:
@@ -659,7 +744,7 @@ def code_notification():
     msg.html = """\
     <html>
         <body>
-            <h1>Hello Serenia!</h1>
+            <h1>Hello from Serenia!</h1>
             <p>We've received your request to reset your password. Please click the link below to complete the reset.
             email sent from a Flask application using Flask-Mail. Here is the code: </p>
             <h2>{code}</h2>
@@ -693,7 +778,6 @@ def verify_code():
 
     
 #rutas de favoritos para perfil de usuario
-
 @api.route('/user/favorites', methods=['GET'])
 @jwt_required()
 def get_favorite_hotels():
@@ -784,4 +868,52 @@ def add_favorite_hotel():
     except Exception as e:
         return jsonify({"error": "Internal Server Error", "details": str(e)}), 500
     
+@api.route('/pass-reset-check', methods = ['PUT'])
+def verification_code_date():
+    data = request.get_json()
+    print(data)
+    
+    try:
+        verified_user = User.query.filter_by(email = data["email"]).first()
+        code_date =  int(verified_user.password_reset_date)
+
+        print(verified_user.password_reset, data["code"])
+        print(verified_user.password_reset_date, data["code_date"])
+
+        if not verified_user:
+            return jsonify({"message": "This email is not registered within the system"}), 401
+        
+        if not verified_user.password_reset:
+            return jsonify({"message": "A code has yet to be requested"}), 402
+        
+        if not code_date > data["code_date"]:
+            return jsonify({"message": "The code has expired"}), 403
+
+        if verified_user.password_reset == data["code"] and (code_date > data["code_date"]):
+            print("Correct!")
+            verified_user.password_reset = ""
+            verified_user.password_reset_date = ""
+            db.session.commit()
+            return jsonify({"Code": True})
+        
+    except Exception as e:
+         return jsonify({"error": "Internal Server Error", "details": str(e)}), 500
+    
+
+@api.route('/change-password', methods = ['PUT'])
+def password_change():
+    data = request.get_json()
+    print(data)
+    try:
+        verified_user = User.query.filter_by(email = data["email"]).first()
+        password =  current_app.bcrypt.generate_password_hash(data["newPassword"]).decode('utf-8')
+
+        verified_user.password = password
+        
+        db.session.commit()
+        return jsonify({"message": "Successfully reset the password!"})
+        
+    except Exception as e:
+         return jsonify({"error": "Internal Server Error", "details": str(e)}), 500
+
 

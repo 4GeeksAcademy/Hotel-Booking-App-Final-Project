@@ -46,9 +46,14 @@ export const LoginAccount = () => {
     return (
         <>
             <div className='col-xs-auto container-fluid mt-0' >
-                <div className="col-sm-auto d-flex justify-content-center mt-5 mb-0 pb-0">
-                    <p id="welcomePageTitleLogin">Welcome to&nbsp;</p>
-                    <p id="sereniaPageTitleLogin">Serenia</p>
+                <div className="row d-flex justify-content-center mt-5 mb-0 pb-0">
+
+                        <div id="welcomePageTitleLogin" className="d-flex justify-content-center col-xs-12 col-md-auto">
+                            <div >Welcome to&nbsp;</div> <div className="colorTitle">Serenia</div>
+                        </div>
+                        
+                   
+                    
                 </div>
                 <div id="loginMessage" className="col-sm-auto d-flex justify-content-center mt-0 p-0 mb-0">
                     <p>Please, log in</p>
@@ -56,15 +61,15 @@ export const LoginAccount = () => {
             </div>
 
 
-            <div className='col-xs-auto container-fluid w-50 border-secondary mt-0' id="customMarginLogin">
+            <div className='col-xs-auto container-fluid w-100 border-secondary mt-0' id="customMarginLogin">
                 <form onSubmit={loginUserHandling}>
-                    <div className="col-xs-auto row mt-4 mb-4 d-flex justify-content-center">
+                    <div className=" row mt-1 mb-4 d-flex justify-content-center">
                         <input type="text" className="loginInputData col-sm-auto form-control" placeholder="Enter your username" id="loginInputUser" name="username"
                             value={data.username} onChange={inpuntHandling} />
                         <div class="invalid-feedback"></div>
                     </div>
 
-                    <div className="col-xs-auto row mt-4 mb-4 d-flex justify-content-center">
+                    <div className=" row mt-4 mb-4 d-flex justify-content-center">
                         <input type="password" className="loginInputData form-control" placeholder="Enter your password" id="loginInputPass" name="password"
                             value={data.password} onChange={inpuntHandling}
                         />
@@ -85,14 +90,18 @@ export const LoginAccount = () => {
                 </form>
 
                 {/* Terminos y condiciones asi como boton de registro */}
-                <div className="col-sm-auto d-flex justify-content-center mt-4">
-                    <p className="col-6 d-flex justify-content-end">Don't have an account?</p>
-                    <Link to="/signup" className="ms-2 text-primary col-6 d-flex-justify-content-start ">Sign-up! </Link>
+                <div className="col-sm-auto d-flex justify-content-center text-center mt-4">
+                    <p className="">Don't have an account?
+                        <Link to="/signup" className="ms-2 text-primary">Sign-up! </Link>
+                    </p>
+                    
                 </div>
 
-                <div className="col-sm-auto d-flex justify-content-center mt-1">
-                    <p className="col-6 d-flex justify-content-end">By signing up, you agree with our</p>
-                    <Link to="/signup" className="ms-2 text-primary col-6 d-flex-justify-content-start ">Terms & Conditions </Link>
+                <div className="col-sm-auto d-flex justify-content-center text-center mt-1">
+                    <p className="">By signing up, you agree with our 
+                        <Link to="/terms" className="ms-2 text-primary">Terms & Conditions </Link>
+                    </p>
+                    
                 </div>
             </div>
         </>)
