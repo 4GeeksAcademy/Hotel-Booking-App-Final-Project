@@ -29,7 +29,7 @@ export const Navbar = () => {
 		}
 	}
 
-
+	console.log(location.pathname)
 
 	return (
 		<nav className="navbar navBarConfig p-0 FontDesign container-fluid">
@@ -79,11 +79,11 @@ export const Navbar = () => {
 						</>
 					)}
 					{/* Botón del carrito de reservas, solo en "/" y para clientes */}
-					{location.pathname === "/" && store.currentUser?.user_type === "cliente" && (
+					{ store.currentUser?.user_type === "cliente" && location.pathname !== "/reservationcart" ? (
 						<Link to="/reservationcart" className="text-light fs-3 ms-3">
 							<i className="fa-solid fa-cart-shopping"></i>
 						</Link>
-					)}
+					) : false}
 				</div>
 			</div>
 		</nav >
