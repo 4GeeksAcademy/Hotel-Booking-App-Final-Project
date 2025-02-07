@@ -79,7 +79,7 @@ export const ReservationCart = () => {
                                 <p><strong>Monto de Pago:</strong> ${reservation.stay_package.price}</p>
                                 <p><strong>Estado del Pago:</strong> {reservation.is_paid ? "Pagado" : "Pendiente"}</p>
 
-                                {!reservation.is_paid && (
+                                {!reservation.is_paid ? (
                                     <PayPalButtons
                                         createOrder={(data, actions) => {
                                             return actions.order.create({
@@ -94,7 +94,9 @@ export const ReservationCart = () => {
                                             });
                                         }}
                                     />
-                                )}
+                                ) :
+                                    <a href={`https://wa.me/${reservation.phone_number}`} target="_blank">Contactar por Whatsapp</a>
+                                }
 
                             </div>
                         </div>
