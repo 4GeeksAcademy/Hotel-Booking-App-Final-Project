@@ -206,41 +206,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			signUp: async (name, last_name, email, username, password, user_type, phone_number) => {
-				console.log(name, last_name, email, username, password, user_type, phone_number);
-
-				try {
-					const response = await fetch(process.env.BACKEND_URL + "api/signup", {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json"
-						},
-						body: JSON.stringify({
-							name: name,
-							last_name: last_name,
-							email: email,
-							username: username,
-							password: password,
-							user_type: user_type,
-							phone_number: phone_number // Puede ser 'cliente' o 'hotel'
-						})
-					});
-
-					if (!response.ok) {
-						const errorData = await response.json();
-						throw new Error(errorData.msg);
-					}
-
-					const data = await response.json();
-					console.log("User registered successfully:", data);
-
-					return "User registered successfully";
-				} catch (error) {
-					console.error("Error registering:", error);
-					return error.message || "This email or username is already registered, try it again.";
-				}
-			},
-
 			setSignUpData: (key, value, clear = false) => {
 				if (!clear) {
 					const store = getStore()
