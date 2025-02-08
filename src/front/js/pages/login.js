@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import "../../styles/login.css"
+
 
 
 
@@ -43,8 +45,14 @@ export const LoginAccount = () => {
         //console.log(data);
     }
 
+    const handleGoogleLogin = (credentialResponse) =>{
+        console.log(credentialResponse);
+        actions.getGoogleInformation(credentialResponse)
+    }
+
     return (
         <>
+            
             <div className='col-xs-auto container-fluid mt-0' >
                 <div className="row d-flex justify-content-center mt-5 mb-0 pb-0">
 
@@ -88,6 +96,24 @@ export const LoginAccount = () => {
                         </button>
                     </div>
                 </form>
+                <div className="d-flex justify-content-center">
+                    <GoogleOAuthProvider clientId="168580669100-kncvlspb1adg5clh58ne7if2sbo1ocrm.apps.googleusercontent.com">
+                        <div className = "w-25 mt-5 d-flex justify-content-center"> 
+                            <GoogleLogin
+                                
+                                onSuccess={credentialResponse => {
+                                    handleGoogleLogin(credentialResponse)
+                                }}
+                                onError={() => {
+                                    console.log('Login Failed');
+                                }}
+                                />  
+                        </div>
+                        
+                    </GoogleOAuthProvider>
+                </div>
+                
+                
 
                 {/* Terminos y condiciones asi como boton de registro */}
                 <div className="col-sm-auto d-flex justify-content-center text-center mt-4">
@@ -98,7 +124,7 @@ export const LoginAccount = () => {
                 </div>
 
                 <div className="col-sm-auto d-flex justify-content-center text-center mt-1">
-                    <p className="">By signing up, you agree with our 
+                    <p className="">By signing in, you agree with our 
                         <Link to="/terms" className="ms-2 text-primary">Terms & Conditions </Link>
                     </p>
                     

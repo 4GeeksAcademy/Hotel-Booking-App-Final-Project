@@ -72,14 +72,19 @@ export const Search = () => {
 		setFilterData([...store.hotel_packages])
 	}
 
+	const handleAddToCart = async (package_info) => {
+		console.log('entered')
+		await actions.addToCart(package_info)
+	}
+
     //console.log(store.hotels)
 	return(
 		<>	
 			{/*Busqueda de hoteles */}
-			<div className="container-fluid d-flex justify-content-center">
+			<div className="container d-flex justify-content-center">
 				<form onSubmit={packageSearchFilter}>
-						<div className="row sm-h-50 mt-5">
-							<div className="col d-inline-flex justify-content-center searchBarConfig">
+						<div className="col sm-h-50 mt-5">
+							<div className="col d-flex justify-content-center searchBarConfig">
 								{/*Por nombre de hotel*/}
 								<div className="col me-4">
 									<label for="locationSearch" className="label">Hotel</label>
@@ -176,10 +181,9 @@ export const Search = () => {
 										<div className="invalid-feedback"></div> 
 									</div>
 								</div>
-							</div>
-							
+							</div>	
 						</div>
-						<div className="mt-3 d-flex justify-content-center">
+						<div className="col mt-3 d-flex justify-content-center">
 							{/*Boton de limpieza de filtro */}
 							<button  className='btn btn-secondary searchButton me-2' type="button" onClick={clearFilters}>
 								<div className='text-light fw-bold'>Clear</div>
@@ -193,7 +197,7 @@ export const Search = () => {
 				</form>
 			</div>
 			
-
+			{/* Listado de los paquetes */}
 			<div className="searchBackground container-fluid mt-5">
 				<div className="overflow-auto hotelPackageList col-7 d-flex justify-content-start  ms-3 h-75 mb-5 mt-5 ps-0">
 					<ul className="list-group">
@@ -208,22 +212,34 @@ export const Search = () => {
 								</div>
 								
 
-								<div className="col-5 packageDetails container-fluid">
+								<div className="col-7 packageDetails container-fluid">
 									<div className="fs-1">{item.hotel.name}</div>
 									<div className="fs-4 text-nowrap"><p>{item.hotel_package_name}</p></div>
 									<div className="fs-4"><i className="fa-solid fa-location-dot"></i> {item.hotel.location}</div>
 									<div className="fs-6"><i className="fa-regular fa-calendar"></i> Starting date: {item.start_date}</div>
 									<div className="fs-6"><i className="fa-solid fa-calendar"></i> Lasts until: {item.end_date}</div>
+									<div className="fs-6"><i className="fa-solid fa-money-check-dollar"></i> $ {item.price}</div>
 									<div className="fs-5 mt-3 mb-2 text-break"> {item.description}</div>
+									
 								</div>
 
-								<div className="col-4 container-fluid d-inline-flex justify-content-between text-break mt-auto ">
-									<div className="fs-6"><i className="fa-solid fa-money-check-dollar"></i> $ {item.price}</div>
-									<button className="btn custom-btn detailsButton h-25 ms-2 mb-2">
-										View details
-									</button>
+								<div className="col-2 container-fluid d-flex justify-content-end text-break mt-auto ">
 									
-									
+									<div>
+										{store.currentUser ? (store.currentUser.user_type == "cliente"? (<>
+											<button className="btn custom-btn detailsButton ms-2 mb-2" onClick={() =>{
+												handleAddToCart(item)
+												}}> 
+												Add to cart
+											</button>
+										</>
+											):  false) : false
+										} 
+											
+										<button className="btn custom-btn detailsButton ms-2 mb-2">
+											View details
+										</button>
+									</div>
 								</div>
 
 							</li>

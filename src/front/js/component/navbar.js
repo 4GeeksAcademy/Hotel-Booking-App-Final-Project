@@ -29,7 +29,7 @@ export const Navbar = () => {
 		}
 	}
 
-
+	console.log(location.pathname)
 
 	return (
 		<nav className="navbar navBarConfig p-0 FontDesign container-fluid">
@@ -69,21 +69,27 @@ export const Navbar = () => {
 						<>
 							{/* Botón de Login si no está logueado */}
 							{(
-								<button
-									className="btndashboard-signup"
-									onClick={() => navigate("/login")}
-								>
-									Login
-								</button>
+								<>
+									<div className="col mb-0 navBar w-100 Dropdown-Setup row d-flex justify-content-start">
+										<p className = "col m-auto h-100 fw-none text-light text-end" onClick={() => {navigate("/search")}}> Browse </p>
+									</div>
+									<button
+										className="btndashboard-signup"
+										onClick={() => navigate("/login")}
+									>
+										Login
+									</button>
+								</>
+								
 							)}
 						</>
 					)}
 					{/* Botón del carrito de reservas, solo en "/" y para clientes */}
-					{location.pathname === "/" && store.currentUser?.user_type === "cliente" && (
+					{ store.currentUser?.user_type === "cliente" && location.pathname !== "/reservationcart" ? (
 						<Link to="/reservationcart" className="text-light fs-3 ms-3">
 							<i className="fa-solid fa-cart-shopping"></i>
 						</Link>
-					)}
+					) : false}
 				</div>
 			</div>
 		</nav >
