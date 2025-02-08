@@ -72,34 +72,41 @@ export const Search = () => {
 		setFilterData([...store.hotel_packages])
 	}
 
+	const handleAddToCart = async (package_info) => {
+		console.log('entered')
+		await actions.addToCart(package_info)
+	}
+
     //console.log(store.hotels)
 	return(
 		<>	
 			{/*Busqueda de hoteles */}
-			<div className="container-fluid d-flex justify-content-center">
-				<form onSubmit={packageSearchFilter}>
-						<div className="row sm-h-50 mt-5">
-							<div className="col d-inline-flex justify-content-center searchBarConfig">
+			<div className="container d-flex justify-content-center">
+				<form className= "d-flex flex-column justify-content-center" onSubmit={packageSearchFilter}>
+						
+							<div className="row searchBarConfig">
 								{/*Por nombre de hotel*/}
-								<div className="col me-4">
-									<label for="locationSearch" className="label">Hotel</label>
-									<div className="group-label">
-										<input type="text" className="h-25" placeholder="By hotel name" id="hotelSearch" name = "hotel_name"
-											onChange={(e) => {
-												const {name, value} = e.target;
-												setSearchInfo(prevInfo => ({
-													...prevInfo, [name]:value
-												}));
-											}}
+								<div className="col-12 col-md-6 col-lg-2 d-flex justify-content-center">
+									<div className="d-inline-flex flex-column">
+										<label for="locationSearch" className="label">Hotel</label>
+										<div className="group-label">
+											<input type="text" className="h-25" placeholder="By hotel name" id="hotelSearch" name = "hotel_name"
+												onChange={(e) => {
+													const {name, value} = e.target;
+													setSearchInfo(prevInfo => ({
+														...prevInfo, [name]:value
+													}));
+												}}
 
-											value = {searchInfo.hotel_name ? searchInfo.hotel_name : ""}
+												value = {searchInfo.hotel_name ? searchInfo.hotel_name : ""}
 
-											/> 
-										<div className="invalid-feedback"></div> 
+												/> 
+											<div className="invalid-feedback"></div> 
+										</div>
 									</div>
 								</div>
 								{/*ubicacion de hotel */}
-								<div className="col me-4">
+								<div className="col-12 col-md-6 col-lg-2">
 									<label for="locationSearch" className="label">Location</label>
 									<div className="group-label">
 										<input type="text" className="h-25" placeholder="By Location" id="locationSearch" name = "hotel_location"
@@ -117,7 +124,7 @@ export const Search = () => {
 									</div>
 								</div>
 								{/*Nombre del paquete*/}
-								<div className="col me-4">
+								<div className="col-12 col-md-6 col-lg-2">
 									<label for="locationSearch" className="label">Package name</label>
 									<div className="group-label">
 										<input type="text" className="h-25" placeholder="By package name" id="nameSearch" name = "package_name"
@@ -133,7 +140,7 @@ export const Search = () => {
 									</div>
 								</div>
 								{/*Por fecha de inicio paquete*/}
-								<div className="col me-4">
+								<div className="col-12 col-md-6 col-lg-2">
 									<label for="locationSearch" className="label">Date</label>
 									<div className="group-label">
 										<input type="date" className="h-25" placeholder="By check-in date" id="dateSearch" name = "package_date"
@@ -150,10 +157,10 @@ export const Search = () => {
 									</div>
 								</div>
 								{/*Por precio*/}
-								<div className="col">
-									<label for="locationSearch" className="label">Price range</label>
+								<div className="col-12 col-md-6 col-lg-2">
+									<label for="locationSearch" className="label">Min Price</label>
 									<div className="group-label d-flex">
-										<input type="number" className="h-25 w-25 p-0 me-2" placeholder="Min price" id="priceSearch" name = "min_price"
+										<input type="number" className="h-25 p-0" placeholder="Min price" id="priceSearch" name = "min_price"
 											onChange={(e) => {
 												const {name, value} = e.target;
 												setSearchInfo(prevInfo => ({
@@ -163,23 +170,28 @@ export const Search = () => {
 											value = {searchInfo.min_price ? searchInfo.min_price : ""}
 
 											/> 
-											<input type="number" className="h-25 w-25 ms-2" placeholder="Max price" id="priceSearch" name = "max_price"
-											onChange={(e) => {
-												const {name, value} = e.target;
-												setSearchInfo(prevInfo => ({
-													...prevInfo, [name]:value
-												}));
-											}}
-											value = {searchInfo.max_price ? searchInfo.max_price : ""}
-
-											/> 
 										<div className="invalid-feedback"></div> 
 									</div>
 								</div>
-							</div>
-							
-						</div>
-						<div className="mt-3 d-flex justify-content-center">
+								<div className="col-12 col-md-6 col-lg-2">
+									<label for="locationSearch" className="label">Max Price</label>
+									<div className="group-label d-flex">
+										<input type="number" className="h-25" placeholder="Max price" id="priceSearch" name = "max_price"
+													onChange={(e) => {
+														const {name, value} = e.target;
+														setSearchInfo(prevInfo => ({
+															...prevInfo, [name]:value
+														}));
+													}}
+													value = {searchInfo.max_price ? searchInfo.max_price : ""}
+													/> 
+										<div className="invalid-feedback"></div> 
+									</div>
+									
+								</div>
+							</div>	
+						
+						<div className="col mt-3 d-flex justify-content-center">
 							{/*Boton de limpieza de filtro */}
 							<button  className='btn btn-secondary searchButton me-2' type="button" onClick={clearFilters}>
 								<div className='text-light fw-bold'>Clear</div>
@@ -193,7 +205,7 @@ export const Search = () => {
 				</form>
 			</div>
 			
-
+			{/* Listado de los paquetes */}
 			<div className="searchBackground container-fluid mt-5">
 				<div className="overflow-auto hotelPackageList col-7 d-flex justify-content-start  ms-3 h-75 mb-5 mt-5 ps-0">
 					<ul className="list-group">
@@ -208,22 +220,34 @@ export const Search = () => {
 								</div>
 								
 
-								<div className="col-5 packageDetails container-fluid">
+								<div className="col-7 packageDetails container-fluid">
 									<div className="fs-1">{item.hotel.name}</div>
 									<div className="fs-4 text-nowrap"><p>{item.hotel_package_name}</p></div>
 									<div className="fs-4"><i className="fa-solid fa-location-dot"></i> {item.hotel.location}</div>
 									<div className="fs-6"><i className="fa-regular fa-calendar"></i> Starting date: {item.start_date}</div>
 									<div className="fs-6"><i className="fa-solid fa-calendar"></i> Lasts until: {item.end_date}</div>
+									<div className="fs-6"><i className="fa-solid fa-money-check-dollar"></i> $ {item.price}</div>
 									<div className="fs-5 mt-3 mb-2 text-break"> {item.description}</div>
+									
 								</div>
 
-								<div className="col-4 container-fluid d-inline-flex justify-content-between text-break mt-auto ">
-									<div className="fs-6"><i className="fa-solid fa-money-check-dollar"></i> $ {item.price}</div>
-									<button className="btn custom-btn detailsButton h-25 ms-2 mb-2">
-										View details
-									</button>
+								<div className="col-2 container-fluid d-flex justify-content-end text-break mt-auto ">
 									
-									
+									<div>
+										{store.currentUser ? (store.currentUser.user_type == "cliente"? (<>
+											<button className="btn custom-btn detailsButton ms-2 mb-2" onClick={() =>{
+												handleAddToCart(item)
+												}}> 
+												Add to cart
+											</button>
+										</>
+											):  false) : false
+										} 
+											
+										<button className="btn custom-btn detailsButton ms-2 mb-2">
+											View details
+										</button>
+									</div>
 								</div>
 
 							</li>

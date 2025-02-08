@@ -24,6 +24,8 @@ flask-bcrypt = "*"
 paypalrestsdk = "*"
 flask-mail = "==0.9.0"
 moment = "*"
+oauthlib = "==3.0.1"
+google-api-python-client = "*"
 
 [requires]
 python_version = "3.10"
