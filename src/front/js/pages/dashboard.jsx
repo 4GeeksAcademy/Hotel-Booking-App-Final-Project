@@ -1,5 +1,8 @@
 import React, { useEffect, useContext, useState } from "react";
 import { Context } from "../store/appContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
 import { useNavigate } from "react-router-dom";
 
 export const Dashboard = () => {
@@ -7,11 +10,12 @@ export const Dashboard = () => {
     const { actions, store } = useContext(Context);
     const [priorityHotels, setPriorityHotels] = useState([]);
     const [basicHotels, setBasicHotels] = useState([]);
+    const [favoriteHotels, setFavoriteHotels] = useState([]);
+    const [loadingFavorites, setLoadingFavorites] = useState(true); // ✅ Track when favorites are loading
     const [showAlert, setShowAlert] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [selectedHotel, setSelectedHotel] = useState(null);
 
-    // Determina si el usuario actual es de tipo "hotel" o "cliente"
     const isHotelUser = store.currentUser?.user_type === "hotel";
     const isClientUser = store.currentUser?.user_type === "cliente";
 
@@ -20,44 +24,70 @@ export const Dashboard = () => {
             try {
                 const fetchedPriorityHotels = await actions.getPriorityHotels();
                 setPriorityHotels(fetchedPriorityHotels || []);
-
+    
                 const fetchedBasicHotels = await actions.getBasicHotels();
                 setBasicHotels(fetchedBasicHotels || []);
+    
+                if (isClientUser) {
+                    const fetchedFavorites = await actions.getFavoriteHotels();
+                    setFavoriteHotels(fetchedFavorites || []);
+                }
             } catch (error) {
                 console.error("Error fetching hotels:", error);
             }
         };
-
+    
         fetchHotels();
-    }, []);
+    }, [isClientUser]);
+
+    useEffect(() => {
+        console.log(" Updating state with fetched favorites:", store.favoriteHotels);
+        setFavoriteHotels(store.favoriteHotels || []);
+    }, [store.favoriteHotels]); // Runs when `store.favoriteHotels` changes
+    
+    
+
+    const isHotelFavorited = (hotelId) => {
+        return favoriteHotels.some((fav) => fav.id_hotel === hotelId);
+    };
+
+    const toggleFavorite = async (hotel) => {
+        if (!store.currentUser) {
+            setShowAlert(true);
+            setTimeout(() => setShowAlert(false), 3000);
+            return;
+        }
+    
+        const isFavorite = favoriteHotels.some((fav) => fav.id_hotel === hotel.id_hotel);
+    
+        if (isFavorite) {
+            console.log(` Removing favorite hotel: ${hotel.id_hotel}`);
+            await actions.removeFavoriteHotel(hotel.id_hotel);
+            setFavoriteHotels(favoriteHotels.filter((fav) => fav.id_hotel !== hotel.id_hotel));
+        } else {
+            console.log(` Adding hotel to favorites:`, hotel);
+            await actions.addFavoriteHotel(hotel);
+            setFavoriteHotels([...favoriteHotels, hotel]);
+        }
+    };
+    
 
     const handleReserve = (hotelName) => {
         const userSession = localStorage.getItem("user_session");
         if (!userSession) {
-            setShowAlert(true); // Activa la alerta
-            setTimeout(() => setShowAlert(false), 3000); // Oculta la alerta tras 3 segundos
+            setShowAlert(true);
+            setTimeout(() => setShowAlert(false), 3000);
         } else {
             setSelectedHotel(hotelName);
             setShowModal(true);
         }
     };
 
-
-    const confirmReservation = () => {
-        console.log(`Reservation confirmed for: ${selectedHotel}`);
-        setShowModal(false);
-    };
-
-    const cancelReservation = () => {
-        setShowModal(false);
-        setSelectedHotel(null);
-    };
-
     return (
         <div className="FontDesign container py-5">
             {showAlert && (
                 <div className="alert alert-primary position-fixed top-0 end-0 mt-3 me-3 z-index-1050" role="alert">
-                    Please log in to make a reservation.
+                    Please log in to add favorites or make a reservation.
                 </div>
             )}
 
@@ -147,7 +177,15 @@ export const Dashboard = () => {
                                         alt={hotel.name}
                                         className="card-img-top"
                                     />
-                                    <h5 className="card-title">{hotel.name}</h5>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <h5 className="card-title">{hotel.name}</h5>
+                                        <FontAwesomeIcon
+                                            icon={isHotelFavorited(hotel.id_hotel) ? solidStar : regularStar}
+                                            className="text-warning fs-4 ms-2"
+                                            onClick={() => toggleFavorite(hotel)}
+                                            style={{ cursor: "pointer" }}
+                                        />
+                                    </div>
                                     <p className="card-text">{hotel.description}</p>
                                     <p className="card-text">
                                         {hotel.location}, {hotel.country}
@@ -175,31 +213,6 @@ export const Dashboard = () => {
                     <p>No basic hotels available.</p>
                 )}
             </div>
-
-            {/* Modal for reservation */}
-            {showModal && (
-                <div className="modal show dashboard-modal" style={{ display: "block" }}>
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">Confirm Reservation</h5>
-                                <button type="button" className="btn-close" onClick={cancelReservation}></button>
-                            </div>
-                            <div className="modal-body">
-                                <p>Are you sure you want to reserve: {selectedHotel}?</p>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" onClick={cancelReservation}>
-                                    Cancel
-                                </button>
-                                <button type="button" className="btn btn-primary" onClick={confirmReservation}>
-                                    Confirm
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
