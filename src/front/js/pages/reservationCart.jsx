@@ -72,7 +72,7 @@ export const ReservationCart = () => {
                         <div key={index} className="card mb-3">
                             <div className="card-body">
                                 <h5 className="card-title">
-                                Reservation #{index + 1}
+                                    Reservation #{index + 1}
                                 </h5>
                                 <p><strong>Reservation Date:</strong> {moment(reservation.reservation_date).format("YYYY-MM-DD HH:mm:ss")}</p>
                                 <p><strong>Stay Package:</strong> {reservation.stay_package.hotel_package_name}</p>
@@ -95,7 +95,7 @@ export const ReservationCart = () => {
                                         }}
                                     />
                                 ) :
-                                    <a href={`https://wa.me/${reservation.phone_number}`} target="_blank">Contactar por Whatsapp</a>
+                                    <a href={`https://wa.me/${reservation.phone_number}`} target="_blank">Contact by Whatsapp</a>
                                 }
 
                             </div>
