@@ -63,7 +63,7 @@ export const ReservationCart = () => {
 
     return (
         <div className="container mt-4">
-            <h2 className="mb-3">Mis Reservas</h2>
+            <h2 className="mb-3">My Reservations</h2>
             <PayPalScriptProvider options={{ "client-id": process.env.PAYPAL_CLIENT_ID }}>
 
                 {reservations && reservations.length > 0 ? (
@@ -72,12 +72,12 @@ export const ReservationCart = () => {
                         <div key={index} className="card mb-3">
                             <div className="card-body">
                                 <h5 className="card-title">
-                                    Reserva #{index + 1}
+                                Reservation #{index + 1}
                                 </h5>
-                                <p><strong>Fecha de Reserva:</strong> {moment(reservation.reservation_date).format("YYYY-MM-DD HH:mm:ss")}</p>
-                                <p><strong>Paquete de Estancia:</strong> {reservation.stay_package.hotel_package_name}</p>
-                                <p><strong>Monto de Pago:</strong> ${reservation.stay_package.price}</p>
-                                <p><strong>Estado del Pago:</strong> {reservation.is_paid ? "Pagado" : "Pendiente"}</p>
+                                <p><strong>Reservation Date:</strong> {moment(reservation.reservation_date).format("YYYY-MM-DD HH:mm:ss")}</p>
+                                <p><strong>Stay Package:</strong> {reservation.stay_package.hotel_package_name}</p>
+                                <p><strong>Payment Amount:</strong> ${reservation.stay_package.price}</p>
+                                <p><strong>Payment Status:</strong> {reservation.is_paid ? "Paid" : "Pending payment"}</p>
 
                                 {!reservation.is_paid ? (
                                     <PayPalButtons
