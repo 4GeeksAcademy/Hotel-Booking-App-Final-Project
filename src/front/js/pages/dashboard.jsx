@@ -120,14 +120,14 @@ export const Dashboard = () => {
                                             <p className="mt-2">
                                                 {hotel.location}, {hotel.country}
                                             </p>
-                                            {!isHotelUser && (
-                                                <button
-                                                    className="btn custom-btn ms-3 align-self-start mt-n4"
-                                                    onClick={() => handleReserve(hotel.name)}
-                                                >
-                                                    Reserve
-                                                </button>
-                                            )}
+                                            {/* {!isHotelUser && (
+                                                // <button
+                                                //     className="btn custom-btn ms-3 align-self-start mt-n4"
+                                                //     onClick={() => handleReserve(hotel.name)}
+                                                // >
+                                                //     Reserve
+                                                // </button>
+                                            )} */}
                                             <button className="btn custom-btn ms-3 align-self-start mt-n4" onClick={() => {
                                                 store.clicked_hotel = hotel.name
                                                 navigate("/search")
@@ -191,11 +191,11 @@ export const Dashboard = () => {
                                         {hotel.location}, {hotel.country}
                                     </p>
                                     <div className="d-flex justify-content-between mt-auto">
-                                        {!isHotelUser && (
+                                        {/* {!isHotelUser && (
                                             <button className="btn custom-btn" onClick={() => handleReserve(hotel.name)}>
                                                 Reserve
                                             </button>
-                                        )}
+                                        )} */}
                                          <button className="btn custom-btn ms-3 align-self-start mt-n4" onClick={() => {
                                                 store.clicked_hotel = hotel.name
                                                 console.log(store.clicked_hotel)

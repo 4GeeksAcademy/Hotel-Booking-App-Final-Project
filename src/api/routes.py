@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint, current_app
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, decode_token, JWTManager
 from api.models import db, User, Hotel, User_Hotel_Admin_Package, Hotel_Admin_Package, Stay_History, Stay_Package, Reservation
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
@@ -12,6 +12,8 @@ from api.models import db, User, Hotel, Favorites  # ✅ Add Favorites
 from oauthlib.oauth2 import WebApplicationClient
 from datetime import datetime
 from api.models import db, User, Hotel, Stay_Package, User_Hotel_Admin_Package, Hotel_Admin_Package
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
 api = Blueprint('api', __name__)
 mailApp = Flask(__name__)
@@ -942,7 +944,41 @@ def password_change():
     except Exception as e:
          return jsonify({"error": "Internal Server Error", "details": str(e)}), 500
 
-    
+@api.route('/google/verify', methods = ['POST'])
+def verify_google_account():
+   token = request.get_json()
+
+   try:
+        # Specify the WEB_CLIENT_ID of the app that accesses the backend:
+        idinfo = id_token.verify_oauth2_token(token["credential"], requests.Request(), os.environ.get(GOOGLE_CLIENT_ID, None))
+
+        userid = idinfo['sub']
+        print(userid)
+        return jsonify({"user_id": userid}), 201
+   
+   except ValueError:
+    # Invalid token
+        pass
+
+@api.route('/google/login', methods = ['POST'])
+def google_login():
+   email_data = request.get_json()
+   print(email_data["email"])
+   try:
+        user = User.query.filter_by(email = email_data["email"]).first()
+        print(user)
+        if not user:
+            return jsonify({"msg": "This user is not in the system"}), 401
+
+        access_token = create_access_token(identity=user.username)
+   
+        return jsonify({"access_token": access_token, "user": user.serialize()}), 201
+   
+   except Exception as e:
+    # Invalid token
+        return jsonify({"error": "Internal Server Error", "details": str(e)}), 403
+
+       
 
 
 

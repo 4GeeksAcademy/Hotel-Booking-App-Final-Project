@@ -9,7 +9,7 @@ export const ReservationCart = () => {
     const { reservations } = store;
     const [loading, setLoading] = useState(true);
     // Reemplazarlo después
-    // const paypalClientID = "TU_CLIENT_ID_DE_PAYPAL";
+    //const paypalClientID = "";
 
     // Cargar las reservas cuando el componente se monta
     useEffect(() => {

@@ -205,40 +205,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				},
 
-				signUp: async (name, last_name, email, username, password, user_type) => {
-					console.log(name, last_name, email, username, password, user_type);
-
-					try {
-						const response = await fetch(process.env.BACKEND_URL + "api/signup", {
-							method: "POST",
-							headers: {
-								"Content-Type": "application/json"
-							},
-							body: JSON.stringify({
-								name: name,
-								last_name: last_name,
-								email: email,
-								username: username,
-								password: password,
-								user_type: user_type // Puede ser 'cliente' o 'hotel'
-							})
-						});
-
-						if (!response.ok) {
-							const errorData = await response.json();
-							throw new Error(errorData.msg);
-						}
-
-						const data = await response.json();
-						console.log("User registered successfully:", data);
-
-						return "User registered successfully";
-					} catch (error) {
-						console.error("Error registering:", error);
-						return error.message || "This email or username is already registered, try it again.";
-					}
-				},
-
 				setSignUpData: (key, value, clear = false) => {
 					if (!clear) {
 						const store = getStore()
@@ -1142,27 +1108,80 @@ const getState = ({ getStore, getActions, setStore }) => {
 			}
 		},
 		getGoogleInformation: async (credentialResponse) => {
-			//console.log("AAAAAA")
+			console.log(credentialResponse.credential)
 			try {
-				const response = await fetch("https://www.googleapis.com/oauth2/v1/userinfo?alt=json", {
-					method: "GET",
+				const response = await fetch(`${process.env.BACKEND_URL}api/google/verify`, {
+					method: "POST",
 					headers: {
-						Authorization: `Bearer ${credentialResponse}`
+						"Content-type": "application/json"
+					}, 
+					body:JSON.stringify(
+					{
+						"credential": credentialResponse.credential,
 					}
+					)
 				});
 				if (response.ok) {
 
 					const data = await response.json();
-					console.log(data);
+
+					const email_data = getActions().verifyGoogleAccount(credentialResponse.credential)
 					
-					return data; // Retornar los hoteles básicos
+					return email_data; // Retornar los hoteles básicos
 				} else {
-					console.error("Error fetching basic hotels:", response.status);
+					console.error("Error signing in with Google:", response.status);
 				}
 			} catch (error) {
-				console.error("Error fetching basic hotels:", error);
+				console.error("Error signing in with Google:", error);
 			}
 			
+		},
+		verifyGoogleAccount: async (user_token) => {
+				console.log(user_token)
+			try {
+
+				const response = await fetch('https://oauth2.googleapis.com/tokeninfo?id_token='+ user_token);
+				if (response.ok) {
+
+					const data = await response.json();
+					console.log(data);
+
+					
+					return data; // Retornar los datos del email
+				} else {
+					console.error("Error google verification:", response.status);
+				}
+			} catch (error) {
+				console.error("Error google verification:", error);
+			}
+		},
+		loginGoogleAccount: async(email_data) => {
+			//generacion de la data del usuario cada vez que refrezca la pagina
+			try {
+				const response = await fetch(`${process.env.BACKEND_URL}api/google/login`, {
+					method: "POST",
+					headers: {
+						"Content-type": "application/json"
+					}, 
+					body:JSON.stringify(
+					{
+						"email": email_data.email,
+					}
+					)
+				});
+				
+
+				const data = await response.json();
+				console.log(data)
+				
+				localStorage.setItem("user_session", data.access_token);
+				setStore({ currentUser: data.user })
+					
+				return data; // Retornar los hoteles básicos
+				
+			} catch (error) {
+				console.error("Error signing in with Google:", error);
+			}
 		},
 		addToCart: async (package_data) => {
 			const token = localStorage.getItem("user_session");
