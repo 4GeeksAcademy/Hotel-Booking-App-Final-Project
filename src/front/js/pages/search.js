@@ -82,29 +82,31 @@ export const Search = () => {
 		<>	
 			{/*Busqueda de hoteles */}
 			<div className="container d-flex justify-content-center">
-				<form onSubmit={packageSearchFilter}>
-						<div className="col sm-h-50 mt-5">
-							<div className="col d-flex justify-content-center searchBarConfig">
+				<form className= "d-flex flex-column justify-content-center" onSubmit={packageSearchFilter}>
+						
+							<div className="row searchBarConfig">
 								{/*Por nombre de hotel*/}
-								<div className="col me-4">
-									<label for="locationSearch" className="label">Hotel</label>
-									<div className="group-label">
-										<input type="text" className="h-25" placeholder="By hotel name" id="hotelSearch" name = "hotel_name"
-											onChange={(e) => {
-												const {name, value} = e.target;
-												setSearchInfo(prevInfo => ({
-													...prevInfo, [name]:value
-												}));
-											}}
+								<div className="col-12 col-md-6 col-lg-2 d-flex justify-content-center">
+									<div className="d-inline-flex flex-column">
+										<label for="locationSearch" className="label">Hotel</label>
+										<div className="group-label">
+											<input type="text" className="h-25" placeholder="By hotel name" id="hotelSearch" name = "hotel_name"
+												onChange={(e) => {
+													const {name, value} = e.target;
+													setSearchInfo(prevInfo => ({
+														...prevInfo, [name]:value
+													}));
+												}}
 
-											value = {searchInfo.hotel_name ? searchInfo.hotel_name : ""}
+												value = {searchInfo.hotel_name ? searchInfo.hotel_name : ""}
 
-											/> 
-										<div className="invalid-feedback"></div> 
+												/> 
+											<div className="invalid-feedback"></div> 
+										</div>
 									</div>
 								</div>
 								{/*ubicacion de hotel */}
-								<div className="col me-4">
+								<div className="col-12 col-md-6 col-lg-2">
 									<label for="locationSearch" className="label">Location</label>
 									<div className="group-label">
 										<input type="text" className="h-25" placeholder="By Location" id="locationSearch" name = "hotel_location"
@@ -122,7 +124,7 @@ export const Search = () => {
 									</div>
 								</div>
 								{/*Nombre del paquete*/}
-								<div className="col me-4">
+								<div className="col-12 col-md-6 col-lg-2">
 									<label for="locationSearch" className="label">Package name</label>
 									<div className="group-label">
 										<input type="text" className="h-25" placeholder="By package name" id="nameSearch" name = "package_name"
@@ -138,7 +140,7 @@ export const Search = () => {
 									</div>
 								</div>
 								{/*Por fecha de inicio paquete*/}
-								<div className="col me-4">
+								<div className="col-12 col-md-6 col-lg-2">
 									<label for="locationSearch" className="label">Date</label>
 									<div className="group-label">
 										<input type="date" className="h-25" placeholder="By check-in date" id="dateSearch" name = "package_date"
@@ -155,10 +157,10 @@ export const Search = () => {
 									</div>
 								</div>
 								{/*Por precio*/}
-								<div className="col">
-									<label for="locationSearch" className="label">Price range</label>
+								<div className="col-12 col-md-6 col-lg-2">
+									<label for="locationSearch" className="label">Min Price</label>
 									<div className="group-label d-flex">
-										<input type="number" className="h-25 w-25 p-0 me-2" placeholder="Min price" id="priceSearch" name = "min_price"
+										<input type="number" className="h-25 p-0" placeholder="Min price" id="priceSearch" name = "min_price"
 											onChange={(e) => {
 												const {name, value} = e.target;
 												setSearchInfo(prevInfo => ({
@@ -168,21 +170,27 @@ export const Search = () => {
 											value = {searchInfo.min_price ? searchInfo.min_price : ""}
 
 											/> 
-											<input type="number" className="h-25 w-25 ms-2" placeholder="Max price" id="priceSearch" name = "max_price"
-											onChange={(e) => {
-												const {name, value} = e.target;
-												setSearchInfo(prevInfo => ({
-													...prevInfo, [name]:value
-												}));
-											}}
-											value = {searchInfo.max_price ? searchInfo.max_price : ""}
-
-											/> 
 										<div className="invalid-feedback"></div> 
 									</div>
 								</div>
+								<div className="col-12 col-md-6 col-lg-2">
+									<label for="locationSearch" className="label">Max Price</label>
+									<div className="group-label d-flex">
+										<input type="number" className="h-25" placeholder="Max price" id="priceSearch" name = "max_price"
+													onChange={(e) => {
+														const {name, value} = e.target;
+														setSearchInfo(prevInfo => ({
+															...prevInfo, [name]:value
+														}));
+													}}
+													value = {searchInfo.max_price ? searchInfo.max_price : ""}
+													/> 
+										<div className="invalid-feedback"></div> 
+									</div>
+									
+								</div>
 							</div>	
-						</div>
+						
 						<div className="col mt-3 d-flex justify-content-center">
 							{/*Boton de limpieza de filtro */}
 							<button  className='btn btn-secondary searchButton me-2' type="button" onClick={clearFilters}>
