@@ -1,9 +1,10 @@
-/* Fuente del Proyecto */
+/******************************************************************INICIO DE FUENTE DEL PROYECTO***************************************************************************/
 .FontDesign{
     font-family: "Doppio One", serif;
-  font-weight: 400;
-  font-style: normal;
+    font-weight: 400;
+    font-style: normal;
 }
+/******************************************************************CIERRE DE FUENTE DEL PROYECTO***************************************************************************/
 /*****************************************************************INICIO DISEÑO BOTÓN LOGIN NAVBAR*************************************************************************/
 .custom-btn-login {
     background: #484848; 
@@ -30,16 +31,14 @@
     font-size: 35px;
     text-decoration: none;
   }
-  
-
+/********************************************************************INICIO PATRON DEL NAVBAR*************************************************************************/
   .navBarfooterConfig {
-    background-color: #30728A; /* Color de fondo principal */
+    background-color: #30728A;
     background-image: url("https://www.transparenttextures.com/patterns/swirl.png");
-    background-repeat: repeat; /* Se repite en toda la barra */
-    background-size: 40px 40px; /* Patrón más pequeño */
+    background-repeat: repeat;
+    background-size: 40px 40px;
 }
-
-
+/********************************************************************CIERRE PATRON DEL NAVBAR*************************************************************************/
 .userProfileButton {
     background-color: #ffff;
     z-index: 1;
@@ -328,11 +327,6 @@
 
 .dashboard-modal .modal-footer {
     border-top: 2px solid #ddd;
-}
-
-/* Estilo para el título principal */
-.dashboard-title {
-    font-weight: bold;
 }
 /***********************************************************************CIERRE DASHBOARD**********************************************************************************/
 /******************************************************************INICIO DISEÑO BOTÓN RESERVAS***************************************************************************/

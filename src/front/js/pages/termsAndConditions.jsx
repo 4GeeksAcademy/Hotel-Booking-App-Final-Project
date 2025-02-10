@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 export const TermsAndConditions = () => {
     const navigate = useNavigate();
     return (
-        <div className="container py-5">
+        <div className="FontDesign container py-5">
             <div className="col-12 col-md-8 col-lg-6 mx-auto">
                 <h2 className="text-center fw-bold">Terms and Conditions</h2>
                 <p className="text-secondary text-center">Last updated: January 2025</p>

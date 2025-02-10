@@ -92,7 +92,7 @@ export const Dashboard = () => {
             )}
 
             {/* Mensaje de bienvenida dinámico */}
-            <h2 className="text-center mb-3 dashboard-title">
+            <h2 className="text-center mb-3 fw-bold">
                 Welcome, {store.currentUser ? store.currentUser.name : "Guest"}
             </h2>
             <p className="text-center text-muted fs-5 mb-5">

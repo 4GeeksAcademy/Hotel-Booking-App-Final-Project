@@ -57,8 +57,8 @@ export const ReservationCart = () => {
     }
 
     return (
-        <div className="container mt-5">
-            <h2 className="text-center mb-3 dashboard-title">Mis Reservas</h2>
+        <div className="FontDesign container mt-5">
+            <h2 className="text-center mb-3 fw-bold">Mis Reservas</h2>
             <PayPalScriptProvider options={{ "client-id": process.env.PAYPAL_CLIENT_ID }}>
 
                 {reservations && reservations.length > 0 ? (
