@@ -4,29 +4,23 @@
   font-weight: 400;
   font-style: normal;
 }
-
-
-/* CSS DEL SIGN UP */
-.btndashboard-signup {
-    background-color: #6c757d;
-    color: #ffffff;
-    border-radius: 50rem;
-    padding: 0.5rem 1.5rem;
-    text-decoration: none;
-    margin-right: 10px;
+/*****************************************************************INICIO DISEÑO BOTÓN LOGIN NAVBAR*************************************************************************/
+.custom-btn-login {
+    background: #484848; 
+    border: none;
+    color: white;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
-.btndashboard-signup:hover {
-    color: #ffffff;
+.custom-btn-login:hover {
+    background: linear-gradient(45deg, #00131a, #898787);
+    transform: scale(1.05);
+    color: #ffffff; 
 }
-.btnlogin-signup {
-    background-color: #30728A;
-    border-color: #30728A;
-    color: #ffffff;
-    border-radius: 50rem;
-    padding: 0.5rem 1.5rem;
-    text-decoration: none;
-}
-
+/*****************************************************************CIERRE DISEÑO BOTÓN LOGIN NAVBAR*************************************************************************/
 /* Fuente del titulo del navbar */
 .SereniaTitle {
     font-family: "Dancing Script", serif;

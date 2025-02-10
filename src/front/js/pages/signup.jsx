@@ -128,7 +128,7 @@ export const SignUp = () => {
                     </div>
 
                     <div className="d-flex flex-column align-items-center justify-content-center mt-5">
-                        <button type="submit" className="btn w-75 btn-secondary rounded-pill mt-3" style={{ backgroundColor: "#30728A", borderColor: "#30728A", fontWeight: "bold" }}>
+                        <button type="submit" className="custom-btn">
                             Sign Up
                         </button>
                     </div>

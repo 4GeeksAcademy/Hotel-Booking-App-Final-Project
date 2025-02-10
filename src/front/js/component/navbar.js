@@ -74,7 +74,7 @@ export const Navbar = () => {
 										<p className="col m-auto h-100 fw-none text-light text-end" onClick={() => { navigate("/search") }}> Browse </p>
 									</div>
 									<button
-										className="btndashboard-signup"
+										className="custom-btn-login"
 										onClick={() => navigate("/login")}
 									>
 										Login
