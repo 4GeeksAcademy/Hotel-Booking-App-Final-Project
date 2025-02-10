@@ -45,7 +45,7 @@ export const Navbar = () => {
 							{/* Botón de funciones de usuario */}
 							{localStorage.getItem("user_session") && (
 								<div className="col mb-0 navBar w-100 Dropdown-Setup row d-flex justify-content-start">
-									<p className = "col m-auto h-100 fw-none text-light text-end" onClick={() => {navigate("/search")}}> Browse </p>
+									<p className="col m-auto h-100 fw-none text-light text-end" onClick={() => { navigate("/search") }}> Browse </p>
 									{/* Mensaje saludando al usuario */}
 									<p className="col m-auto h-100 w-75 fw-none text-light text-end">Hello, {store.currentUser && store.currentUser.name}</p>
 									{/* Funciones especificas del usuario a traves del navBar */}
@@ -71,7 +71,7 @@ export const Navbar = () => {
 							{(
 								<>
 									<div className="col mb-0 navBar w-100 Dropdown-Setup row d-flex justify-content-start">
-										<p className = "col m-auto h-100 fw-none text-light text-end" onClick={() => {navigate("/search")}}> Browse </p>
+										<p className="col m-auto h-100 fw-none text-light text-end" onClick={() => { navigate("/search") }}> Browse </p>
 									</div>
 									<button
 										className="btndashboard-signup"
@@ -80,14 +80,14 @@ export const Navbar = () => {
 										Login
 									</button>
 								</>
-								
+
 							)}
 						</>
 					)}
 					{/* Botón del carrito de reservas, solo en "/" y para clientes */}
-					{ store.currentUser?.user_type === "cliente" && location.pathname !== "/reservationcart" ? (
-						<Link to="/reservationcart" className="text-light fs-3 ms-3">
-							<i className="fa-solid fa-cart-shopping"></i>
+					{store.currentUser?.user_type === "cliente" && location.pathname !== "/reservationcart" ? (
+						<Link to="/reservationcart" className="icon-app text-light fs-3 ms-3">
+							<i className="fa-solid fa-calendar-check"></i>
 						</Link>
 					) : false}
 				</div>

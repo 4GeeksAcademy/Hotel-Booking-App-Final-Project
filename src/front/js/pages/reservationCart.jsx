@@ -2,30 +2,26 @@ import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import moment from "moment";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
 export const ReservationCart = () => {
     const { store, actions } = useContext(Context);
     const { reservations } = store;
     const [loading, setLoading] = useState(true);
-    // Reemplazarlo después
-    //const paypalClientID = "";
 
-    // Cargar las reservas cuando el componente se monta
     useEffect(() => {
         const fetchReservations = async () => {
             try {
-                // Llamada a la función del Flux para obtener las reservas
                 await actions.getUserReservations();
             } catch (error) {
                 console.error("Error al obtener reservas:", error);
             } finally {
-                setLoading(false); // Dejar de cargar después de obtener las reservas
+                setLoading(false);
             }
         };
 
         fetchReservations();
-    }, []); // Este efecto solo se ejecuta una vez al montar el componente
+    }, []);
 
     const handlePaymentSuccess = async (orderID, paymentID, reservationId) => {
         try {
@@ -43,7 +39,7 @@ export const ReservationCart = () => {
                     showConfirmButton: false,
                     timer: 1500
                 });
-                actions.getUserReservations(); // Actualizar reservas después del pago
+                actions.getUserReservations();
             } else {
                 Swal.fire({
                     position: "center",
@@ -57,55 +53,61 @@ export const ReservationCart = () => {
     };
 
     if (loading) {
-        // Mientras se cargan las reservas
-        return <div className="container text-center mt-4"><p>Cargando reservas...</p></div>;
+        return <div className="container text-center mt-4"><p><i className="fas fa-spinner fa-spin"></i> Cargando reservas...</p></div>;
     }
 
     return (
-        <div className="container mt-4">
-            <h2 className="mb-3">My Reservations</h2>
+        <div className="container mt-5">
+            <h2 className="text-center mb-3 dashboard-title">Mis Reservas</h2>
             <PayPalScriptProvider options={{ "client-id": process.env.PAYPAL_CLIENT_ID }}>
 
                 {reservations && reservations.length > 0 ? (
-                    // Si hay reservas, las mapeamos para mostrarlas
                     reservations.map((reservation, index) => (
-                        <div key={index} className="card mb-3">
+                        <div key={index} className="card shadow-lg mb-4 rounded">
                             <div className="card-body">
-                                <h5 className="card-title">
-                                    Reservation #{index + 1}
-                                </h5>
-                                <p><strong>Reservation Date:</strong> {moment(reservation.reservation_date).format("YYYY-MM-DD HH:mm:ss")}</p>
-                                <p><strong>Stay Package:</strong> {reservation.stay_package.hotel_package_name}</p>
-                                <p><strong>Payment Amount:</strong> ${reservation.stay_package.price}</p>
-                                <p><strong>Payment Status:</strong> {reservation.is_paid ? "Paid" : "Pending payment"}</p>
+                                <h5 className="card-title"><strong>Reserva #{index + 1}</strong></h5>
+                                <p className="mb-2 fs-6 mt-4"><strong>Fecha de Reserva:</strong> {moment(reservation.reservation_date).format("YYYY-MM-DD HH:mm:ss")}</p>
+                                <p className="mb-2"><strong>Paquete de Estancia:</strong> {reservation.stay_package.hotel_package_name}</p>
+                                <p className="mb-2"><strong>Monto del Pago:</strong> ${reservation.stay_package.price}</p>
+                                <p className="mb-3">
+                                    <strong>Estado del Pago:</strong>
+                                    <span className={`badge ${reservation.is_paid ? "bg-success" : "bg-warning"}`}>
+                                        {reservation.is_paid ? "Pagado" : "Pendiente"}
+                                    </span>
+                                </p>
 
                                 {!reservation.is_paid ? (
-                                    <PayPalButtons
-                                        createOrder={(data, actions) => {
-                                            return actions.order.create({
-                                                purchase_units: [{
-                                                    amount: { value: reservation.stay_package.price }
-                                                }]
-                                            });
-                                        }}
-                                        onApprove={(data, actions) => {
-                                            return actions.order.capture().then((details) => {
-                                                handlePaymentSuccess(data.orderID, data.paymentID, reservation.id_reservation);
-                                            });
-                                        }}
-                                    />
+                                    <div className="d-flex justify-content-center">
+                                        <PayPalButtons
+                                            createOrder={(data, actions) => {
+                                                return actions.order.create({
+                                                    purchase_units: [{
+                                                        amount: { value: reservation.stay_package.price }
+                                                    }]
+                                                });
+                                            }}
+                                            onApprove={(data, actions) => {
+                                                return actions.order.capture().then((details) => {
+                                                    handlePaymentSuccess(data.orderID, data.paymentID, reservation.id_reservation);
+                                                });
+                                            }}
+                                        />
+                                    </div>
                                 ) :
-                                    <a href={`https://wa.me/${reservation.phone_number}`} target="_blank">Contact by Whatsapp</a>
+                                    <div className="text-center">
+                                        <a href={`https://wa.me/${reservation.phone_number}`} target="_blank" rel="noopener noreferrer" className="btn btn-success">
+                                            <i className="fab fa-whatsapp"></i> Contactar por WhatsApp
+                                        </a>
+                                    </div>
                                 }
 
                             </div>
                         </div>
                     ))
                 ) : (
-                    // Si no hay reservas
-                    <p>No tienes reservas activas.</p>
+                    <p className="text-center">No tienes reservas activas.</p>
                 )}
             </PayPalScriptProvider>
-        </div >
+        </div>
     );
 };
