@@ -34,8 +34,8 @@ export const Navbar = () => {
 	return (
 		<nav className="navbar navBarfooterConfig p-0 FontDesign container-fluid">
 			<div className="container-fluid d-flex justify-content-between align-items-center ms-5 me-5">
-				<Link to="/" className="SereniaTitle d-flex align-items-center text-light">
-					<i className="fa-solid fa-location-dot fs-4 me-2"></i>
+				<Link to="/" className="SereniaTitle d-flex align-items-center text-light ms-0">
+					<i className="fa-solid fa-location-dot fs-4 me-1"></i>
 					<span className="navbar-brand mb-0 h1 font-weight-bold text-light">
 						Serenia
 					</span>
