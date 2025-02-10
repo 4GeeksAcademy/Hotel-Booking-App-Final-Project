@@ -34,9 +34,13 @@ export const Navbar = () => {
 	return (
 		<nav className="navbar navBarfooterConfig p-0 FontDesign container-fluid">
 			<div className="container-fluid d-flex justify-content-between align-items-center ms-5 me-5">
-				<Link to="/" className="SereniaTitle">
-					<span className="navbar-brand mb-0 h1 text-light SereniaTitle">Serenia</span>
+				<Link to="/" className="SereniaTitle d-flex align-items-center text-light">
+					<i className="fa-solid fa-location-dot fs-4 me-2"></i>
+					<span className="navbar-brand mb-0 h1 font-weight-bold text-light">
+						Serenia
+					</span>
 				</Link>
+
 				{/* <div className="ml-auto d-flex"> */}
 				<div className="d-flex align-items-center gap-3">
 					{/* Mostrar el botón de Logout si el usuario está logueado */}

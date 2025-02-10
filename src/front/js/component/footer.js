@@ -7,7 +7,7 @@ export const Footer = () => (
 		<div className="footer-content">
 			<p className="contact-title">
 				{ }
-				<Link to="/contact" className="contact-link">
+				<Link to="/contact" className="contact-link FontDesign fw-bold">
 					Contact Us
 				</Link>
 			</p>

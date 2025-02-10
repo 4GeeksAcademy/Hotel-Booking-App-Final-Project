@@ -92,10 +92,10 @@ export const Dashboard = () => {
             )}
 
             {/* Mensaje de bienvenida dinámico */}
-            <h2 className="text-center mb-3 fw-bold">
+            <h2 className="FontDesign text-center mb-3 fw-bold fs-4">
                 Welcome, {store.currentUser ? store.currentUser.name : "Guest"}
             </h2>
-            <p className="text-center text-muted fs-5 mb-5">
+            <p className="text-center text-muted fs-6 mb-5">
                 {isHotelUser
                     ? "Grow your business by publishing your hotels with Serenia"
                     : "Book with the best, with Serenia"}
@@ -113,11 +113,11 @@ export const Dashboard = () => {
                                         alt={hotel.name}
                                         className="d-block w-100 carousel-img"
                                     />
-                                    <div className="carousel-caption d-none d-md-block text-start">
-                                        <h5>{hotel.name}</h5>
-                                        <p>{hotel.description}</p>
+                                    <div className="carousel-caption d-none d-md-block text-start fs-7">
+                                        <h5 className="fs-7">{hotel.name}</h5>
+                                        <p className="fs-7">{hotel.description}</p>
                                         <div className="d-flex align-items-center">
-                                            <p className="mt-2">
+                                            <p className="mt-2 fs-7">
                                                 {hotel.location}, {hotel.country}
                                             </p>
                                             {/* {!isHotelUser && (
@@ -141,7 +141,7 @@ export const Dashboard = () => {
                             </div>
                         ))
                     ) : (
-                        <p>No priority hotels available.</p>
+                        <p className="fs-7">No priority hotels available.</p>
                     )}
                 </div>
                 <button
@@ -177,17 +177,17 @@ export const Dashboard = () => {
                                         alt={hotel.name}
                                         className="card-img-top"
                                     />
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <h5 className="card-title">{hotel.name}</h5>
+                                    <div className="d-flex justify-content-between align-items-center fs-7">
+                                        <h5 className="card-title fs-7">{hotel.name}</h5>
                                         <FontAwesomeIcon
                                             icon={isHotelFavorited(hotel.id_hotel) ? solidStar : regularStar}
-                                            className="text-warning fs-4 ms-2"
+                                            className="text-warning fs-4 ms-2 fs-7"
                                             onClick={() => toggleFavorite(hotel)}
                                             style={{ cursor: "pointer" }}
                                         />
                                     </div>
-                                    <p className="card-text">{hotel.description}</p>
-                                    <p className="card-text">
+                                    <p className="card-text fs-7">{hotel.description}</p>
+                                    <p className="card-text fs-7">
                                         {hotel.location}, {hotel.country}
                                     </p>
                                     <div className="d-flex justify-content-between mt-auto">
@@ -210,7 +210,7 @@ export const Dashboard = () => {
                         </div>
                     ))
                 ) : (
-                    <p>No basic hotels available.</p>
+                    <p className="fs-7">No basic hotels available.</p>
                 )}
             </div>
         </div>

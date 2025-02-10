@@ -4,6 +4,15 @@
     font-weight: 400;
     font-style: normal;
 }
+/* Fuente del titulo del navbar */
+.SereniaTitle {
+    font-family: "Dancing Script", serif;
+    font-optical-sizing: auto;
+    font-weight: 1000;
+    font-style: normal;
+    font-size: 25px;
+    text-decoration: none;
+  }
 /******************************************************************CIERRE DE FUENTE DEL PROYECTO***************************************************************************/
 /*****************************************************************INICIO DISEÑO BOTÓN LOGIN NAVBAR*************************************************************************/
 .custom-btn-login {
@@ -12,9 +21,11 @@
     color: white;
     border-radius: 8px;
     padding: 0.5rem 1rem;
+    margin: 10px;
     font-weight: bold;
     text-transform: uppercase;
     transition: background-color 0.3s ease, transform 0.3s ease;
+    font-size: 0.80rem;
 }
 .custom-btn-login:hover {
     background: linear-gradient(45deg, #00131a, #898787);
@@ -22,15 +33,6 @@
     color: #ffffff; 
 }
 /*****************************************************************CIERRE DISEÑO BOTÓN LOGIN NAVBAR*************************************************************************/
-/* Fuente del titulo del navbar */
-.SereniaTitle {
-    font-family: "Dancing Script", serif;
-    font-optical-sizing: auto;
-    font-weight: 1000;
-    font-style: normal;
-    font-size: 35px;
-    text-decoration: none;
-  }
 /********************************************************************INICIO PATRON DEL NAVBAR*************************************************************************/
   .navBarfooterConfig {
     background-color: #30728A;
