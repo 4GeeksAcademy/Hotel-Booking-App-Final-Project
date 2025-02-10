@@ -1,7 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 export const TermsAndConditions = () => {
+    const navigate = useNavigate();
     return (
         <div className="container py-5">
             <div className="col-12 col-md-8 col-lg-6 mx-auto">
@@ -50,11 +51,10 @@ export const TermsAndConditions = () => {
                 <p>
                     If you have any questions about these terms, please contact us at <strong>support@sereniahotels.com</strong>.
                 </p>
-
-                <div className="text-center mt-4">
-                    <Link to="/signup" className="btn btn-secondary rounded-pill" style={{ backgroundColor: "#30728A", borderColor: "#30728A" }}>
+                <div className="d-flex justify-content-center align-items-center mt-5">
+                    <button className="btn custom-btn" onClick={() => navigate('/signup')}>
                         Go to Sign Up
-                    </Link>
+                    </button>
                 </div>
             </div>
         </div>

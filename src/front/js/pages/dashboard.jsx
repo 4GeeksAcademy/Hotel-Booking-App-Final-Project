@@ -24,10 +24,10 @@ export const Dashboard = () => {
             try {
                 const fetchedPriorityHotels = await actions.getPriorityHotels();
                 setPriorityHotels(fetchedPriorityHotels || []);
-    
+
                 const fetchedBasicHotels = await actions.getBasicHotels();
                 setBasicHotels(fetchedBasicHotels || []);
-    
+
                 if (isClientUser) {
                     const fetchedFavorites = await actions.getFavoriteHotels();
                     setFavoriteHotels(fetchedFavorites || []);
@@ -36,7 +36,7 @@ export const Dashboard = () => {
                 console.error("Error fetching hotels:", error);
             }
         };
-    
+
         fetchHotels();
     }, [isClientUser]);
 
@@ -44,8 +44,8 @@ export const Dashboard = () => {
         console.log(" Updating state with fetched favorites:", store.favoriteHotels);
         setFavoriteHotels(store.favoriteHotels || []);
     }, [store.favoriteHotels]); // Runs when `store.favoriteHotels` changes
-    
-    
+
+
 
     const isHotelFavorited = (hotelId) => {
         return favoriteHotels.some((fav) => fav.id_hotel === hotelId);
@@ -57,9 +57,9 @@ export const Dashboard = () => {
             setTimeout(() => setShowAlert(false), 3000);
             return;
         }
-    
+
         const isFavorite = favoriteHotels.some((fav) => fav.id_hotel === hotel.id_hotel);
-    
+
         if (isFavorite) {
             console.log(` Removing favorite hotel: ${hotel.id_hotel}`);
             await actions.removeFavoriteHotel(hotel.id_hotel);
@@ -70,7 +70,7 @@ export const Dashboard = () => {
             setFavoriteHotels([...favoriteHotels, hotel]);
         }
     };
-    
+
 
     const handleReserve = (hotelName) => {
         const userSession = localStorage.getItem("user_session");
@@ -133,7 +133,7 @@ export const Dashboard = () => {
                                                 navigate("/search")
                                             }}>
                                                 View Packages
-                                                
+
                                             </button>
                                         </div>
                                     </div>
@@ -196,14 +196,14 @@ export const Dashboard = () => {
                                                 Reserve
                                             </button>
                                         )} */}
-                                         <button className="btn custom-btn ms-3 align-self-start mt-n4" onClick={() => {
-                                                store.clicked_hotel = hotel.name
-                                                console.log(store.clicked_hotel)
-                                                navigate("/search")
-                                            }}>
-                                                View Packages
-                                                
-                                            </button>
+                                        <button className="btn custom-btn ms-3 align-self-start mt-n4" onClick={() => {
+                                            store.clicked_hotel = hotel.name
+                                            console.log(store.clicked_hotel)
+                                            navigate("/search")
+                                        }}>
+                                            View Packages
+
+                                        </button>
                                     </div>
                                 </div>
                             </div>

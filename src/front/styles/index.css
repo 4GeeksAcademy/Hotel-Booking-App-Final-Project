@@ -204,19 +204,17 @@
 }
 
 /*****************************************************************************DASHBOARD******************************************************************************/
-
 /*BOTONES DASHBOARD*/
 .custom-btn {
-    background: rgba(0, 140, 186, 0.5); /* Gradiente de color */
+    background: #30728A; 
     border: none;
     color: white;
-    border-radius: 50px;
-    padding: 10px 20px;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
     font-weight: bold;
     text-transform: uppercase;
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
-
 .standard-button-shape {
     border: none;
     color: white;
@@ -227,8 +225,9 @@
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 .custom-btn:hover {
-    background: linear-gradient(45deg, #2575fc, #6a11cb);
+    background: linear-gradient(45deg, #0651d2, #2ba0ad);
     transform: scale(1.05);
+    color: #000000; 
 }
 
 .custom-btn:focus {
@@ -336,19 +335,5 @@
 /* Estilo para el título principal */
 .dashboard-title {
     font-weight: bold;
-}
-
-/* Botón personalizado */
-.custom-btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    transition: background-color 0.3s;
-}
-
-.custom-btn:hover {
-    background-color: #0056b3;
 }
 /***********************************************************************CIERRE DASHBOARD**********************************************************************************/
