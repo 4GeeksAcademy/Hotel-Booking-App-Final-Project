@@ -32,7 +32,7 @@ export const Navbar = () => {
 	console.log(location.pathname)
 
 	return (
-		<nav className="navbar navBarConfig p-0 FontDesign container-fluid">
+		<nav className="navbar navBarfooterConfig p-0 FontDesign container-fluid">
 			<div className="container-fluid d-flex justify-content-between align-items-center ms-5 me-5">
 				<Link to="/" className="SereniaTitle">
 					<span className="navbar-brand mb-0 h1 text-light SereniaTitle">Serenia</span>

@@ -32,9 +32,13 @@
   }
   
 
-.navBarConfig {
-    background-color: #30728A; 
+  .navBarfooterConfig {
+    background-color: #30728A; /* Color de fondo principal */
+    background-image: url("https://www.transparenttextures.com/patterns/swirl.png");
+    background-repeat: repeat; /* Se repite en toda la barra */
+    background-size: 40px 40px; /* Patrón más pequeño */
 }
+
 
 .userProfileButton {
     background-color: #ffff;
