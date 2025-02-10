@@ -23,18 +23,17 @@ export const TermsAndConditions = () => {
 
                 <h4 className="mt-4">3. Booking and Payment</h4>
                 <p>
-                    Serenia facilitates hotel reservations but does not process payments directly.
-                    Clients must adhere to the cancellation policies set by the respective hotels.
+                    Serenia facilitates hotel reservations and clients must adhere to the cancellation policies set by the respective hotels.
                 </p>
 
                 <h4 className="mt-4">4. Cancellations and Refunds</h4>
                 <p>
-                    Cancellation and refund policies vary per hotel. Clients should review the specific terms of each booking before confirming.
+                    Cancellation and refund policies vary by hotel, these procedures will only be carried out by contacting the specific hotel. Customers should review the specific details of each reservation before proceeding with payment.
                 </p>
 
                 <h4 className="mt-4">5. Account Management</h4>
                 <p>
-                    Users are responsible for maintaining the security of their accounts. Serenia reserves the right to suspend accounts for violations of these terms.
+                    Users are responsible for maintaining the security of their accounts.
                 </p>
 
                 <h4 className="mt-4">6. Limitation of Liability</h4>
@@ -54,7 +53,7 @@ export const TermsAndConditions = () => {
 
                 <div className="text-center mt-4">
                     <Link to="/signup" className="btn btn-secondary rounded-pill" style={{ backgroundColor: "#30728A", borderColor: "#30728A" }}>
-                        Back to Sign Up
+                        Go to Sign Up
                     </Link>
                 </div>
             </div>
