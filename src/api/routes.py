@@ -75,7 +75,7 @@ def signup():
     existing_user_phone = User.query.filter_by(phone_number=data['phone_number']).first()
 
     if existing_user_email:
-        return jsonify({"message": "This email is already registered. Please use another email address.."}), 400
+        return jsonify({"msg": "This email is already registered. Please use another email address."}), 400
     if existing_user_username:
         return jsonify({"message": "This username is already in use. Please choose another one."}), 400
     if existing_user_phone:
@@ -113,7 +113,6 @@ def signup():
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": f"Error registering user: {str(e)}"}), 500
-
 
 #Creacion del token de JWT
 @api.route('/login', methods = ['POST'])
@@ -978,7 +977,18 @@ def google_login():
     # Invalid token
         return jsonify({"error": "Internal Server Error", "details": str(e)}), 403
 
-       
+@api.route('/check-duplicate', methods=['POST'])
+def check_duplicate():
+    data = request.get_json()
 
+    # Verificar si el email, nombre de usuario o número de teléfono ya existen
+    email_exists = User.query.filter_by(email=data['email']).first() is not None
+    username_exists = User.query.filter_by(username=data['username']).first() is not None
+    phone_exists = User.query.filter_by(phone_number=data['phone_number']).first() is not None
 
-
+    # Devolver la respuesta en función de si existe duplicado
+    return jsonify({
+        "email_exists": email_exists,
+        "username_exists": username_exists,
+        "phone_exists": phone_exists
+    })

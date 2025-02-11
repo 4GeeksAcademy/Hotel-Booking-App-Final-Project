@@ -74,6 +74,36 @@ export const SignUp = () => {
             return;
         }
 
+        // Validación de duplicados
+        const isEmailTaken = email;
+        const isUsernameTaken = userName;
+        const isPhoneNumberTaken = phoneNumber;
+
+        if (isEmailTaken) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Email Already Registered',
+                text: 'This email is already registered. Please use another email address.',
+            });
+            return;
+        }
+        if (isUsernameTaken) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Username Already Taken',
+                text: 'This username is already in use. Please choose another one.',
+            });
+            return;
+        }
+        if (isPhoneNumberTaken) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Phone Number Already Registered',
+                text: 'This phone number is already registered. Please use another phone number.',
+            });
+            return;
+        }
+
         const message = await actions.signUp(name, lastName, email, userName, password, userType, "+" + phoneNumber);
 
         if (message === "User registered successfully") {
@@ -87,6 +117,7 @@ export const SignUp = () => {
                     actions.setSignUpData("", "", true);
                     setTimeout(() => navigate("/login"), 2000);
                 }
+
             });
         }
     };
