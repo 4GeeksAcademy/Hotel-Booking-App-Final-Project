@@ -1216,7 +1216,42 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error adding item to cart:", error);
 					return false;
 				}
-			}
+			},
+
+			/*getting the paid reservations only */
+
+			getPaidReservations: async () => {
+				const token = localStorage.getItem("user_session");
+				if (!token) {
+					console.error("No token found!");
+					return false;
+				}
+				try {
+					// Fetch all reservations (pending + paid)
+					const response = await fetch(`${process.env.BACKEND_URL}api/user/reservations`, {
+						method: "GET",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`
+						},
+					});
+			
+					const data = await response.json();
+					console.log('📌 All User Reservations:', data);
+			
+					if (response.ok) {
+						// ✅ Filter out only PAID reservations
+						const paidReservations = data.reservations.filter(reservation => reservation.is_paid);
+						setStore({ paidReservations });
+						console.log("✅ Stored only PAID reservations in Flux:", paidReservations);
+					} else {
+						console.error("❌ Error fetching reservations:", data.error || 'Unknown error');
+					}
+				} catch (error) {
+					console.error("❌ Error in request:", error);
+				}
+			},
+			
 		}
 	};
 };
