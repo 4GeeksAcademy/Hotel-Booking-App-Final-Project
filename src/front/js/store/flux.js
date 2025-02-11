@@ -1,3 +1,5 @@
+import Swal from 'sweetalert2';
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
@@ -60,42 +62,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				//reset the global store
 				setStore({ demo: demo });
 			},
-
-			// signUp: async (name, last_name, email, username, password, user_type, phone_number) => {
-			// 	console.log(name, last_name, email, username, password, user_type, phone_number);
-
-			// 	try {
-			// 		const response = await fetch(process.env.BACKEND_URL + "api/signup", {
-			// 			method: "POST",
-			// 			headers: {
-			// 				"Content-Type": "application/json"
-			// 			},
-			// 			body: JSON.stringify({
-			// 				name: name,
-			// 				last_name: last_name,
-			// 				email: email,
-			// 				username: username,
-			// 				password: password,
-			// 				user_type: user_type,
-			// 				phone_number: phone_number
-			// 			})
-			// 		});
-
-			// 		if (!response.ok) {
-			// 			const errorData = await response.json();
-			// 			throw new Error(errorData.msg);
-			// 		}
-
-			// 		const data = await response.json();
-			// 		console.log("User registered successfully:", data);
-
-			// 		return "User registered successfully";
-			// 	} catch (error) {
-			// 		console.error("Error registering:", error);
-			// 		return error.message || "This email or username is already registered, try again.";
-			// 	}
-			// },
-
 			signUp: async (name, last_name, email, username, password, user_type, phone_number) => {
 				console.log(name, last_name, email, username, password, user_type, phone_number);
 
@@ -1247,7 +1213,55 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error adding item to cart:", error);
 					return false;
 				}
-			}
+			},
+			// ELIMINAR RESERVAS
+			deleteReservation: async (id_reservation) => {
+				console.log("ID de la reserva que se va a eliminar:", id_reservation);
+
+				const token = localStorage.getItem("user_session");
+				console.log(token);
+
+				if (!token) {
+					console.error("No token found!");
+					return null;
+				}
+
+				// Confirmación de eliminación
+				const confirmDelete = await Swal.fire({
+					title: "¿Estás seguro?",
+					text: "Esta acción eliminará la reserva de forma permanente.",
+					icon: "warning",
+					showCancelButton: true,
+					confirmButtonColor: "#d33",
+					cancelButtonColor: "#3085d6",
+					confirmButtonText: "Sí, eliminar",
+					cancelButtonText: "Cancelar"
+				});
+
+				if (confirmDelete.isConfirmed) {
+					try {
+						const response = await fetch(`${process.env.BACKEND_URL}/api/reservations/${id_reservation}`, {
+							method: "DELETE",
+							headers: {
+								Authorization: `Bearer ${token}`
+							}
+						});
+
+						// Si la respuesta es correcta, mostrar mensaje de éxito
+						if (response.ok) {
+							const data = await response.json();
+							Swal.fire("Eliminado", data.msg, "success");
+						} else {
+							const errorData = await response.json();
+							Swal.fire("Error", errorData.msg || "No se pudo eliminar la reserva.", "error");
+						}
+
+					} catch (error) {
+						console.error("Error al eliminar reserva:", error);
+						Swal.fire("Error", "Ocurrió un error al eliminar la reserva.", "error");
+					}
+				}
+			},
 		}
 	};
 };

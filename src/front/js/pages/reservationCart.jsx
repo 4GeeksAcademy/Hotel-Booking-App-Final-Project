@@ -23,35 +23,6 @@ export const ReservationCart = () => {
         fetchReservations();
     }, []);
 
-    const handlePaymentSuccess = async (orderID, paymentID, reservationId) => {
-        try {
-            const response = await fetch(`${process.env.BACKEND_URL}/api/pay-reservation/${reservationId}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ orderID, paymentID })
-            });
-
-            if (response.ok) {
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "Pago exitoso",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                actions.getUserReservations();
-            } else {
-                Swal.fire({
-                    position: "center",
-                    icon: "error",
-                    title: "Hubo un problema con el pago"
-                });
-            }
-        } catch (error) {
-            console.error("Error procesando el pago:", error);
-        }
-    };
-
     if (loading) {
         return <div className="container text-center mt-4"><p><i className="fas fa-spinner fa-spin"></i> Cargando reservas...</p></div>;
     }
@@ -77,13 +48,11 @@ export const ReservationCart = () => {
                                     <span className="badge bg-warning">Pendiente</span>
                                 </p>
 
-                                <div className="d-flex justify-content-center">
+                                <div className="d-flex justify-content-center gap-3">
                                     <PayPalButtons
                                         createOrder={(data, actions) => {
                                             return actions.order.create({
-                                                purchase_units: [{
-                                                    amount: { value: reservation.stay_package.price }
-                                                }]
+                                                purchase_units: [{ amount: { value: reservation.stay_package.price } }]
                                             });
                                         }}
                                         onApprove={(data, actions) => {
@@ -92,6 +61,11 @@ export const ReservationCart = () => {
                                             });
                                         }}
                                     />
+
+                                    {/* Botón para eliminar reserva */}
+                                    <button className="btn btn-danger" onClick={() => handleDeleteReservation(reservation.id_reservation)}>
+                                        <i className="fas fa-trash-alt"></i> Eliminar
+                                    </button>
                                 </div>
                             </div>
                         </div>

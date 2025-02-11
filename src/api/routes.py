@@ -977,18 +977,24 @@ def google_login():
     # Invalid token
         return jsonify({"error": "Internal Server Error", "details": str(e)}), 403
 
-@api.route('/check-duplicate', methods=['POST'])
-def check_duplicate():
-    data = request.get_json()
-
-    # Verificar si el email, nombre de usuario o número de teléfono ya existen
-    email_exists = User.query.filter_by(email=data['email']).first() is not None
-    username_exists = User.query.filter_by(username=data['username']).first() is not None
-    phone_exists = User.query.filter_by(phone_number=data['phone_number']).first() is not None
-
-    # Devolver la respuesta en función de si existe duplicado
-    return jsonify({
-        "email_exists": email_exists,
-        "username_exists": username_exists,
-        "phone_exists": phone_exists
-    })
+@api.route('/reservations/<int:id_reservation>', methods=['DELETE'])
+@jwt_required()  # Asegura que el usuario esté autenticado
+def delete_reservation(id_reservation):
+    current_user = get_jwt_identity()  # Obtén el usuario autenticado
+    
+    # Lógica para eliminar la reserva
+    reservation = Reservation.query.get(id_reservation)
+    
+    if reservation is None:
+        return jsonify({"msg": "Reserva no encontrada"}), 404
+    
+    if reservation.user_id != current_user:
+        return jsonify({"msg": "No tienes permiso para eliminar esta reserva"}), 403
+    
+    try:
+        db.session.delete(reservation)
+        db.session.commit()
+        return jsonify({"msg": "Reserva eliminada con éxito"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"msg": f"Error al eliminar la reserva: {str(e)}"}), 500
