@@ -67,7 +67,7 @@ def signup():
 
     # Verifica que los datos necesarios estén presentes
     if not all(k in data for k in ("name", "last_name", "email", "username", "password", "user_type", "phone_number")):
-        return jsonify({"message": "Faltan datos obligatorios"}), 400
+        return jsonify({"msg": "Faltan datos obligatorios"}), 400
 
     # Verifica si el correo o el nombre de usuario ya están registrados
     existing_user_email = User.query.filter_by(email=data['email']).first()
@@ -77,9 +77,9 @@ def signup():
     if existing_user_email:
         return jsonify({"msg": "This email is already registered. Please use another email address."}), 400
     if existing_user_username:
-        return jsonify({"message": "This username is already in use. Please choose another one."}), 400
+        return jsonify({"msg": "This username is already in use. Please choose another one."}), 400
     if existing_user_phone:
-        return jsonify({"message": "This phone number is already registered. Please use another phone number."}), 400
+        return jsonify({"msg": "This phone number is already registered. Please use another phone number."}), 400
 
     # Crear una nueva instancia de User
     new_user = User(

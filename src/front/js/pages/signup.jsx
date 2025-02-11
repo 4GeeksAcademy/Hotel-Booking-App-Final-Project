@@ -46,7 +46,6 @@ export const SignUp = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Validación del campo teléfono
         if (!phoneNumber) {
             Swal.fire({
                 icon: 'error',
@@ -74,36 +73,6 @@ export const SignUp = () => {
             return;
         }
 
-        // Validación de duplicados
-        const isEmailTaken = email;
-        const isUsernameTaken = userName;
-        const isPhoneNumberTaken = phoneNumber;
-
-        if (isEmailTaken) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Email Already Registered',
-                text: 'This email is already registered. Please use another email address.',
-            });
-            return;
-        }
-        if (isUsernameTaken) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Username Already Taken',
-                text: 'This username is already in use. Please choose another one.',
-            });
-            return;
-        }
-        if (isPhoneNumberTaken) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Phone Number Already Registered',
-                text: 'This phone number is already registered. Please use another phone number.',
-            });
-            return;
-        }
-
         const message = await actions.signUp(name, lastName, email, userName, password, userType, "+" + phoneNumber);
 
         if (message === "User registered successfully") {
@@ -118,6 +87,12 @@ export const SignUp = () => {
                     setTimeout(() => navigate("/login"), 2000);
                 }
 
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: message,
             });
         }
     };

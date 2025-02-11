@@ -99,49 +99,32 @@ const getState = ({ getStore, getActions, setStore }) => {
 			signUp: async (name, last_name, email, username, password, user_type, phone_number) => {
 				console.log(name, last_name, email, username, password, user_type, phone_number);
 
-				try {
-					const response = await fetch(process.env.BACKEND_URL + "api/signup", {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json"
-						},
-						body: JSON.stringify({
-							name: name,
-							last_name: last_name,
-							email: email,
-							username: username,
-							password: password,
-							user_type: user_type,
-							phone_number: phone_number
-						})
-					});
+				const response = await fetch(process.env.BACKEND_URL + "api/signup", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						name: name,
+						last_name: last_name,
+						email: email,
+						username: username,
+						password: password,
+						user_type: user_type,
+						phone_number: phone_number
+					})
+				});
 
-					// Si la respuesta no es correcta, manejar error
-					if (!response.ok) {
-						const errorData = await response.json();
-						throw new Error(errorData.msg);  // Muestra el mensaje de error enviado por el backend
-					}
-
-					const data = await response.json();
-					console.log("User registered successfully:", data);
-
-					return "User registered successfully"; // Se devuelve mensaje de éxito
-
-				} catch (error) {
-					console.error("Error registering:", error);
-					// Agregué para estas repeticiones:
-					if (error.msg === "This email is already registered. Please use another email address.") {
-						return "This email is already registered, please use another email.";
-					} else if (error.msg === "This username is already in use. Please choose another one.") {
-						return "This username is already in use, please choose another one.";
-					} else if (error.msg === "This phone number is already registered. Please use another phone number.") {
-						return "This phone number is already registered, please use another one.";
-					}
-
-
-					// Si el error no es específico, mostramos un mensaje genérico
-					return error.message || "An error occurred during registration. Please try again.";
+				// Si la respuesta no es correcta, manejar error
+				if (!response.ok) {
+					const errorData = await response.json();
+					return errorData.msg
 				}
+				const data = await response.json();
+				console.log("User registered successfully:", data);
+
+				return "User registered successfully"; // Se devuelve mensaje de éxito
+
 			},
 
 			// Fetch personal information for the PersonalInfo page
