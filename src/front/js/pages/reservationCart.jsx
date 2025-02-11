@@ -56,13 +56,16 @@ export const ReservationCart = () => {
         return <div className="container text-center mt-4"><p><i className="fas fa-spinner fa-spin"></i> Cargando reservas...</p></div>;
     }
 
+    // Filtrar solo las reservas pendientes
+    const pendingReservations = reservations.filter(reservation => !reservation.is_paid);
+
     return (
         <div className="FontDesign container mt-5">
             <h2 className="text-center mb-3 fw-bold">Mis Reservas</h2>
             <PayPalScriptProvider options={{ "client-id": process.env.PAYPAL_CLIENT_ID }}>
 
-                {reservations && reservations.length > 0 ? (
-                    reservations.map((reservation, index) => (
+                {pendingReservations.length > 0 ? (
+                    pendingReservations.map((reservation, index) => (
                         <div key={index} className="card shadow-lg mb-4 rounded">
                             <div className="card-body">
                                 <h5 className="card-title"><strong>Reserva #{index + 1}</strong></h5>
@@ -71,41 +74,30 @@ export const ReservationCart = () => {
                                 <p className="mb-2"><strong>Monto del Pago:</strong> ${reservation.stay_package.price}</p>
                                 <p className="mb-3">
                                     <strong>Estado del Pago:</strong>
-                                    <span className={`badge ${reservation.is_paid ? "bg-success" : "bg-warning"}`}>
-                                        {reservation.is_paid ? "Pagado" : "Pendiente"}
-                                    </span>
+                                    <span className="badge bg-warning">Pendiente</span>
                                 </p>
 
-                                {!reservation.is_paid ? (
-                                    <div className="d-flex justify-content-center">
-                                        <PayPalButtons
-                                            createOrder={(data, actions) => {
-                                                return actions.order.create({
-                                                    purchase_units: [{
-                                                        amount: { value: reservation.stay_package.price }
-                                                    }]
-                                                });
-                                            }}
-                                            onApprove={(data, actions) => {
-                                                return actions.order.capture().then((details) => {
-                                                    handlePaymentSuccess(data.orderID, data.paymentID, reservation.id_reservation);
-                                                });
-                                            }}
-                                        />
-                                    </div>
-                                ) :
-                                    <div className="text-center">
-                                        <a href={`https://wa.me/${reservation.phone_number}`} target="_blank" rel="noopener noreferrer" className="btn btn-success">
-                                            <i className="fab fa-whatsapp"></i> Contactar por WhatsApp
-                                        </a>
-                                    </div>
-                                }
-
+                                <div className="d-flex justify-content-center">
+                                    <PayPalButtons
+                                        createOrder={(data, actions) => {
+                                            return actions.order.create({
+                                                purchase_units: [{
+                                                    amount: { value: reservation.stay_package.price }
+                                                }]
+                                            });
+                                        }}
+                                        onApprove={(data, actions) => {
+                                            return actions.order.capture().then((details) => {
+                                                handlePaymentSuccess(data.orderID, data.paymentID, reservation.id_reservation);
+                                            });
+                                        }}
+                                    />
+                                </div>
                             </div>
                         </div>
                     ))
                 ) : (
-                    <p className="text-center">No tienes reservas activas.</p>
+                    <p className="text-center">No tienes reservas pendientes.</p>
                 )}
             </PayPalScriptProvider>
         </div>
