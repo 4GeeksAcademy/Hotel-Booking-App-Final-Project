@@ -61,39 +61,70 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ demo: demo });
 			},
 
+			// signUp: async (name, last_name, email, username, password, user_type, phone_number) => {
+			// 	console.log(name, last_name, email, username, password, user_type, phone_number);
+
+			// 	try {
+			// 		const response = await fetch(process.env.BACKEND_URL + "api/signup", {
+			// 			method: "POST",
+			// 			headers: {
+			// 				"Content-Type": "application/json"
+			// 			},
+			// 			body: JSON.stringify({
+			// 				name: name,
+			// 				last_name: last_name,
+			// 				email: email,
+			// 				username: username,
+			// 				password: password,
+			// 				user_type: user_type,
+			// 				phone_number: phone_number
+			// 			})
+			// 		});
+
+			// 		if (!response.ok) {
+			// 			const errorData = await response.json();
+			// 			throw new Error(errorData.msg);
+			// 		}
+
+			// 		const data = await response.json();
+			// 		console.log("User registered successfully:", data);
+
+			// 		return "User registered successfully";
+			// 	} catch (error) {
+			// 		console.error("Error registering:", error);
+			// 		return error.message || "This email or username is already registered, try again.";
+			// 	}
+			// },
+
 			signUp: async (name, last_name, email, username, password, user_type, phone_number) => {
 				console.log(name, last_name, email, username, password, user_type, phone_number);
 
-				try {
-					const response = await fetch(process.env.BACKEND_URL + "api/signup", {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json"
-						},
-						body: JSON.stringify({
-							name: name,
-							last_name: last_name,
-							email: email,
-							username: username,
-							password: password,
-							user_type: user_type,
-							phone_number: phone_number
-						})
-					});
+				const response = await fetch(process.env.BACKEND_URL + "api/signup", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						name: name,
+						last_name: last_name,
+						email: email,
+						username: username,
+						password: password,
+						user_type: user_type,
+						phone_number: phone_number
+					})
+				});
 
-					if (!response.ok) {
-						const errorData = await response.json();
-						throw new Error(errorData.msg);
-					}
-
-					const data = await response.json();
-					console.log("User registered successfully:", data);
-
-					return "User registered successfully";
-				} catch (error) {
-					console.error("Error registering:", error);
-					return error.message || "This email or username is already registered, try again.";
+				// Si la respuesta no es correcta, manejar error
+				if (!response.ok) {
+					const errorData = await response.json();
+					return errorData.msg
 				}
+				const data = await response.json();
+				console.log("User registered successfully:", data);
+
+				return "User registered successfully"; // Se devuelve mensaje de éxito
+
 			},
 
 			// Fetch personal information for the PersonalInfo page

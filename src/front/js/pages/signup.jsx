@@ -46,7 +46,6 @@ export const SignUp = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Validación del campo teléfono
         if (!phoneNumber) {
             Swal.fire({
                 icon: 'error',
@@ -87,6 +86,13 @@ export const SignUp = () => {
                     actions.setSignUpData("", "", true);
                     setTimeout(() => navigate("/login"), 2000);
                 }
+
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: message,
             });
         }
     };
