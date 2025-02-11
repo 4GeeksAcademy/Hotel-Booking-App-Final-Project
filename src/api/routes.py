@@ -976,26 +976,29 @@ def google_login():
    except Exception as e:
     # Invalid token
         return jsonify({"error": "Internal Server Error", "details": str(e)}), 403
-   
-# ELIMINAR RESERVAS:
+
+# ELIMINAR UNA RESERVA POR ID
 @api.route('/reservations/<int:id_reservation>', methods=['DELETE'])
-@jwt_required()  # Asegura que el usuario esté autenticado
+@jwt_required()
 def delete_reservation(id_reservation):
-    current_user = get_jwt_identity()  # Obtén el usuario autenticado
-    
-    # Lógica para eliminar la reserva
-    reservation = Reservation.query.get(id_reservation)
-    
-    if reservation is None:
-        return jsonify({"msg": "Reserva no encontrada"}), 404
-    
-    if reservation.user_id != current_user:
-        return jsonify({"msg": "No tienes permiso para eliminar esta reserva"}), 403
-    
+    current_user_username = get_jwt_identity()
+
+    # Obtener al usuario autenticado
+    user = User.query.filter_by(username=current_user_username).first()
+    if not user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    # Buscar la reserva
+    reservation = Reservation.query.filter_by(id_reservation=id_reservation, id_user=user.id_user).first()
+    if not reservation:
+        return jsonify({"error": "Reserva no encontrada o no autorizada"}), 404
+
     try:
+        # Eliminar la reserva de la base de datos
         db.session.delete(reservation)
         db.session.commit()
-        return jsonify({"msg": "Reserva eliminada con éxito"}), 200
+        return jsonify({"msg": "Reserva eliminada correctamente"}), 200
+
     except Exception as e:
         db.session.rollback()
-        return jsonify({"msg": f"Error al eliminar la reserva: {str(e)}"}), 500
+        return jsonify({"error": "Error al eliminar la reserva", "details": str(e)}), 500

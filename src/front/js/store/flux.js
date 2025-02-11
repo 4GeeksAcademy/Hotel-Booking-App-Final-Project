@@ -1215,59 +1215,52 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 			// ELIMINAR RESERVAS
-			// handleDeleteReservation: async (id_reservation) => {
-			// 	console.log("ID de la reserva que se va a eliminar:", id_reservation);
+			handleDeleteReservation: async (id_reservation) => {
+				console.log("ID de la reserva que se va a eliminar:", id_reservation);
 
-			// 	const token = localStorage.getItem("user_session");
-			// 	console.log(token);
+				const token = localStorage.getItem("user_session");
+				if (!token) {
+					Swal.fire("Error", "No se encontró token de sesión.", "error");
+					return;
+				}
 
-			// 	if (!token) {
-			// 		console.error("No token found!");
-			// 		Swal.fire("Error", "No se encontró token de sesión.", "error");
-			// 		return;
-			// 	}
+				const confirmDelete = await Swal.fire({
+					title: "¿Estás seguro?",
+					text: "Esta acción eliminará la reserva de forma permanente.",
+					icon: "warning",
+					showCancelButton: true,
+					confirmButtonColor: "#d33",
+					cancelButtonColor: "#3085d6",
+					confirmButtonText: "Sí, eliminar",
+					cancelButtonText: "Cancelar"
+				});
 
-			// 	// Confirmación de eliminación
-			// 	const confirmDelete = await Swal.fire({
-			// 		title: "¿Estás seguro?",
-			// 		text: "Esta acción eliminará la reserva de forma permanente.",
-			// 		icon: "warning",
-			// 		showCancelButton: true,
-			// 		confirmButtonColor: "#d33",
-			// 		cancelButtonColor: "#3085d6",
-			// 		confirmButtonText: "Sí, eliminar",
-			// 		cancelButtonText: "Cancelar"
-			// 	});
+				if (confirmDelete.isConfirmed) {
+					try {
+						const response = await fetch(`${process.env.BACKEND_URL}/api/reservations/${id_reservation}`, {
+							method: "DELETE",
+							headers: {
+								"Authorization": `Bearer ${token}`,
+								"Content-Type": "application/json"
+							}
+						});
 
-			// 	if (confirmDelete.isConfirmed) {
-			// 		try {
-			// 			const response = await fetch(`${process.env.BACKEND_URL}/api/reservations/${id_reservation}`, {
-			// 				method: "DELETE",
-			// 				headers: {
-			// 					Authorization: `Bearer ${token}`
-			// 				}
-			// 			});
+						if (response.ok) {
+							const data = await response.json();
+							Swal.fire("Eliminado", data.msg, "success");
 
-			// 			// Si la respuesta es correcta, mostrar mensaje de éxito
-			// 			if (response.ok) {
-			// 				const data = await response.json();
-			// 				Swal.fire("Eliminado", data.msg, "success");
-
-			// 				// Aquí podemos actualizar el estado, si es necesario, para eliminar la reserva del listado
-			// 				// Si estás usando React, podrías hacer algo como:
-			// 				// setReservations(prev => prev.filter(res => res.id_reservation !== id_reservation));
-
-			// 			} else {
-			// 				const errorData = await response.json();
-			// 				Swal.fire("Error", errorData.msg || "No se pudo eliminar la reserva.", "error");
-			// 			}
-
-			// 		} catch (error) {
-			// 			console.error("Error al eliminar reserva:", error);
-			// 			Swal.fire("Error", "Ocurrió un error al eliminar la reserva.", "error");
-			// 		}
-			// 	}
-			// },
+							// Actualizar la lista de reservas en el frontend
+							getActions().getUserReservations();  // Llamar a la función que actualiza la lista
+						} else {
+							const errorData = await response.json();
+							Swal.fire("Error", errorData.msg || "No se pudo eliminar la reserva.", "error");
+						}
+					} catch (error) {
+						console.error("Error al eliminar reserva:", error);
+						Swal.fire("Error", "Ocurrió un error al eliminar la reserva.", "error");
+					}
+				}
+			}
 		}
 	};
 };

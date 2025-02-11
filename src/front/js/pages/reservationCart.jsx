@@ -23,58 +23,9 @@ export const ReservationCart = () => {
         fetchReservations();
     }, []);
 
-    // Función para eliminar la reserva
-    const handleDeleteReservation = async (id_reservation) => {
-        console.log("ID de la reserva que se va a eliminar:", id_reservation);
-
-        const token = localStorage.getItem("user_session");
-        console.log(token);
-
-        if (!token) {
-            console.error("No token found!");
-            Swal.fire("Error", "No se encontró token de sesión.", "error");
-            return;
-        }
-
-        // Confirmación de eliminación
-        const confirmDelete = await Swal.fire({
-            title: "¿Estás seguro?",
-            text: "Esta acción eliminará la reserva de forma permanente.",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#d33",
-            cancelButtonColor: "#3085d6",
-            confirmButtonText: "Sí, eliminar",
-            cancelButtonText: "Cancelar"
-        });
-
-        if (confirmDelete.isConfirmed) {
-            try {
-                const response = await fetch(`${process.env.BACKEND_URL}/reservations/${id_reservation}`, {
-                    method: "DELETE",
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    Swal.fire("Eliminado", data.msg, "success");
-
-                    // Actualiza el estado para eliminar la reserva de la lista
-                    setReservations(prevReservations => prevReservations.filter(res => res.id_reservation !== id_reservation));
-
-                } else {
-                    const errorData = await response.json();
-                    Swal.fire("Error", errorData.msg || "No se pudo eliminar la reserva.", "error");
-                }
-
-            } catch (error) {
-                console.error("Error al eliminar reserva:", error);
-                Swal.fire("Error", "Ocurrió un error al eliminar la reserva.", "error");
-            }
-        }
-    };
+    useEffect(() => {
+        actions.getUserReservations();
+    }, []);
 
     // PAGOS:
     const handlePaymentSuccess = async (orderID, paymentID, reservationId) => {
@@ -135,12 +86,12 @@ export const ReservationCart = () => {
                                 </div>
 
                                 <div className="d-flex justify-content-end">
-                                    <button
-                                        className="btn btn-danger position-absolute top-0 end-0 m-2 me-3 mt-2"
-                                        onClick={() => handleDeleteReservation(reservation.id_reservation)}
-                                    >
+
+                                    <button className="btn btn-danger position-absolute top-0 end-0 m-2 me-3 mt-2"
+                                        onClick={() => actions.handleDeleteReservation(reservation.id_reservation)}>
                                         <i className="fas fa-trash-alt"></i> <small>DELETE</small>
                                     </button>
+
                                     <div className="d-flex justify-content-between align-items-center">
                                         <PayPalButtons
                                             createOrder={(data, actions) => {
