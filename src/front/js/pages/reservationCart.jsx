@@ -23,6 +23,35 @@ export const ReservationCart = () => {
         fetchReservations();
     }, []);
 
+    const handlePaymentSuccess = async (orderID, paymentID, reservationId) => {
+        try {
+            const response = await fetch(`${process.env.BACKEND_URL}/api/pay-reservation/${reservationId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ orderID, paymentID })
+            });
+
+            if (response.ok) {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Pago exitoso",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                actions.getUserReservations();
+            } else {
+                Swal.fire({
+                    position: "center",
+                    icon: "error",
+                    title: "Hubo un problema con el pago"
+                });
+            }
+        } catch (error) {
+            console.error("Error procesando el pago:", error);
+        }
+    };
+
     if (loading) {
         return <div className="container text-center mt-4"><p><i className="fas fa-spinner fa-spin"></i> Cargando reservas...</p></div>;
     }
@@ -46,12 +75,13 @@ export const ReservationCart = () => {
                                     <p className="mb-2"><strong>Monto del Pago:</strong> ${reservation.stay_package.price}</p>
                                     <p className="mb-3">
                                         <strong>Estado del Pago:</strong>
-                                        <span className="badge bg-warning"> Pendiente</span>
+                                        <span className="badge bg-warning ms-1">Pendiente</span>
+
                                     </p>
                                 </div>
 
                                 <div className="d-flex justify-content-end">
-                                    <button className="btn btn-danger position-absolute top-0 end-0 m-2" onClick={() => handleDeleteReservation(reservation.id_reservation)}>
+                                    <button className="btn btn-danger position-absolute top-0 end-0 m-2 me-3" onClick={() => handleDeleteReservation(reservation.id_reservation)}>
                                         <i className="fas fa-trash-alt"></i> <small>Eliminar</small>
                                     </button>
                                     <div className="d-flex justify-content-between align-items-center">
@@ -75,7 +105,7 @@ export const ReservationCart = () => {
                 ) : (
                     <p className="text-center">No tienes reservas pendientes.</p>
                 )}
-            </PayPalScriptProvider>
-        </div>
+            </PayPalScriptProvider >
+        </div >
     );
 };
