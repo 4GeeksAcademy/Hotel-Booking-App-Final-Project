@@ -1,47 +1,46 @@
-/* Fuente del Proyecto */
+/******************************************************************INICIO DE FUENTE DEL PROYECTO***************************************************************************/
 .FontDesign{
     font-family: "Doppio One", serif;
-  font-weight: 400;
-  font-style: normal;
+    font-weight: 400;
+    font-style: normal;
 }
-
-
-/* CSS DEL SIGN UP */
-.btndashboard-signup {
-    background-color: #6c757d;
-    color: #ffffff;
-    border-radius: 50rem;
-    padding: 0.5rem 1.5rem;
-    text-decoration: none;
-    margin-right: 10px;
-}
-.btndashboard-signup:hover {
-    color: #ffffff;
-}
-.btnlogin-signup {
-    background-color: #30728A;
-    border-color: #30728A;
-    color: #ffffff;
-    border-radius: 50rem;
-    padding: 0.5rem 1.5rem;
-    text-decoration: none;
-}
-
 /* Fuente del titulo del navbar */
 .SereniaTitle {
     font-family: "Dancing Script", serif;
     font-optical-sizing: auto;
     font-weight: 1000;
     font-style: normal;
-    font-size: 35px;
+    font-size: 25px;
     text-decoration: none;
+    margin: 10px;
   }
-  
-
-.navBarConfig {
-    background-color: #30728A; 
+/******************************************************************CIERRE DE FUENTE DEL PROYECTO***************************************************************************/
+/*****************************************************************INICIO DISEÑO BOTÓN LOGIN NAVBAR*************************************************************************/
+.custom-btn-login {
+    background: #484848; 
+    border: none;
+    color: white;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-size: 0.80rem;
 }
-
+.custom-btn-login:hover {
+    background: linear-gradient(45deg, #00131a, #898787);
+    transform: scale(1.05);
+    color: #ffffff; 
+}
+/*****************************************************************CIERRE DISEÑO BOTÓN LOGIN NAVBAR*************************************************************************/
+/********************************************************************INICIO PATRON DEL NAVBAR*************************************************************************/
+  .navBarfooterConfig {
+    background-color: #30728A;
+    background-image: url("https://www.transparenttextures.com/patterns/swirl.png");
+    background-repeat: repeat;
+    background-size: 40px 40px;
+}
+/********************************************************************CIERRE PATRON DEL NAVBAR*************************************************************************/
 .userProfileButton {
     background-color: #ffff;
     z-index: 1;
@@ -204,19 +203,18 @@
 }
 
 /*****************************************************************************DASHBOARD******************************************************************************/
-
 /*BOTONES DASHBOARD*/
 .custom-btn {
-    background: rgba(0, 140, 186, 0.5); /* Gradiente de color */
+    background: #30728A; 
     border: none;
     color: white;
-    border-radius: 50px;
-    padding: 10px 20px;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
     font-weight: bold;
     text-transform: uppercase;
     transition: background-color 0.3s ease, transform 0.3s ease;
+    font-size: 0.80rem;
 }
-
 .standard-button-shape {
     border: none;
     color: white;
@@ -227,8 +225,9 @@
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 .custom-btn:hover {
-    background: linear-gradient(45deg, #2575fc, #6a11cb);
+    background: linear-gradient(45deg, #00131a, #00b0cb);
     transform: scale(1.05);
+    color: #ffffff; 
 }
 
 .custom-btn:focus {
@@ -332,23 +331,20 @@
 .dashboard-modal .modal-footer {
     border-top: 2px solid #ddd;
 }
-
-/* Estilo para el título principal */
-.dashboard-title {
-    font-weight: bold;
-}
-
-/* Botón personalizado */
-.custom-btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    transition: background-color 0.3s;
-}
-
-.custom-btn:hover {
-    background-color: #0056b3;
-}
 /***********************************************************************CIERRE DASHBOARD**********************************************************************************/
+/******************************************************************INICIO DISEÑO BOTÓN RESERVAS***************************************************************************/
+.icon-app {
+    transition: transform 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease-in-out;
+    color: #FFFFFF;
+}
+.icon-app:hover {
+    transform: scale(1.2);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 15px rgba(255, 255, 255, 0.6);
+    animation: bounce 0.4s ease;
+}
+@keyframes bounce {
+    0% { transform: scale(1.2) translateY(0); }
+    50% { transform: scale(1.3) translateY(-5px); }
+    100% { transform: scale(1.2) translateY(0); }
+}
+/******************************************************************CIERRE DISEÑO BOTÓN RESERVAS***************************************************************************/

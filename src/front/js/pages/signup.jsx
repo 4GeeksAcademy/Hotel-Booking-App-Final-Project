@@ -3,6 +3,7 @@ import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
+import Swal from 'sweetalert2';
 
 export const SignUp = () => {
     const { store, actions } = useContext(Context);
@@ -15,7 +16,6 @@ export const SignUp = () => {
     const [userType, setUserType] = useState(store.signupData.userType ? store.signupData.userType : "");
     const [acceptTerms, setAcceptTerms] = useState(store.signupData.acceptTerms ? store.signupData.acceptTerms : "");
     const [phoneNumber, setPhoneNumber] = useState(store.signupData.phoneNumber || "");
-    const [toastMessage, setToastMessage] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -48,40 +48,55 @@ export const SignUp = () => {
 
         // Validación del campo teléfono
         if (!phoneNumber) {
-            setToastMessage({ text: "Phone number is required.", type: "danger" });
-            setTimeout(() => setToastMessage(null), 3000);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Phone number is required.'
+            });
             return;
         }
 
         if (!acceptTerms) {
-            setToastMessage({ text: "You must accept the Terms and Conditions.", type: "danger" });
-            setTimeout(() => setToastMessage(null), 3000);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'You must accept the Terms and Conditions.'
+            });
             return;
         }
 
         if (password !== confirmPassword) {
-            setToastMessage({ text: "The passwords do not match.", type: "danger" });
-            setTimeout(() => setToastMessage(null), 3000);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'The passwords do not match.'
+            });
             return;
         }
 
         const message = await actions.signUp(name, lastName, email, userName, password, userType, "+" + phoneNumber);
 
         if (message === "User registered successfully") {
-            setToastMessage({ text: "User registered successfully.", type: "success" });
-            actions.setSignUpData("", "", true)
-            setTimeout(() => navigate("/login"), 3000);
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'User registered successfully.',
+                timer: 2000,
+                showConfirmButton: false,
+                willClose: () => {
+                    actions.setSignUpData("", "", true);
+                    setTimeout(() => navigate("/login"), 2000);
+                }
+            });
         }
-
-        setTimeout(() => setToastMessage(null), 1000);
     };
     console.log(phoneNumber);
 
     return (
         <div className="FontDesign container py-5">
             <div className="col-12 col-md-8 col-lg-6 mx-auto">
-                <h2 className="text-center font-weight-bold">Welcome to <span style={{ color: "#30728A" }}>Serenia</span></h2>
-                <h5 className="text-center text-secondary"><strong>Sign Up</strong></h5>
+                <h2 className="FontDesign text-center fw-bold">Welcome to <span>Serenia</span></h2>
+                <h5 className="FontDesign text-center fw-bold text-muted"><strong>Sign Up</strong></h5>
                 <form onSubmit={handleSubmit} className="eb-garamond">
                     <h5 className="fs-6 mt-4">Name</h5>
                     <input type="text" className="form-control rounded-pill" value={name} onChange={(e) => setName(e.target.value)} required />
@@ -128,25 +143,12 @@ export const SignUp = () => {
                     </div>
 
                     <div className="d-flex flex-column align-items-center justify-content-center mt-5">
-                        <button type="submit" className="btn w-75 btn-secondary rounded-pill mt-3" style={{ backgroundColor: "#30728A", borderColor: "#30728A", fontWeight: "bold" }}>
+                        <button type="submit" className="custom-btn">
                             Sign Up
                         </button>
                     </div>
                 </form>
             </div>
-
-            {toastMessage && (
-                <div className="toast-container position-fixed top-0 end-0 p-3" style={{ zIndex: 1050 }}>
-                    <div className={`toast show align-items-center text-bg-${toastMessage.type} border-0`} role="alert">
-                        <div className="d-flex">
-                            <div className="toast-body">
-                                {toastMessage.text}
-                            </div>
-                            <button type="button" className="btn-close btn-close-white me-2 m-auto" onClick={() => setToastMessage(null)}></button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
