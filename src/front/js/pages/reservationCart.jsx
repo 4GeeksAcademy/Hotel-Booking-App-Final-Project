@@ -23,6 +23,60 @@ export const ReservationCart = () => {
         fetchReservations();
     }, []);
 
+    // Función para eliminar la reserva
+    const handleDeleteReservation = async (id_reservation) => {
+        console.log("ID de la reserva que se va a eliminar:", id_reservation);
+
+        const token = localStorage.getItem("user_session");
+        console.log(token);
+
+        if (!token) {
+            console.error("No token found!");
+            Swal.fire("Error", "No se encontró token de sesión.", "error");
+            return;
+        }
+
+        // Confirmación de eliminación
+        const confirmDelete = await Swal.fire({
+            title: "¿Estás seguro?",
+            text: "Esta acción eliminará la reserva de forma permanente.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+        });
+
+        if (confirmDelete.isConfirmed) {
+            try {
+                const response = await fetch(`${process.env.BACKEND_URL}/reservations/${id_reservation}`, {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    Swal.fire("Eliminado", data.msg, "success");
+
+                    // Actualiza el estado para eliminar la reserva de la lista
+                    setReservations(prevReservations => prevReservations.filter(res => res.id_reservation !== id_reservation));
+
+                } else {
+                    const errorData = await response.json();
+                    Swal.fire("Error", errorData.msg || "No se pudo eliminar la reserva.", "error");
+                }
+
+            } catch (error) {
+                console.error("Error al eliminar reserva:", error);
+                Swal.fire("Error", "Ocurrió un error al eliminar la reserva.", "error");
+            }
+        }
+    };
+
+    // PAGOS:
     const handlePaymentSuccess = async (orderID, paymentID, reservationId) => {
         try {
             const response = await fetch(`${process.env.BACKEND_URL}/api/pay-reservation/${reservationId}`, {
@@ -61,28 +115,31 @@ export const ReservationCart = () => {
 
     return (
         <div className="FontDesign container mt-5">
-            <h2 className="text-center mb-3 fw-bold">Mis Reservas</h2>
-            <PayPalScriptProvider options={{ "client-id": process.env.PAYPAL_CLIENT_ID }}>
+            <h2 className="text-center mb-3 fw-bold fs-4">My Reservations</h2>
+            <PayPalScriptProvider options={{ "client-id": process.env.PAYPAL_CLIENT_ID, "locale": "en_US" }}>
 
                 {pendingReservations.length > 0 ? (
                     pendingReservations.map((reservation, index) => (
                         <div key={index} className="card shadow-lg mb-4 rounded h-auto">
-                            <div className="card-body d-flex flex-column justify-content-between h-100 p">
+                            <div className="card-body d-flex flex-column justify-content-between h-100">
                                 <div>
-                                    <h5 className="card-title"><strong>Reserva #{index + 1}</strong></h5>
-                                    <p className="mb-2 fs-6"><strong>Fecha de Reserva:</strong> {moment(reservation.reservation_date).format("YYYY-MM-DD HH:mm:ss")}</p>
-                                    <p className="mb-2"><strong>Paquete de Estancia:</strong> {reservation.stay_package.hotel_package_name}</p>
-                                    <p className="mb-2"><strong>Monto del Pago:</strong> ${reservation.stay_package.price}</p>
-                                    <p className="mb-3">
-                                        <strong>Estado del Pago:</strong>
-                                        <span className="badge bg-warning ms-1">Pendiente</span>
+                                    <h5 className="card-title fs-5"><strong>Reservation #{index + 1}</strong></h5>
+                                    <p className="mb-2 fs-7"><strong>Reservation Date:</strong> {moment(reservation.reservation_date).format("YYYY-MM-DD HH:mm:ss")}</p>
+                                    <p className="mb-2 fs-7"><strong>Stay Package:</strong> {reservation.stay_package.hotel_package_name}</p>
+                                    <p className="mb-2 fs-7"><strong>Payment Amount:</strong> ${reservation.stay_package.price}</p>
+                                    <p className="mb-3 fs-7">
+                                        <strong>Payment Status:</strong>
+                                        <span className="badge bg-warning ms-1">Pending Payment</span>
 
                                     </p>
                                 </div>
 
                                 <div className="d-flex justify-content-end">
-                                    <button className="btn btn-danger position-absolute top-0 end-0 m-2 me-3" onClick={() => handleDeleteReservation(reservation.id_reservation)}>
-                                        <i className="fas fa-trash-alt"></i> <small>Eliminar</small>
+                                    <button
+                                        className="btn btn-danger position-absolute top-0 end-0 m-2 me-3 mt-2"
+                                        onClick={() => handleDeleteReservation(reservation.id_reservation)}
+                                    >
+                                        <i className="fas fa-trash-alt"></i> <small>DELETE</small>
                                     </button>
                                     <div className="d-flex justify-content-between align-items-center">
                                         <PayPalButtons

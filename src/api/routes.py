@@ -976,7 +976,8 @@ def google_login():
    except Exception as e:
     # Invalid token
         return jsonify({"error": "Internal Server Error", "details": str(e)}), 403
-
+   
+# ELIMINAR RESERVAS:
 @api.route('/reservations/<int:id_reservation>', methods=['DELETE'])
 @jwt_required()  # Asegura que el usuario esté autenticado
 def delete_reservation(id_reservation):
