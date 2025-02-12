@@ -116,7 +116,7 @@ export const Dashboard = () => {
             </p>
 
             {/* Hoteles prioritarios */}
-            <h3 className="custom-underline text-center mb-4 fw-bold fs-5">Nuestros Hoteles Más Recomendados</h3>
+            <h3 className="custom-underline text-center mb-4 fw-bold fs-5">Our Most Recommended Hotels</h3>
             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
                 {priorityHotels.length > 0 ? (
                     priorityHotels.map((hotel, index) => (
@@ -131,7 +131,7 @@ export const Dashboard = () => {
                                     <h5 className="card-title">{hotel.name}</h5>
                                     <FontAwesomeIcon
                                         icon={isHotelFavorited(hotel.id_hotel) ? solidStar : regularStar}
-                                        className="text-warning fs-4 ms-2"
+                                        className="position-absolute top-0 end-0 m-2 text-warning fs-4"
                                         onClick={() => toggleFavorite(hotel)}
                                         style={{ cursor: "pointer" }}
                                     />
@@ -163,7 +163,7 @@ export const Dashboard = () => {
             </div>
 
             {/* Hoteles básicos */}
-            <h3 className="text-center mb-4 fw-bold fs-5">Explora Otros Hoteles Disponibles</h3>
+            <h3 className="text-center mb-4 fw-bold fs-5">Explore Other Available Hotels</h3>
             <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-5">
                 {basicHotels.length > 0 ? (
                     basicHotels.map((hotel, index) => (
@@ -187,7 +187,7 @@ export const Dashboard = () => {
                                         </button>
                                         <FontAwesomeIcon
                                             icon={isHotelFavorited(hotel.id_hotel) ? solidStar : regularStar}
-                                            className="text-warning fs-4 ms-2"
+                                            className="position-absolute top-0 end-0 m-2 text-warning fs-4"
                                             onClick={() => toggleFavorite(hotel)}
                                             style={{ cursor: "pointer" }}
                                         />
