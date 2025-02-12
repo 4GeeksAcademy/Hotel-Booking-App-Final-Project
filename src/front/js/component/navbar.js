@@ -36,7 +36,7 @@ export const Navbar = () => {
 			<div className="container-fluid d-flex justify-content-between align-items-center ms-5 me-5">
 				<Link to="/" className="SereniaTitle d-flex align-items-center text-light ms-0">
 					<i className="fa-solid fa-location-dot fs-4 me-1"></i>
-					<span className="navbar-brand mb-0 h6 font-weight-bold text-light">
+					<span className="navbar-brand mb-0 h3 text-light">
 						Serenia
 					</span>
 				</Link>

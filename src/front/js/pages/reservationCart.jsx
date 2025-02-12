@@ -23,11 +23,6 @@ export const ReservationCart = () => {
         fetchReservations();
     }, []);
 
-    useEffect(() => {
-        actions.getUserReservations();
-    }, []);
-
-    // PAGOS:
     const handlePaymentSuccess = async (orderID, paymentID, reservationId) => {
         try {
             const response = await fetch(`${process.env.BACKEND_URL}/api/pay-reservation/${reservationId}`, {
@@ -66,50 +61,63 @@ export const ReservationCart = () => {
 
     return (
         <div className="FontDesign container mt-5">
-            <h2 className="text-center mb-3 fw-bold fs-4">My Reservations</h2>
+            <h2 className="text-center mb-4 fw-bold fs-4">My Reservations</h2>
 
             <PayPalScriptProvider options={{ "client-id": process.env.PAYPAL_CLIENT_ID, "locale": "en_US" }}>
 
                 {pendingReservations.length > 0 ? (
                     pendingReservations.map((reservation, index) => (
-                        <div key={index} className="card reservation-card shadow-lg mb-4 rounded h-auto">
+                        <div key={index} className="reservation-card card shadow-lg mb-4 rounded h-auto bg-light">
 
-                            <div className="card-body d-flex flex-column justify-content-between h-100">
-                                <div>
-                                    <h5 className="card-title fs-5"><strong>Reservation #{index + 1}</strong></h5>
-                                    <p className="mb-2 fs-7"><strong>Reservation Date:</strong> {moment(reservation.reservation_date).format("YYYY-MM-DD HH:mm:ss")}</p>
-                                    <p className="mb-2 fs-7"><strong>Stay Package:</strong> {reservation.stay_package.hotel_package_name}</p>
-                                    <p className="mb-2 fs-7"><strong>Payment Amount:</strong> ${reservation.stay_package.price}</p>
-                                    <p className="mb-3 fs-7">
-                                        <strong>Payment Status:</strong>
-                                        <span className="badge bg-warning ms-1">Pending Payment</span>
-
-                                    </p>
+                            <div className="row g-0">
+                                <div className="col-12 col-md-4">
+                                    <img
+                                        src={reservation.stay_package.hotel.image_url}
+                                        alt={reservation.stay_package.hotel.name}
+                                        className="img-fluid rounded-start imagen-hotel-reservas"
+                                    />
                                 </div>
 
-                                <div className="d-flex justify-content-end">
+                                <div className="col-12 col-md-8">
+                                    <div className="card-body">
+                                        <div className="d-flex justify-content-between mb-3">
+                                            <h5 className="card-title fs-5 fs-md-5 text-dark"><strong>Reservation #{index + 1}</strong></h5>
+                                            <span className={`badge fs-6 ${reservation.is_paid ? 'bg-success' : 'bg-warning'}`}>
+                                                {reservation.is_paid ? 'Paid' : 'Pending Payment'}
+                                            </span>
+                                        </div>
 
-                                    <button className="btn custom-btn-red position-absolute top-0 end-0 m-2 me-3 mt-2"
-                                        onClick={() => actions.handleDeleteReservation(reservation.id_reservation)}>
-                                        <i className="fas fa-trash-alt"></i>DELETE
-                                    </button>
+                                        <div className="mb-3">
+                                            <p className="fs-7"><strong>Reservation Date:</strong> {moment(reservation.reservation_date).format("YYYY-MM-DD HH:mm:ss")}</p>
+                                            <p className="fs-7"><strong>Stay Package:</strong> {reservation.stay_package.hotel_package_name}</p>
+                                            <p className="fs-7"><strong>Payment Amount:</strong> ${reservation.stay_package.price}</p>
+                                        </div>
 
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <PayPalButtons
-                                            createOrder={(data, actions) => {
-                                                return actions.order.create({
-                                                    purchase_units: [{ amount: { value: reservation.stay_package.price } }]
-                                                });
-                                            }}
-                                            onApprove={(data, actions) => {
-                                                return actions.order.capture().then((details) => {
-                                                    handlePaymentSuccess(data.orderID, data.paymentID, reservation.id_reservation);
-                                                });
-                                            }}
-                                        />
+                                        <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4">
+
+                                            <button className="btn custom-btn-red btn-lg mb-2 mb-md-0 w-100 w-md-auto" onClick={() => actions.handleDeleteReservation(reservation.id_reservation)}>
+                                                <i className="fas fa-trash-alt me-2"></i>DELETE
+                                            </button>
+
+                                            <div className="w-100 w-md-auto mt-2 mt-md-0">
+                                                <PayPalButtons
+                                                    createOrder={(data, actions) => {
+                                                        return actions.order.create({
+                                                            purchase_units: [{ amount: { value: reservation.stay_package.price } }]
+                                                        });
+                                                    }}
+                                                    onApprove={(data, actions) => {
+                                                        return actions.order.capture().then((details) => {
+                                                            handlePaymentSuccess(data.orderID, data.paymentID, reservation.id_reservation);
+                                                        });
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     ))
                 ) : (
@@ -119,19 +127,19 @@ export const ReservationCart = () => {
                     </p>
                 )}
 
-            </PayPalScriptProvider >
-            <div className="d-flex justify-content-end">
-                {/* Botón de eliminar reservas, solo si hay reservas pendientes */}
-                {pendingReservations.length > 0 && (
+            </PayPalScriptProvider>
+
+            {pendingReservations.length > 0 && (
+                <div className="d-flex justify-content-end">
                     <button
                         onClick={() => actions.handleDeleteAllReservations()}
-                        className="btn custom-btn-red w-auto mt-4 mb-5 me-3"
+                        className="btn custom-btn-red btn-sm w-auto mt-4 mb-5 me-3"
                     >
-                        Delete All Reservations
+                        <i className="fas fa-trash-alt me-2"></i>Delete All Reservations
                     </button>
-                )}
-            </div>
+                </div>
+            )}
 
-        </div >
+        </div>
     );
 };
