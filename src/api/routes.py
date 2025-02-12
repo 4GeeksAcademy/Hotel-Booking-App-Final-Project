@@ -1002,3 +1002,32 @@ def delete_reservation(id_reservation):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": "Error al eliminar la reserva", "details": str(e)}), 500
+    
+# ELIMINAR TODAS LAS RESERVAS DEL USUARIO AUTENTICADO
+@api.route('/user/reservations', methods=['DELETE'])
+@jwt_required()
+def delete_all_reservations():
+    current_user_username = get_jwt_identity()
+
+    # Obtener al usuario autenticado
+    user = User.query.filter_by(username=current_user_username).first()
+    if not user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    # Buscar todas las reservas del usuario
+    reservations = Reservation.query.filter_by(id_user=user.id_user).all()
+    
+    if not reservations:
+        return jsonify({"message": "No tienes reservas activas"}), 200
+
+    try:
+        # Eliminar todas las reservas
+        for reservation in reservations:
+            db.session.delete(reservation)
+        db.session.commit()
+
+        return jsonify({"msg": "Todas las reservas han sido eliminadas"}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Error al eliminar las reservas", "details": str(e)}), 500

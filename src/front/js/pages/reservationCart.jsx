@@ -67,6 +67,14 @@ export const ReservationCart = () => {
     return (
         <div className="FontDesign container mt-5">
             <h2 className="text-center mb-3 fw-bold fs-4">My Reservations</h2>
+
+            <button
+                onClick={() => actions.handleDeleteAllReservations()}
+                style={{ backgroundColor: "#d33", color: "white", padding: "10px", borderRadius: "5px", border: "none", cursor: "pointer" }}
+            >
+                Eliminar Todas las Reservas
+            </button>
+
             <PayPalScriptProvider options={{ "client-id": process.env.PAYPAL_CLIENT_ID, "locale": "en_US" }}>
 
                 {pendingReservations.length > 0 ? (
