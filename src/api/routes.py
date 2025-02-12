@@ -977,18 +977,57 @@ def google_login():
     # Invalid token
         return jsonify({"error": "Internal Server Error", "details": str(e)}), 403
 
-@api.route('/check-duplicate', methods=['POST'])
-def check_duplicate():
-    data = request.get_json()
+# ELIMINAR UNA RESERVA POR ID
+@api.route('/reservations/<int:id_reservation>', methods=['DELETE'])
+@jwt_required()
+def delete_reservation(id_reservation):
+    current_user_username = get_jwt_identity()
 
-    # Verificar si el email, nombre de usuario o número de teléfono ya existen
-    email_exists = User.query.filter_by(email=data['email']).first() is not None
-    username_exists = User.query.filter_by(username=data['username']).first() is not None
-    phone_exists = User.query.filter_by(phone_number=data['phone_number']).first() is not None
+    # Obtener al usuario autenticado
+    user = User.query.filter_by(username=current_user_username).first()
+    if not user:
+        return jsonify({"error": "User not found"}), 404
 
-    # Devolver la respuesta en función de si existe duplicado
-    return jsonify({
-        "email_exists": email_exists,
-        "username_exists": username_exists,
-        "phone_exists": phone_exists
-    })
+    # Buscar la reserva
+    reservation = Reservation.query.filter_by(id_reservation=id_reservation, id_user=user.id_user).first()
+    if not reservation:
+        return jsonify({"error": "Reservation not found or unauthorized"}), 404
+
+    try:
+        # Eliminar la reserva de la base de datos
+        db.session.delete(reservation)
+        db.session.commit()
+        return jsonify({"msg": "Reservation deleted successfully"}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Error deleting reservation", "details": str(e)}), 500
+    
+# ELIMINAR TODAS LAS RESERVAS DEL USUARIO AUTENTICADO
+@api.route('/user/reservations', methods=['DELETE'])
+@jwt_required()
+def delete_all_reservations():
+    current_user_username = get_jwt_identity()
+
+    # Obtener al usuario autenticado
+    user = User.query.filter_by(username=current_user_username).first()
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    # Buscar todas las reservas del usuario
+    reservations = Reservation.query.filter_by(id_user=user.id_user).all()
+    
+    if not reservations:
+        return jsonify({"message": "You have no active reservations"}), 200
+
+    try:
+        # Eliminar todas las reservas
+        for reservation in reservations:
+            db.session.delete(reservation)
+        db.session.commit()
+
+        return jsonify({"msg": "All reservations have been removed"}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Error deleting reservations", "details": str(e)}), 500
