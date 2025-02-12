@@ -45,7 +45,7 @@ export const LoginAccount = () => {
         //console.log(data);
     }
 
-    const handleGoogleLogin = async (credentialResponse) =>{
+    const handleGoogleLogin = async (credentialResponse) => {
         console.log(credentialResponse);
         const email_data = await actions.getGoogleInformation(credentialResponse)
         const login = await actions.loginGoogleAccount(email_data)
@@ -58,12 +58,12 @@ export const LoginAccount = () => {
                 <div className='col-xs-auto container-fluid mt-0' >
                     <div className="row d-flex justify-content-center mt-5 mb-0 pb-0">
 
-                            <div id="welcomePageTitleLogin" className="d-flex justify-content-center col-xs-12 col-md-auto">
-                                <div >Welcome to&nbsp;</div> <div className="colorTitle">Serenia</div>
-                            </div>
-                            
-                    
-                        
+                        <div id="welcomePageTitleLogin" className="d-flex justify-content-center col-xs-12 col-md-auto">
+                            <div >Welcome to&nbsp;</div> <div className="colorTitle">Serenia</div>
+                        </div>
+
+
+
                     </div>
                     <div id="loginMessage" className="col-sm-auto d-flex justify-content-center mt-0 p-0 mb-0">
                         <p>Please, log in</p>
@@ -98,34 +98,34 @@ export const LoginAccount = () => {
                             </button>
                         </div>
                     </form>
-                    
+
                     <div className="d-flex justify-content-center">
-                            <div className = "w-25 mt-5 d-flex justify-content-center"> 
-                                <GoogleLogin
-                                    
-                                    onSuccess={credentialResponse => {
-                                        handleGoogleLogin(credentialResponse)
-                                    }}
-                                    onError={() => {
-                                        console.log('Login Failed');
-                                    }}
-                                    />  
-                            </div>
+                        <div className="w-25 mt-5 d-flex justify-content-center">
+                            <GoogleLogin
+
+                                onSuccess={credentialResponse => {
+                                    handleGoogleLogin(credentialResponse)
+                                }}
+                                onError={() => {
+                                    console.log('Login Failed');
+                                }}
+                            />
+                        </div>
                     </div>
-                    
+
                     {/* Terminos y condiciones asi como boton de registro */}
                     <div className="col-sm-auto d-flex justify-content-center text-center mt-4">
                         <p className="">Don't have an account?
                             <Link to="/signup" className="ms-2 text-primary">Sign-up! </Link>
                         </p>
-                        
+
                     </div>
 
                     <div className="col-sm-auto d-flex justify-content-center text-center mt-1">
-                        <p className="">By signing in, you agree with our 
+                        <p className="">By signing in, you agree with our
                             <Link to="/terms" className="ms-2 text-primary">Terms & Conditions </Link>
                         </p>
-                        
+
                     </div>
                 </div>
             </GoogleOAuthProvider>

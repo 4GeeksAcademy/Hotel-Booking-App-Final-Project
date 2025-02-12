@@ -383,3 +383,57 @@
     width: 100%;
 }
 /******************************************************************CIERRE DISEÑO RESERVAS*********************************************************************************/
+/* Estilo para las tarjetas de los hoteles */
+.hotel-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hotel-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Contenedor de imagen del hotel */
+.hotel-img-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+/* DISEÑO IMAGENES DE HOTEL */
+.hotel-img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.hotel-img-container:hover .hotel-img {
+    transform: scale(1.1);
+}
+
+.hotel-img-container:hover .overlay {
+    display: block;
+    opacity: 1;
+}
+/* DISEÑO SUBRAYADO AMARILLO */
+.custom-underline {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+}
+.custom-underline::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: #ffe800;
+    background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 10"%3E%3Cpath d="M0 4 Q 25 0, 50 5 T 100 5" fill="transparent" stroke="%23ffe800" stroke-width="4" /%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
