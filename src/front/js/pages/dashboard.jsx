@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
 import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 export const Dashboard = () => {
     const navigate = useNavigate()
@@ -49,10 +50,24 @@ export const Dashboard = () => {
         return favoriteHotels.some((fav) => fav.id_hotel === hotelId);
     };
 
+
+    // ALERTA QUE INTEGRÉ PARA QUE SEA CON SWEETALERT2
+    const showLoginAlert = () => {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Login Required',
+            text: 'Please log in to add favorites or make a reservation.',
+            confirmButtonText: 'OK'
+        });
+    };
+
+
     const toggleFavorite = async (hotel) => {
         if (!store.currentUser) {
-            setShowAlert(true);
-            setTimeout(() => setShowAlert(false), 3000);
+            // COMENTÉ PORQUE ERA DE LA OTRA ALERT SENCILLA
+            showLoginAlert();
+            // setShowAlert(true);
+            // setTimeout(() => setShowAlert(false), 3000);
             return;
         }
 
@@ -72,21 +87,23 @@ export const Dashboard = () => {
     const handleReserve = (hotelName) => {
         const userSession = localStorage.getItem("user_session");
         if (!userSession) {
-            setShowAlert(true);
-            setTimeout(() => setShowAlert(false), 3000);
+            // COMENTÉ PORQUE ERA DE LA OTRA ALERT SENCILLA
+            showLoginAlert();
+            // setShowAlert(true);
+            // setTimeout(() => setShowAlert(false), 3000);
         } else {
             setSelectedHotel(hotelName);
-            setShowModal(true);
+            // setShowModal(true);
         }
     };
 
     return (
         <div className="FontDesign container py-5">
-            {showAlert && (
+            {/* {showAlert && (
                 <div className="alert alert-primary position-fixed top-0 end-0 mt-3 me-3 z-index-1050" role="alert">
                     Please log in to add favorites or make a reservation.
                 </div>
-            )}
+            )} */}
 
             {/* Mensaje de bienvenida dinámico */}
             <h2 className="FontDesign text-center mb-3 fw-bold fs-4">
