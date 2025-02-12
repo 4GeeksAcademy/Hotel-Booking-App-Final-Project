@@ -1216,23 +1216,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			// ELIMINAR RESERVAS
 			handleDeleteReservation: async (id_reservation) => {
-				console.log("ID de la reserva que se va a eliminar:", id_reservation);
+				console.log("ID of the reservation to be deleted:", id_reservation);
 
 				const token = localStorage.getItem("user_session");
 				if (!token) {
-					Swal.fire("Error", "No se encontró token de sesión.", "error");
+					Swal.fire("Error", "No session token found.", "error");
 					return;
 				}
 
 				const confirmDelete = await Swal.fire({
-					title: "¿Estás seguro?",
-					text: "Esta acción eliminará la reserva de forma permanente.",
+					title: "You're sure?",
+					text: "This action will permanently delete the reservation.",
 					icon: "warning",
 					showCancelButton: true,
 					confirmButtonColor: "#d33",
 					cancelButtonColor: "#3085d6",
-					confirmButtonText: "Sí, eliminar",
-					cancelButtonText: "Cancelar"
+					confirmButtonText: "Yes, delete",
+					cancelButtonText: "Cancel"
 				});
 
 				if (confirmDelete.isConfirmed) {
@@ -1247,38 +1247,38 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 						if (response.ok) {
 							const data = await response.json();
-							Swal.fire("Eliminado", data.msg, "success");
+							Swal.fire("Deleted", data.msg, "success");
 
 							// Actualizar la lista de reservas en el frontend
 							getActions().getUserReservations();  // Llamar a la función que actualiza la lista
 						} else {
 							const errorData = await response.json();
-							Swal.fire("Error", errorData.msg || "No se pudo eliminar la reserva.", "error");
+							Swal.fire("Error", errorData.msg || "The reservation could not be deleted.", "error");
 						}
 					} catch (error) {
-						console.error("Error al eliminar reserva:", error);
-						Swal.fire("Error", "Ocurrió un error al eliminar la reserva.", "error");
+						console.error("Error deleting reservation:", error);
+						Swal.fire("Error", "An error occurred while deleting the reservation.", "error");
 					}
 				}
 			},
 			handleDeleteAllReservations: async () => {
-				console.log("Eliminando todas las reservas...");
+				console.log("Removing all reservations...");
 
 				const token = localStorage.getItem("user_session");
 				if (!token) {
-					Swal.fire("Error", "No se encontró token de sesión.", "error");
+					Swal.fire("Error", "No session token found.", "error");
 					return;
 				}
 
 				const confirmDelete = await Swal.fire({
-					title: "¿Estás seguro?",
-					text: "Esta acción eliminará TODAS tus reservas de forma permanente.",
+					title: "You're sure?",
+					text: "This action will permanently delete ALL your reservations.",
 					icon: "warning",
 					showCancelButton: true,
 					confirmButtonColor: "#d33",
 					cancelButtonColor: "#3085d6",
-					confirmButtonText: "Sí, eliminar",
-					cancelButtonText: "Cancelar"
+					confirmButtonText: "Yes, delete",
+					cancelButtonText: "Cancel"
 				});
 
 				if (confirmDelete.isConfirmed) {
@@ -1293,17 +1293,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 						if (response.ok) {
 							const data = await response.json();
-							Swal.fire("Eliminado", data.msg, "success");
+							Swal.fire("Deleted", data.msg, "success");
 
 							// Actualizar la lista de reservas en el frontend
 							getActions().getUserReservations();
 						} else {
 							const errorData = await response.json();
-							Swal.fire("Error", errorData.msg || "No se pudieron eliminar las reservas.", "error");
+							Swal.fire("Error", errorData.msg || "Reservations could not be deleted.", "error");
 						}
 					} catch (error) {
-						console.error("Error al eliminar reservas:", error);
-						Swal.fire("Error", "Ocurrió un error al eliminar las reservas.", "error");
+						console.error("Error deleting reservations:", error);
+						Swal.fire("Error", "An error occurred while deleting reservations.", "error");
 					}
 				}
 			}

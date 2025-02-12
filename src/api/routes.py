@@ -986,22 +986,22 @@ def delete_reservation(id_reservation):
     # Obtener al usuario autenticado
     user = User.query.filter_by(username=current_user_username).first()
     if not user:
-        return jsonify({"error": "Usuario no encontrado"}), 404
+        return jsonify({"error": "User not found"}), 404
 
     # Buscar la reserva
     reservation = Reservation.query.filter_by(id_reservation=id_reservation, id_user=user.id_user).first()
     if not reservation:
-        return jsonify({"error": "Reserva no encontrada o no autorizada"}), 404
+        return jsonify({"error": "Reservation not found or unauthorized"}), 404
 
     try:
         # Eliminar la reserva de la base de datos
         db.session.delete(reservation)
         db.session.commit()
-        return jsonify({"msg": "Reserva eliminada correctamente"}), 200
+        return jsonify({"msg": "Reservation deleted successfully"}), 200
 
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": "Error al eliminar la reserva", "details": str(e)}), 500
+        return jsonify({"error": "Error deleting reservation", "details": str(e)}), 500
     
 # ELIMINAR TODAS LAS RESERVAS DEL USUARIO AUTENTICADO
 @api.route('/user/reservations', methods=['DELETE'])
@@ -1012,13 +1012,13 @@ def delete_all_reservations():
     # Obtener al usuario autenticado
     user = User.query.filter_by(username=current_user_username).first()
     if not user:
-        return jsonify({"error": "Usuario no encontrado"}), 404
+        return jsonify({"error": "User not found"}), 404
 
     # Buscar todas las reservas del usuario
     reservations = Reservation.query.filter_by(id_user=user.id_user).all()
     
     if not reservations:
-        return jsonify({"message": "No tienes reservas activas"}), 200
+        return jsonify({"message": "You have no active reservations"}), 200
 
     try:
         # Eliminar todas las reservas
@@ -1026,8 +1026,8 @@ def delete_all_reservations():
             db.session.delete(reservation)
         db.session.commit()
 
-        return jsonify({"msg": "Todas las reservas han sido eliminadas"}), 200
+        return jsonify({"msg": "All reservations have been removed"}), 200
 
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": "Error al eliminar las reservas", "details": str(e)}), 500
+        return jsonify({"error": "Error deleting reservations", "details": str(e)}), 500

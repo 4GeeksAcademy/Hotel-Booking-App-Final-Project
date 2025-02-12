@@ -14,7 +14,7 @@ export const ReservationCart = () => {
             try {
                 await actions.getUserReservations();
             } catch (error) {
-                console.error("Error al obtener reservas:", error);
+                console.error("Error getting reservations:", error);
             } finally {
                 setLoading(false);
             }
@@ -40,7 +40,7 @@ export const ReservationCart = () => {
                 Swal.fire({
                     position: "center",
                     icon: "success",
-                    title: "Pago exitoso",
+                    title: "Payment successful",
                     showConfirmButton: false,
                     timer: 1500
                 });
@@ -49,16 +49,16 @@ export const ReservationCart = () => {
                 Swal.fire({
                     position: "center",
                     icon: "error",
-                    title: "Hubo un problema con el pago"
+                    title: "There was a problem with the payment"
                 });
             }
         } catch (error) {
-            console.error("Error procesando el pago:", error);
+            console.error("Error processing payment:", error);
         }
     };
 
     if (loading) {
-        return <div className="container text-center mt-4"><p><i className="fas fa-spinner fa-spin"></i> Cargando reservas...</p></div>;
+        return <div className="container text-center mt-4"><p><i className="fas fa-spinner fa-spin"></i> Loading reservations...</p></div>;
     }
 
     // Filtrar solo las reservas pendientes
@@ -68,18 +68,12 @@ export const ReservationCart = () => {
         <div className="FontDesign container mt-5">
             <h2 className="text-center mb-3 fw-bold fs-4">My Reservations</h2>
 
-            <button
-                onClick={() => actions.handleDeleteAllReservations()}
-                style={{ backgroundColor: "#d33", color: "white", padding: "10px", borderRadius: "5px", border: "none", cursor: "pointer" }}
-            >
-                Eliminar Todas las Reservas
-            </button>
-
             <PayPalScriptProvider options={{ "client-id": process.env.PAYPAL_CLIENT_ID, "locale": "en_US" }}>
 
                 {pendingReservations.length > 0 ? (
                     pendingReservations.map((reservation, index) => (
-                        <div key={index} className="card shadow-lg mb-4 rounded h-auto">
+                        <div key={index} className="card reservation-card shadow-lg mb-4 rounded h-auto">
+
                             <div className="card-body d-flex flex-column justify-content-between h-100">
                                 <div>
                                     <h5 className="card-title fs-5"><strong>Reservation #{index + 1}</strong></h5>
@@ -95,9 +89,9 @@ export const ReservationCart = () => {
 
                                 <div className="d-flex justify-content-end">
 
-                                    <button className="btn btn-danger position-absolute top-0 end-0 m-2 me-3 mt-2"
+                                    <button className="btn custom-btn-red position-absolute top-0 end-0 m-2 me-3 mt-2"
                                         onClick={() => actions.handleDeleteReservation(reservation.id_reservation)}>
-                                        <i className="fas fa-trash-alt"></i> <small>DELETE</small>
+                                        <i className="fas fa-trash-alt"></i>DELETE
                                     </button>
 
                                     <div className="d-flex justify-content-between align-items-center">
@@ -119,9 +113,25 @@ export const ReservationCart = () => {
                         </div>
                     ))
                 ) : (
-                    <p className="text-center">No tienes reservas pendientes.</p>
+                    <p className="text-center mt-4 p-3 bg-light border rounded shadow-sm">
+                        <i className="fas fa-info-circle me-2 text-warning"></i>
+                        You have no pending reservations. Enjoy your day!
+                    </p>
                 )}
+
             </PayPalScriptProvider >
+            <div className="d-flex justify-content-end">
+                {/* Botón de eliminar reservas, solo si hay reservas pendientes */}
+                {pendingReservations.length > 0 && (
+                    <button
+                        onClick={() => actions.handleDeleteAllReservations()}
+                        className="btn custom-btn-red w-auto mt-4 mb-5 me-3"
+                    >
+                        Delete All Reservations
+                    </button>
+                )}
+            </div>
+
         </div >
     );
 };
