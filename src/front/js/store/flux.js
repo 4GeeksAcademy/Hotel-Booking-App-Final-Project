@@ -1,3 +1,5 @@
+import Swal from 'sweetalert2';
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
@@ -60,40 +62,35 @@ const getState = ({ getStore, getActions, setStore }) => {
 				//reset the global store
 				setStore({ demo: demo });
 			},
-
 			signUp: async (name, last_name, email, username, password, user_type, phone_number) => {
 				console.log(name, last_name, email, username, password, user_type, phone_number);
 
-				try {
-					const response = await fetch(process.env.BACKEND_URL + "api/signup", {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json"
-						},
-						body: JSON.stringify({
-							name: name,
-							last_name: last_name,
-							email: email,
-							username: username,
-							password: password,
-							user_type: user_type,
-							phone_number: phone_number
-						})
-					});
+				const response = await fetch(process.env.BACKEND_URL + "api/signup", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						name: name,
+						last_name: last_name,
+						email: email,
+						username: username,
+						password: password,
+						user_type: user_type,
+						phone_number: phone_number
+					})
+				});
 
-					if (!response.ok) {
-						const errorData = await response.json();
-						throw new Error(errorData.msg);
-					}
-
-					const data = await response.json();
-					console.log("User registered successfully:", data);
-
-					return "User registered successfully";
-				} catch (error) {
-					console.error("Error registering:", error);
-					return error.message || "This email or username is already registered, try again.";
+				// Si la respuesta no es correcta, manejar error
+				if (!response.ok) {
+					const errorData = await response.json();
+					return errorData.msg
 				}
+				const data = await response.json();
+				console.log("User registered successfully:", data);
+
+				return "User registered successfully"; // Se devuelve mensaje de éxito
+
 			},
 
 			// Fetch personal information for the PersonalInfo page
@@ -1216,6 +1213,100 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error adding item to cart:", error);
 					return false;
 				}
+			},
+			// ELIMINAR RESERVAS
+			handleDeleteReservation: async (id_reservation) => {
+				console.log("ID of the reservation to be deleted:", id_reservation);
+
+				const token = localStorage.getItem("user_session");
+				if (!token) {
+					Swal.fire("Error", "No session token found.", "error");
+					return;
+				}
+
+				const confirmDelete = await Swal.fire({
+					title: "You're sure?",
+					text: "This action will permanently delete the reservation.",
+					icon: "warning",
+					showCancelButton: true,
+					confirmButtonColor: "#d33",
+					cancelButtonColor: "#3085d6",
+					confirmButtonText: "Yes, delete",
+					cancelButtonText: "Cancel"
+				});
+
+				if (confirmDelete.isConfirmed) {
+					try {
+						const response = await fetch(`${process.env.BACKEND_URL}/api/reservations/${id_reservation}`, {
+							method: "DELETE",
+							headers: {
+								"Authorization": `Bearer ${token}`,
+								"Content-Type": "application/json"
+							}
+						});
+
+						if (response.ok) {
+							const data = await response.json();
+							Swal.fire("Deleted", data.msg, "success");
+
+							// Actualizar la lista de reservas en el frontend
+							getActions().getUserReservations();  // Llamar a la función que actualiza la lista
+						} else {
+							const errorData = await response.json();
+							Swal.fire("Error", errorData.msg || "The reservation could not be deleted.", "error");
+						}
+					} catch (error) {
+						console.error("Error deleting reservation:", error);
+						Swal.fire("Error", "An error occurred while deleting the reservation.", "error");
+					}
+				}
+			},
+			handleDeleteAllReservations: async () => {
+				console.log("Removing all reservations...");
+
+				const token = localStorage.getItem("user_session");
+				if (!token) {
+					Swal.fire("Error", "No session token found.", "error");
+					return;
+				}
+
+				const confirmDelete = await Swal.fire({
+					title: "You're sure?",
+					text: "This action will permanently delete ALL your reservations.",
+					icon: "warning",
+					showCancelButton: true,
+					confirmButtonColor: "#d33",
+					cancelButtonColor: "#3085d6",
+					confirmButtonText: "Yes, delete",
+					cancelButtonText: "Cancel"
+				});
+
+				if (confirmDelete.isConfirmed) {
+					try {
+						const response = await fetch(`${process.env.BACKEND_URL}/api/user/reservations`, {
+							method: "DELETE",
+							headers: {
+								"Authorization": `Bearer ${token}`,
+								"Content-Type": "application/json"
+							}
+						});
+
+						if (response.ok) {
+							const data = await response.json();
+							Swal.fire("Deleted", data.msg, "success");
+
+							// Actualizar la lista de reservas en el frontend
+							getActions().getUserReservations();
+						} else {
+							const errorData = await response.json();
+							Swal.fire("Error", errorData.msg || "Reservations could not be deleted.", "error");
+						}
+					} catch (error) {
+						console.error("Error deleting reservations:", error);
+						Swal.fire("Error", "An error occurred while deleting reservations.", "error");
+					}
+				}
+			}
 			},
 
 			/*getting the paid reservations only */

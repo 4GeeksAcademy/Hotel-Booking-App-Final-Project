@@ -46,7 +46,6 @@ export const SignUp = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Validación del campo teléfono
         if (!phoneNumber) {
             Swal.fire({
                 icon: 'error',
@@ -87,6 +86,13 @@ export const SignUp = () => {
                     actions.setSignUpData("", "", true);
                     setTimeout(() => navigate("/login"), 2000);
                 }
+
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: message,
             });
         }
     };
@@ -95,9 +101,9 @@ export const SignUp = () => {
     return (
         <div className="FontDesign container py-5">
             <div className="col-12 col-md-8 col-lg-6 mx-auto">
-                <h2 className="FontDesign text-center fw-bold">Welcome to <span>Serenia</span></h2>
-                <h5 className="FontDesign text-center fw-bold text-muted"><strong>Sign Up</strong></h5>
-                <form onSubmit={handleSubmit} className="eb-garamond">
+                <h2 className="FontDesign text-center fw-bold fs-4">Welcome to <span>Serenia</span></h2>
+                <h5 className="FontDesign text-center fw-bold text-muted fs-5"><strong>Sign Up</strong></h5>
+                <form onSubmit={handleSubmit} className="FontDesign">
                     <h5 className="fs-6 mt-4">Name</h5>
                     <input type="text" className="form-control rounded-pill" value={name} onChange={(e) => setName(e.target.value)} required />
 
