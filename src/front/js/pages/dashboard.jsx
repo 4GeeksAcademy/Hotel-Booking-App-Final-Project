@@ -116,7 +116,9 @@ export const Dashboard = () => {
             </p>
 
             {/* Hoteles prioritarios */}
-            <h3 className="custom-underline text-center mb-4 fw-bold fs-5">Our Most Recommended Hotels</h3>
+            <div className="text-center">
+                <h3 className="custom-underline mb-4 fw-bold fs-5">Our Most Recommended Hotels</h3>
+            </div>
             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
                 {priorityHotels.length > 0 ? (
                     priorityHotels.map((hotel, index) => (
