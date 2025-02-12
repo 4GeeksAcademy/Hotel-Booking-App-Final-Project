@@ -79,7 +79,7 @@ export const Navbar = () => {
 										<p className="col m-auto h-100 fw-none text-light text-end" onClick={() => { navigate("/search") }}> Browse </p>
 									</div>
 									<button
-										className="custom-btn-login"
+										className="custom-btn-grey"
 										onClick={() => navigate("/login")}
 									>
 										Login

@@ -12,6 +12,7 @@ export const Dashboard = () => {
     const [priorityHotels, setPriorityHotels] = useState([]);
     const [basicHotels, setBasicHotels] = useState([]);
     const [favoriteHotels, setFavoriteHotels] = useState([]);
+    const [expandBasicHotels, setExpandBasicHotels] = useState(false); // Estado para expandir las cards de hoteles básicos
     const [loadingFavorites, setLoadingFavorites] = useState(true); // ✅ Track when favorites are loading
     const [showAlert, setShowAlert] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -178,15 +179,25 @@ export const Dashboard = () => {
                                 />
                                 <div className="card-body d-flex flex-column">
                                     <h5 className="card-title">{hotel.name}</h5>
-                                    <p className="card-text">{hotel.description}</p>
+                                    {/* <p className="card-text">{hotel.description}</p> */}
+                                    <p className={`card-text ${expandBasicHotels ? "d-block" : "d-none"}`}>{hotel.description}</p>
                                     <p className="card-text">{hotel.location}, {hotel.country}</p>
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <button className="btn btn-light custom-btn" onClick={() => {
-                                            store.clicked_hotel = hotel.name;
-                                            navigate("/search");
-                                        }}>
-                                            View Packages
-                                        </button>
+                                    <div className="d-flex justify-content-between align-items-center mt-auto">
+                                        <div className="gap-2">
+                                            <button className="btn btn-light custom-btn me-3" onClick={() => {
+                                                store.clicked_hotel = hotel.name;
+                                                navigate("/search");
+                                            }}>
+                                                View Packages
+                                            </button>
+                                            {/* Botón de "Mostrar más" */}
+                                            <button
+                                                className="custom-btn-grey mt-2"
+                                                onClick={() => setExpandBasicHotels(!expandBasicHotels)}
+                                            >
+                                                {expandBasicHotels ? "Show Less" : "Show More"}
+                                            </button>
+                                        </div>
                                         <FontAwesomeIcon
                                             icon={isHotelFavorited(hotel.id_hotel) ? solidStar : regularStar}
                                             className="position-absolute top-0 end-0 m-2 text-warning fs-4"
