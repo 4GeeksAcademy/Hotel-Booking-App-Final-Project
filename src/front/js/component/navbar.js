@@ -47,7 +47,7 @@ export const Navbar = () => {
 					{localStorage.getItem("user_session") && store.currentUser ? (
 						<>
 							{/* Botón de funciones de usuario */}
-							{localStorage.getItem("user_session") && (
+							{(
 								<div className="col mb-0 navBar w-100 Dropdown-Setup row d-flex justify-content-start">
 									<p className="col m-auto h-100 fw-none text-light text-end" onClick={() => { navigate("/search") }}> Browse </p>
 									{/* Mensaje saludando al usuario */}

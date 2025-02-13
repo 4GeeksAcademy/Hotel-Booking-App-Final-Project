@@ -16,7 +16,7 @@ export const LoginAccount = () => {
 
 
     useEffect(() => {
-        store.currentUser || localStorage.getItem("user_session") ? navigate("/") : console.log("user error")
+        store.currentUser ? navigate("/") : console.log("user error")
     }, [])
 
     //console.log(store.user)

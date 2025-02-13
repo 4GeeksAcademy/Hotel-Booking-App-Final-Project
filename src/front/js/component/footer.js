@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "../../styles/footer.css";
 
 export const Footer = () => (
-	<footer className="navBarfooterConfig footer mt-auto py-3 text-center">
+	<footer className="navBarfooterConfig footer mt-2 text-center sticky-bottom mt-5">
 		<div className="footer-content">
 			<p className="contact-title">
 				{ }
