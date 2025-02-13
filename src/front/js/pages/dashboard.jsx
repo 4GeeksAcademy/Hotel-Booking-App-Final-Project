@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
 import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 export const Dashboard = () => {
     const navigate = useNavigate()
@@ -11,6 +12,7 @@ export const Dashboard = () => {
     const [priorityHotels, setPriorityHotels] = useState([]);
     const [basicHotels, setBasicHotels] = useState([]);
     const [favoriteHotels, setFavoriteHotels] = useState([]);
+    const [expandBasicHotels, setExpandBasicHotels] = useState(false); // Estado para expandir las cards de hoteles básicos
     const [loadingFavorites, setLoadingFavorites] = useState(true); // ✅ Track when favorites are loading
     const [showAlert, setShowAlert] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -45,16 +47,28 @@ export const Dashboard = () => {
         setFavoriteHotels(store.favoriteHotels || []);
     }, [store.favoriteHotels]); // Runs when `store.favoriteHotels` changes
 
-
-
     const isHotelFavorited = (hotelId) => {
         return favoriteHotels.some((fav) => fav.id_hotel === hotelId);
     };
 
+
+    // ALERTA QUE INTEGRÉ PARA QUE SEA CON SWEETALERT2
+    const showLoginAlert = () => {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Login Required',
+            text: 'Please log in to add favorites or make a reservation.',
+            confirmButtonText: 'OK'
+        });
+    };
+
+
     const toggleFavorite = async (hotel) => {
         if (!store.currentUser) {
-            setShowAlert(true);
-            setTimeout(() => setShowAlert(false), 3000);
+            // COMENTÉ PORQUE ERA DE LA OTRA ALERT SENCILLA
+            showLoginAlert();
+            // setShowAlert(true);
+            // setTimeout(() => setShowAlert(false), 3000);
             return;
         }
 
@@ -71,25 +85,26 @@ export const Dashboard = () => {
         }
     };
 
-
     const handleReserve = (hotelName) => {
         const userSession = localStorage.getItem("user_session");
         if (!userSession) {
-            setShowAlert(true);
-            setTimeout(() => setShowAlert(false), 3000);
+            // COMENTÉ PORQUE ERA DE LA OTRA ALERT SENCILLA
+            showLoginAlert();
+            // setShowAlert(true);
+            // setTimeout(() => setShowAlert(false), 3000);
         } else {
             setSelectedHotel(hotelName);
-            setShowModal(true);
+            // setShowModal(true);
         }
     };
 
     return (
         <div className="FontDesign container py-5">
-            {showAlert && (
+            {/* {showAlert && (
                 <div className="alert alert-primary position-fixed top-0 end-0 mt-3 me-3 z-index-1050" role="alert">
                     Please log in to add favorites or make a reservation.
                 </div>
-            )}
+            )} */}
 
             {/* Mensaje de bienvenida dinámico */}
             <h2 className="FontDesign text-center mb-3 fw-bold fs-4">
@@ -101,26 +116,31 @@ export const Dashboard = () => {
                     : "Book with the best, with Serenia"}
             </p>
 
-            {/* Hoteles prioritarios como carrusel */}
-            <div id="priorityHotelsCarousel" className="carousel slide mb-5 dashboard-carousel" data-bs-ride="carousel">
-                <div className="carousel-inner">
-                    {priorityHotels.length > 0 ? (
-                        priorityHotels.map((hotel, index) => (
-                            <div key={index} className={`carousel-item ${index === 0 ? "active" : ""}`}>
-                                <div className="card h-100 dashboard-card">
-                                    <img
-                                        src={hotel.image_url ? hotel.image_url : "https://via.placeholder.com/200x200.png?text=No+Image"}
-                                        alt={hotel.name}
-                                        className="d-block w-100 carousel-img"
+            {/* Hoteles prioritarios */}
+            <div className="text-center">
+                <h3 className="custom-underline mb-4 fw-bold fs-5">Our Most Recommended Hotels</h3>
+            </div>
+            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+                {priorityHotels.length > 0 ? (
+                    priorityHotels.map((hotel, index) => (
+                        <div key={index} className="col">
+                            <div className="card hotel-card shadow-lg" style={{ width: "100%", height: "100%" }}>
+                                <img
+                                    src={hotel.image_url ? hotel.image_url : "https://via.placeholder.com/200x200.png?text=No+Image"}
+                                    alt={hotel.name}
+                                    className="card-img-top hotel-img"
+                                />
+                                <div className="card-body d-flex flex-column">
+                                    <h5 className="card-title">{hotel.name}</h5>
+                                    <FontAwesomeIcon
+                                        icon={isHotelFavorited(hotel.id_hotel) ? solidStar : regularStar}
+                                        className="position-absolute top-0 end-0 m-2 text-warning fs-4"
+                                        onClick={() => toggleFavorite(hotel)}
+                                        style={{ cursor: "pointer" }}
                                     />
-                                    <div className="carousel-caption d-none d-md-block text-start fs-7">
-                                        <h5 className="fs-7">{hotel.name}</h5>
-                                        <p className="fs-7">{hotel.description}</p>
-                                        <div className="d-flex align-items-center">
-                                            <p className="mt-2 fs-7">
-                                                {hotel.location}, {hotel.country}
-                                            </p>
-                                            {/* {!isHotelUser && (
+                                    <p className="card-text">{hotel.description}</p>
+                                    <p className="card-text">{hotel.location}, {hotel.country}</p>
+                                    {/* {!isHotelUser && (
                                                 // <button
                                                 //     className="btn custom-btn ms-3 align-self-start mt-n4"
                                                 //     onClick={() => handleReserve(hotel.name)}
@@ -128,81 +148,12 @@ export const Dashboard = () => {
                                                 //     Reserve
                                                 // </button>
                                             )} */}
-                                            <button className="btn custom-btn ms-3 align-self-start mt-n4" onClick={() => {
-                                                store.clicked_hotel = hotel.name
-                                                navigate("/search")
-                                            }}>
-                                                View Packages
-
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        <p className="fs-7">No priority hotels available.</p>
-                    )}
-                </div>
-                <button
-                    className="carousel-control-prev"
-                    type="button"
-                    data-bs-target="#priorityHotelsCarousel"
-                    data-bs-slide="prev"
-                >
-                    <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span className="visually-hidden">Previous</span>
-                </button>
-                <button
-                    className="carousel-control-next"
-                    type="button"
-                    data-bs-target="#priorityHotelsCarousel"
-                    data-bs-slide="next"
-                >
-                    <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span className="visually-hidden">Next</span>
-                </button>
-            </div>
-
-            {/* Hoteles básicos */}
-            <div className="row">
-                <h3 className="fs-5">Other Hotels</h3>
-                {basicHotels.length > 0 ? (
-                    basicHotels.map((hotel, index) => (
-                        <div key={index} className="col-12 col-md-4">
-                            <div className="card h-100 dashboard-card">
-                                <div className="card-body d-flex flex-column">
-                                    <img
-                                        src={hotel.image_url ? hotel.image_url : "https://via.placeholder.com/200x200.png?text=No+Image"}
-                                        alt={hotel.name}
-                                        className="card-img-top"
-                                    />
-                                    <div className="d-flex justify-content-between align-items-center fs-7">
-                                        <h5 className="card-title fs-7">{hotel.name}</h5>
-                                        <FontAwesomeIcon
-                                            icon={isHotelFavorited(hotel.id_hotel) ? solidStar : regularStar}
-                                            className="text-warning fs-4 ms-2 fs-7"
-                                            onClick={() => toggleFavorite(hotel)}
-                                            style={{ cursor: "pointer" }}
-                                        />
-                                    </div>
-                                    <p className="card-text fs-7">{hotel.description}</p>
-                                    <p className="card-text fs-7">
-                                        {hotel.location}, {hotel.country}
-                                    </p>
-                                    <div className="d-flex justify-content-between mt-auto">
-                                        {/* {!isHotelUser && (
-                                            <button className="btn custom-btn" onClick={() => handleReserve(hotel.name)}>
-                                                Reserve
-                                            </button>
-                                        )} */}
-                                        <button className="btn custom-btn ms-3 align-self-start mt-n4" onClick={() => {
-                                            store.clicked_hotel = hotel.name
-                                            console.log(store.clicked_hotel)
-                                            navigate("/search")
+                                    <div className="d-flex justify-content-between align-items-center mt-auto">
+                                        <button className="btn custom-btn ms-3 align-self-start mt-3" onClick={() => {
+                                            store.clicked_hotel = hotel.name;
+                                            navigate("/search");
                                         }}>
                                             View Packages
-
                                         </button>
                                     </div>
                                 </div>
@@ -210,9 +161,58 @@ export const Dashboard = () => {
                         </div>
                     ))
                 ) : (
-                    <p className="fs-7">No basic hotels available.</p>
+                    <p>No priority hotels available.</p>
                 )}
             </div>
-        </div>
+
+            {/* Hoteles básicos */}
+            <h3 className="text-center mb-4 fw-bold fs-5">Explore Other Available Hotels</h3>
+            <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-5">
+                {basicHotels.length > 0 ? (
+                    basicHotels.map((hotel, index) => (
+                        <div key={index} className="col">
+                            <div className="card shadow-lg h-100 hotel-img">
+                                <img
+                                    src={hotel.image_url ? hotel.image_url : "https://via.placeholder.com/200x200.png?text=No+Image"}
+                                    alt={hotel.name}
+                                    className="card-img-top"
+                                />
+                                <div className="card-body d-flex flex-column">
+                                    <h5 className="card-title">{hotel.name}</h5>
+                                    {/* <p className="card-text">{hotel.description}</p> */}
+                                    <p className={`card-text ${expandBasicHotels ? "d-block" : "d-none"}`}>{hotel.description}</p>
+                                    <p className="card-text">{hotel.location}, {hotel.country}</p>
+                                    <div className="d-flex justify-content-between align-items-center mt-auto">
+                                        <div className="gap-2">
+                                            <button className="btn btn-light custom-btn me-3" onClick={() => {
+                                                store.clicked_hotel = hotel.name;
+                                                navigate("/search");
+                                            }}>
+                                                View Packages
+                                            </button>
+                                            {/* Botón de "Mostrar más" */}
+                                            <button
+                                                className="custom-btn-grey mt-2"
+                                                onClick={() => setExpandBasicHotels(!expandBasicHotels)}
+                                            >
+                                                {expandBasicHotels ? "Show Less" : "Show More"}
+                                            </button>
+                                        </div>
+                                        <FontAwesomeIcon
+                                            icon={isHotelFavorited(hotel.id_hotel) ? solidStar : regularStar}
+                                            className="position-absolute top-0 end-0 m-2 text-warning fs-4"
+                                            onClick={() => toggleFavorite(hotel)}
+                                            style={{ cursor: "pointer" }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <p>No basic hotels available.</p>
+                )}
+            </div>
+        </div >
     );
-};
+}
