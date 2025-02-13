@@ -1,0 +1,46 @@
+/* Sidebar Styles */
+.sidebar {
+    background-color: #40788c;
+    background-image: url("https://www.transparenttextures.com/patterns/swirl.png");
+    background-repeat: repeat;
+    background-size: 70px 70px;
+    filter: contrast(1.2);
+    min-height: 100vh;
+    color: #ffffff;
+    font-family: "Doppio One", serif;
+    padding: 1rem;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    margin-bottom: 1.5rem;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.sidebar a:hover {
+    color: #FFD700;
+    transform: scale(1.05);
+}
+
+.sidebar .fa-icon {
+    margin-right: 10px;
+    transition: transform 0.3s ease;
+}
+
+.sidebar a:hover .fa-icon {
+    transform: scale(1.2);
+}
+

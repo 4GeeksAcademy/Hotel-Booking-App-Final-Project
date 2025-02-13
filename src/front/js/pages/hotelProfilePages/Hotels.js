@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import HotelSidebar from './HotelSidebar';
 import { Context } from '../../store/appContext';
+import "./hotelProfile.css";
+
+
 
 const Hotels = () => {
     const { store, actions } = useContext(Context);
@@ -56,36 +59,33 @@ const Hotels = () => {
     };
 
     return (
-        <div className="d-flex">
+        <div className="hotel-container">
             <HotelSidebar />
-            <div className="flex-grow-1">
+            <div className="hotel-content">
                 <Header title="Hoteles" />
-                <div className="p-4">
-                    <div className="d-flex justify-content-between mb-3">
+                <div className="content-wrapper">
+                    <div className="hotel-header">
                         <h4>Hotels List</h4>
-                        <button className="btn btn-success" onClick={goToAddHotel}>
+                        <button className="custom-btn-green" onClick={goToAddHotel}>
                             Add Hotel
                         </button>
                     </div>
-                    <div className="list-group">
+                    <div className="hotel-list">
                         {hotels.length > 0 ? (
                             hotels.map((hotel) => (
-                                <div
-                                    className="list-group-item d-flex justify-content-between align-items-center"
-                                    key={hotel.id_hotel}
-                                >
+                                <div className="hotel-item" key={hotel.id_hotel}>
                                     <div>
                                         <h5>{hotel.name}</h5>
-                                        <p className="mb-0 text-muted">Ubicación: {hotel.location}</p>
-                                        <p className="mb-0 text-muted">País: {hotel.country}</p>
+                                        <p className="hotel-info">Location: {hotel.location}</p>
+                                        <p className="hotel-info">Country: {hotel.country}</p>
                                     </div>
                                     <div>
                                         {hotel.is_active ? (
-                                            <button className="btn btn-danger" onClick={() => deactivateHotel(hotel.id_hotel)}>
+                                            <button className="custom-btn-red" onClick={() => deactivateHotel(hotel.id_hotel)}>
                                                 Deactivate
                                             </button>
                                         ) : (
-                                            <button className="btn btn-success" onClick={() => reactivateHotel(hotel.id_hotel)}>
+                                            <button className="custom-btn-green" onClick={() => reactivateHotel(hotel.id_hotel)}>
                                                 Reactivate
                                             </button>
                                         )}
@@ -93,7 +93,7 @@ const Hotels = () => {
                                 </div>
                             ))
                         ) : (
-                            <p>No hotels available</p>
+                            <p className="empty-message">No hotels available</p>
                         )}
                     </div>
                 </div>

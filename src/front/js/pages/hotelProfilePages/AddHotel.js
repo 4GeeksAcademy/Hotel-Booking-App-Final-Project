@@ -1,23 +1,21 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import Swal from "sweetalert2";
 import { Context } from "../../store/appContext";
+import "./hotelProfile.css";
 
 const AddHotel = () => {
   const navigate = useNavigate();
 
-  // State to hold the form input values
   const [hotelName, setHotelName] = useState('');
   const [hotelLocation, setHotelLocation] = useState('');
   const [hotelCountry, setHotelCountry] = useState('');
   const [hotelDescription, setHotelDescription] = useState('');
-  const { actions } = useContext(Context); 
+  const { actions } = useContext(Context);
   const [myImage, setMyImage] = useState(null);
 
-  // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
-
 
     const newHotel = {
       name: hotelName,
@@ -27,38 +25,36 @@ const AddHotel = () => {
       image_url: myImage
     };
 
-    console.log("Submitting hotel data:", newHotel); // Debugging log to ensure data is prepared
+    Swal.fire({
+      title: "Adding Hotel...",
+      text: "Please wait while we save the hotel details.",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
 
-    const success = await actions.addHotel(newHotel); // Call the addHotel action
+    const success = await actions.addHotel(newHotel);
     if (success) {
-        navigate('/hotel-profile/hotels'); // Redirect on success
+      Swal.fire("Success!", "Hotel has been added successfully!", "success").then(() => {
+        navigate('/hotel-profile/hotels');
+      });
     } else {
-        alert("Failed to add the hotel. Please try again.");
+      Swal.fire("Error!", "Failed to add the hotel. Please try again.", "error");
     }
-
-
-
-    // call an API to add the hotel or update state
-
-    console.log("New Hotel Added:", newHotel);
-
-    // Navigate to the Hotels page after submission
-    navigate('/hotel-profile/hotels');
   };
 
-  // ********************************** SUBIR CON CLOUDINARY***************************************
   const uploadImage = async (e) => {
     try {
       const file = e.target.files[0];
       if (!file) {
-        console.error("No file selected");
+        Swal.fire("Warning", "No file selected", "warning");
         return;
       }
 
       const formData = new FormData();
       formData.append('image', file);
 
-      // Asegúrate de que tu URL de backend esté correcta
       const response = await fetch(`${process.env.BACKEND_URL}/api/upload`, {
         method: "POST",
         body: formData,
@@ -66,21 +62,17 @@ const AddHotel = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Error uploading image:", errorData.error);
+        Swal.fire("Error!", errorData.error, "error");
         return;
       }
 
       const data = await response.json();
-      console.log("Uploaded image:", data);
-
-      // Actualiza el estado con la URL segura de la imagen
-      setMyImage(data.image_url); // Guarda la URL en el estado
-
+      setMyImage(data.image_url);
+      Swal.fire("Success!", "Image uploaded successfully!", "success");
     } catch (error) {
-      console.error("Error in uploadImage:", error);
+      Swal.fire("Error!", "Error uploading image.", "error");
     }
   };
-  // ********************************** CIERRE DEL SUBIR CON CLOUDINARY***************************************
 
   return (
     <div className="container">
@@ -88,73 +80,28 @@ const AddHotel = () => {
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="hotelName" className="form-label">Hotel Name</label>
-          <input
-            type="text"
-            id="hotelName"
-            className="form-control"
-            value={hotelName}
-            onChange={(e) => setHotelName(e.target.value)}
-            required
-          />
+          <input type="text" id="hotelName" className="form-control" value={hotelName} onChange={(e) => setHotelName(e.target.value)} required />
         </div>
-
         <div className="mb-3">
           <label htmlFor="hotelLocation" className="form-label">Hotel Location</label>
-          <input
-            type="text"
-            id="hotelLocation"
-            className="form-control"
-            value={hotelLocation}
-            onChange={(e) => setHotelLocation(e.target.value)}
-            required
-          />
+          <input type="text" id="hotelLocation" className="form-control" value={hotelLocation} onChange={(e) => setHotelLocation(e.target.value)} required />
         </div>
-
         <div className="mb-3">
           <label htmlFor="hotelCountry" className="form-label">Country</label>
-          <input
-            type="text"
-            id="hotelCountry"
-            className="form-control"
-            value={hotelCountry}
-            onChange={(e) => setHotelCountry(e.target.value)}
-            required
-          />
+          <input type="text" id="hotelCountry" className="form-control" value={hotelCountry} onChange={(e) => setHotelCountry(e.target.value)} required />
         </div>
-
         <div className="mb-3">
           <label htmlFor="hotelDescription" className="form-label">Hotel Description</label>
-          <textarea
-            id="hotelDescription"
-            className="form-control"
-            value={hotelDescription}
-            onChange={(e) => setHotelDescription(e.target.value)}
-            required
-          />
+          <textarea id="hotelDescription" className="form-control" value={hotelDescription} onChange={(e) => setHotelDescription(e.target.value)} required />
         </div>
-
         <div className="mb-3">
           <label htmlFor="hotelImage" className="form-label">Hotel Image</label>
-          <input
-            id="hotelImage"
-            type='file'
-            className="form-control"
-            onChange={uploadImage}
-            required
-          />
-          <img src={myImage} />
+          <input id="hotelImage" type='file' className="form-control" onChange={uploadImage} required />
+          {myImage && <img src={myImage} alt="Hotel Preview" className="img-preview" />}
         </div>
-
         <div>
-          
-          <button
-            type="button"
-            className="btn btn-danger me-2"
-            onClick={() => navigate('/hotel-profile/hotels')} // Cancel and go back to the Hotels list
-          >
-            Cancel
-          </button>
-          <button type="submit" className="btn btn-success">Add Hotel</button>
+          <button type="button" className="custom-btn-red me-2" onClick={() => navigate('/hotel-profile/hotels')}>Cancel</button>
+          <button type="submit" className="custom-btn-green">Add Hotel</button>
         </div>
       </form>
     </div>

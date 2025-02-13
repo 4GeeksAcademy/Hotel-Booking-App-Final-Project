@@ -1,89 +1,335 @@
-/* ---- Personal Info Styles ---- */
-
-.personal-info-container {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #fff; /* White background for form */
-  border-radius: 8px;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.personal-info-container h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #343a40; /* Dark gray for title */
-}
-
-.personal-info-container form {
+/* User Profile Styles */
+.user-profile {
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  font-family: "Doppio One", serif;
 }
 
-.personal-info-container label {
+/* User Profile Header */
+.user-profile-header {
+  background-color: #30728A;
+  background-image: url("https://www.transparenttextures.com/patterns/swirl.png");
+  background-repeat: repeat;
+  background-size: 70px 70px;
+  filter: contrast(1.2);
+  color: #ffffff;
+  font-size: 20px;
   font-weight: bold;
-  color: #495057; /* Bootstrap's default text color */
+  padding: 15px 20px;
+  width: 100%;
+  text-align: center;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  z-index: -1;
 }
 
-.personal-info-container input {
-  border: 1px solid #ced4da; /* Light border for input fields */
-  border-radius: 5px;
-  padding: 10px;
-  font-size: 1rem;
+/* Layout */
+.user-profile .d-flex {
+  display: flex;
 }
 
-.personal-info-container input:disabled {
-  background-color: #e9ecef; /* Light gray background for disabled inputs */
-  color: #6c757d; /* Muted text for disabled inputs */
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #ffffff;
 }
 
-.personal-info-container .btn {
-  padding: 10px 20px;
-  font-size: 1rem;
+/* Buttons */
+.custom-btn-yellow {
+  background: #FFC107;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
   font-weight: bold;
-  border-radius: 5px;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-size: 0.80rem;
 }
 
-.personal-info-container .btn-warning {
-  background-color: #ffc107; /* Yellow for edit button */
-  border-color: #ffc107;
-  color: #fff;
+.custom-btn-yellow:hover {
+  background: linear-gradient(45deg, #b38f00, #FFD700);
+  transform: scale(1.05);
 }
 
-.personal-info-container .btn-warning:hover {
-  background-color: #e0a800;
-  border-color: #d39e00;
+.custom-btn-green {
+  background: #28a745;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-size: 0.80rem;
 }
 
-.personal-info-container .btn-secondary {
-  background-color: #6c757d; /* Bootstrap's secondary color */
-  border-color: #6c757d;
-  color: #fff;
+.custom-btn-green:hover {
+  background: linear-gradient(45deg, #1e7e34, #34d058);
+  transform: scale(1.05);
 }
 
-.personal-info-container .btn-secondary:hover {
-  background-color: #5a6268;
-  border-color: #545b62;
+/* User Profile Styles */
+.user-profile {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-family: "Doppio One", serif;
 }
 
-.personal-info-container .btn-success {
-  background-color: #28a745; /* Green for save button */
-  border-color: #28a745;
-  color: #fff;
+/* User Profile Header */
+.user-profile-header {
+  background-color: #30728A;
+  background-image: url("https://www.transparenttextures.com/patterns/swirl.png");
+  background-repeat: repeat;
+  background-size: 70px 70px;
+  filter: contrast(1.2);
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 15px 20px;
+  width: 100%;
+  text-align: center;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
 }
 
-.personal-info-container .btn-success:disabled {
-  background-color: #c3e6cb; /* Light green for disabled button */
-  border-color: #c3e6cb;
-  color: #6c757d; /* Muted text */
+/* Layout */
+.user-profile .d-flex {
+  display: flex;
 }
 
-/* Profile Picture */
-.personal-info-container .rounded-circle {
-  background-color: #dee2e6; /* Light gray for placeholder */
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #ffffff;
+}
+
+/* Profile Image */
+.profile-image {
   width: 100px;
   height: 100px;
-  margin-bottom: 20px;
+  object-fit: cover;
+  cursor: pointer;
 }
 
+/* Buttons */
+.custom-btn-yellow {
+  background: #FFC107;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-size: 0.80rem;
+}
+
+.custom-btn-yellow:hover {
+  background: linear-gradient(45deg, #b38f00, #FFD700);
+  transform: scale(1.05);
+}
+
+.custom-btn-green {
+  background: #28a745;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-size: 0.80rem;
+}
+
+.custom-btn-green:hover {
+  background: linear-gradient(45deg, #1e7e34, #34d058);
+  transform: scale(1.05);
+}
+
+/* Favorite Hotels Page Styles */
+.content-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #30728A;
+}
+
+.hotel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.hotel-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hotel-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.hotel-info {
+  font-size: 14px;
+  color: #555;
+}
+
+.hotel-description {
+  font-size: 14px;
+  color: #777;
+}
+
+.empty-message {
+  text-align: center;
+  color: #777;
+  font-size: 16px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-dialog {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.custom-btn-grey {
+  background: #484848; 
+  border: none;
+  color: white;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-size: 0.80rem;
+}
+
+.custom-btn-grey:hover {
+  background: linear-gradient(45deg, #00131a, #898787);
+  transform: scale(1.05);
+  color: #ffffff; 
+}
+
+.custom-btn-red {
+  background: #a22020;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-size: 0.80rem;
+}
+
+.custom-btn-red:hover {
+  background: linear-gradient(45deg, #00131a, #cb0000);
+  transform: scale(1.05);
+  color: #ffffff; 
+}
+/* Stay History Page Styles */
+.stay-history-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #30728A;
+}
+
+.stay-card {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+}
+
+.stay-card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.stay-card-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.stay-info {
+  font-size: 14px;
+  color: #555;
+}
+
+.stay-contact {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.no-contact {
+  display: block;
+  color: #777;
+  font-size: 14px;
+  text-align: center;
+}
+
+.empty-message {
+  text-align: center;
+  color: #777;
+  font-size: 16px;
+}
+
+.loading-container {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 16px;
+  color: #777;
+}

@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../../store/appContext";
+import "../../../styles/userProfile.css";
 
 const PersonalInfo = () => {
-  const { actions, store } = useContext(Context); // Access store and actions from flux
-  const [isEditable, setIsEditable] = useState(false); // State to manage editability
-  const [profileImage, setProfileImage] = useState(""); // Store profile image URL
+  const { actions, store } = useContext(Context);
+  const [isEditable, setIsEditable] = useState(false);
+  const [profileImage, setProfileImage] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     last_name: "",
@@ -17,7 +18,7 @@ const PersonalInfo = () => {
 
   useEffect(() => {
     const loadUserInfo = async () => {
-      const personalInfo = await actions.fetchPersonalInfo(); // Fetch personal info from backend
+      const personalInfo = await actions.fetchPersonalInfo();
       if (personalInfo) {
         setFormData({
           name: personalInfo.name,
@@ -26,22 +27,20 @@ const PersonalInfo = () => {
           email: personalInfo.email,
           country: personalInfo.country || "",
           language: personalInfo.language || "",
-          profile_image: personalInfo.profile_image || "", // Load existing profile image
+          profile_image: personalInfo.profile_image || "",
         });
 
-        setProfileImage(personalInfo.profile_image || ""); // Update profile image state
+        setProfileImage(personalInfo.profile_image || "");
       }
     };
 
     loadUserInfo();
   }, []);
 
-  // Toggle edit mode
   const toggleEdit = () => {
     setIsEditable((prevState) => !prevState);
   };
 
-  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -50,7 +49,6 @@ const PersonalInfo = () => {
     }));
   };
 
-  // Function to upload profile image
   const uploadImage = async (e) => {
     try {
       const file = e.target.files[0];
@@ -62,7 +60,6 @@ const PersonalInfo = () => {
       const formData = new FormData();
       formData.append("image", file);
 
-      // Ensure the backend URL is correct
       const response = await fetch(`${process.env.BACKEND_URL}/api/upload`, {
         method: "POST",
         body: formData,
@@ -75,53 +72,41 @@ const PersonalInfo = () => {
       }
 
       const data = await response.json();
-      console.log("Uploaded image:", data);
-
-      // Update the profile image state
       setProfileImage(data.image_url);
       setFormData((prevState) => ({
         ...prevState,
-        profile_image: data.image_url, // Update form data to save it later
+        profile_image: data.image_url,
       }));
     } catch (error) {
       console.error("Error in uploadImage:", error);
     }
   };
 
-  // Handle Save Changes button click
   const handleSaveChanges = async () => {
     console.log("🚀 Saving with data:", {
-        ...formData,
-        profile_image: profileImage,  // ✅ Ensure image is included
+      ...formData,
+      profile_image: profileImage,
     });
 
     const success = await actions.savePersonalInfo({
-        ...formData,
-        profile_image: profileImage,  // ✅ Ensure this is included
+      ...formData,
+      profile_image: profileImage,
     });
 
     if (success) {
-        setIsEditable(false); // Exit edit mode
+      setIsEditable(false);
     }
-};
-
-
-
-  
+  };
 
   return (
     <div className="content container mt-4">
-      {/* Header */}
       <h2 className="text-center mb-4">Personal Info</h2>
-
-      {/* Profile Picture */}
       <div className="d-flex justify-content-center mb-4">
         <label htmlFor="profile-upload" className="position-relative">
           <img
-            src={profileImage || "https://via.placeholder.com/100"} // Default image if none
+            src={profileImage || "https://via.placeholder.com/100"}
             alt="Profile"
-            className="rounded-circle"
-            style={{ width: "100px", height: "100px", objectFit: "cover", cursor: isEditable ? "pointer" : "default" }}
+            className="rounded-circle profile-image"
           />
           {isEditable && (
             <input
@@ -129,14 +114,12 @@ const PersonalInfo = () => {
               id="profile-upload"
               accept="image/*"
               onChange={uploadImage}
-              style={{ display: "none" }}
+              className="d-none"
             />
           )}
         </label>
       </div>
-
-      {/* User Info Form */}
-      <form className="w-100" style={{ maxWidth: "800px", margin: "0 auto" }}>
+      <form className="user-info-form">
         <div className="row mb-3">
           <div className="col-md-6">
             <label className="form-label">First Name</label>
@@ -186,13 +169,11 @@ const PersonalInfo = () => {
           </div>
         </div>
       </form>
-
-      {/* Buttons */}
-      <div className="d-flex justify-content-end mt-4" style={{ maxWidth: "800px", margin: "0 auto" }}>
-        <button className={`btn ${isEditable ? "btn-secondary" : "btn-warning"} me-2`} onClick={toggleEdit}>
+      <div className="d-flex justify-content-end mt-4">
+        <button className={`custom-btn-yellow me-2`} onClick={toggleEdit}>
           {isEditable ? "Cancel" : "Edit Info"}
         </button>
-        <button className="btn btn-success" disabled={!isEditable} onClick={handleSaveChanges}>
+        <button className="custom-btn-green" disabled={!isEditable} onClick={handleSaveChanges}>
           Save Changes
         </button>
       </div>
