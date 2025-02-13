@@ -81,7 +81,7 @@ export const LoginAccount = () => {
                         </div>
 
                     </div>
-                    <div id="loginMessage" className="col-sm-auto d-flex justify-content-center mt-0 p-0 mb-0">
+                    <div id="loginMessage" className="col-sm-auto d-flex justify-content-center mt-0 p-0 mb-4">
                         <p>Please, log in</p>
                     </div>
                 </div>
@@ -95,11 +95,11 @@ export const LoginAccount = () => {
                             <div class="invalid-feedback"></div>
                         </div>
 
-                        <div className=" row mt-4 mb-4 d-flex justify-content-center">
+                        <div className=" row mt-4 mb-5 d-flex justify-content-center">
                             <input type="password" className="InputData min-width-custom w-50 form-control" placeholder="Password" id="loginInputPass" name="password"
                                 value={data.password} onChange={inpuntHandling}
                             />
-                            <div class="invalid-feedback"></div>
+                            <div class="invalid-feedback mb-5"></div>
                         </div>
 
                         {/* Botones de login y de perdida de contraseña */}
@@ -116,7 +116,7 @@ export const LoginAccount = () => {
                         </div>
                     </form>
 
-                    <div className="d-flex justify-content-center">
+                    <div className="d-flex justify-content-center mb-4">
                         <div className="w-25 mt-5 d-flex justify-content-center">
                             <GoogleLogin
                                 onSuccess={credentialResponse => {

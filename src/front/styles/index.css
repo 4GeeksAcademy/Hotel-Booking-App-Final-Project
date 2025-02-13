@@ -385,6 +385,7 @@
     border: solid;
     border-radius: 20px;
     border-width: 2px;
+    margin-bottom: 20px;
 }
 
 #botonLogin {
@@ -395,6 +396,7 @@
 #botonForgotPassword {
     min-width: 230px;
     max-width: 230px;
+    margin-bottom: 20px;
 }
 
 #sereniaPageTitleLogin {
