@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import "../../styles/footer.css";
 
 export const Footer = () => (
@@ -10,8 +9,8 @@ export const Footer = () => (
 				<i className="bi bi-envelope me-2"></i>
 				<span>support@sereniahotels.com</span>
 			</p>
-			<p className="app-name FontDesign fw-bold mb-0">Hotel Booking App</p>
-			<hr className="bg-light my-4" />
+			<p className="app-name fw-bold mb-0">Hotel Booking App</p>
+			<hr className="bg-light my-4 w-50 mx-auto" />
 			<p className="small mb-0">&copy; 2025 Serenia Hotels. All rights reserved.</p>
 
 		</div>
