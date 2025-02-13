@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../../store/appContext";
 import "../../../styles/userProfile.css";
+import { Navigate } from "react-router-dom";
 
 const PersonalInfo = () => {
   const { actions, store } = useContext(Context);
@@ -34,7 +35,10 @@ const PersonalInfo = () => {
       }
     };
 
+    // if (shouldReload) {
     loadUserInfo();
+    //   setShouldReload(false); // Reset reload flag after loading data
+    // }
   }, []);
 
   const toggleEdit = () => {
@@ -97,7 +101,9 @@ const PersonalInfo = () => {
       setIsEditable(false);
     }
   };
-
+  if (!store.currentUser) {
+    return <Navigate to={"/login"} />
+  }
   return (
     <div className="content container mt-4">
       <h2 className="text-center mb-4">Personal Info</h2>

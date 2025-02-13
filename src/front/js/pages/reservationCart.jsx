@@ -3,6 +3,7 @@ import { Context } from "../store/appContext";
 import moment from "moment";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import Swal from 'sweetalert2';
+import { Navigate } from "react-router-dom";
 
 export const ReservationCart = () => {
     const { store, actions } = useContext(Context);
@@ -55,7 +56,9 @@ export const ReservationCart = () => {
     if (loading) {
         return <div className="container text-center mt-4"><p><i className="fas fa-spinner fa-spin"></i> Loading reservations...</p></div>;
     }
-
+    if (!store.currentUser) {
+        return <Navigate to={"/login"} />
+    }
     // Filtrar solo las reservas pendientes
     const pendingReservations = reservations.filter(reservation => !reservation.is_paid);
 
@@ -82,9 +85,9 @@ export const ReservationCart = () => {
                                     <div className="card-body">
                                         <div className="d-flex justify-content-between mb-3">
                                             <h5 className="card-title fs-5 fs-md-5 text-dark"><strong>Reservation #{index + 1}</strong></h5>
-                                            <span className={`badge fs-6 ${reservation.is_paid ? 'bg-success' : 'bg-warning'}`}>
+                                            <div className={`fs-6 rounded p-1 ${reservation.is_paid ? 'bg-success' : 'bg-warning'}`}>
                                                 {reservation.is_paid ? 'Paid' : 'Pending Payment'}
-                                            </span>
+                                            </div>
                                         </div>
 
                                         <div className="mb-3">
@@ -93,13 +96,13 @@ export const ReservationCart = () => {
                                             <p className="fs-7"><strong>Payment Amount:</strong> ${reservation.stay_package.price}</p>
                                         </div>
 
-                                        <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4">
+                                        <div className="d-flex flex-column w-50 justify-content-between align-items-center mt-4" style={{ minWidth: "200px" }}>
 
-                                            <button className="btn custom-btn-red btn-lg mb-2 mb-md-0 w-100 w-md-auto" onClick={() => actions.handleDeleteReservation(reservation.id_reservation)}>
+                                            <button className="btn custom-btn-red btn-lg mb-2 w-100 py-3" onClick={() => actions.handleDeleteReservation(reservation.id_reservation)}>
                                                 <i className="fas fa-trash-alt me-2"></i>DELETE
                                             </button>
 
-                                            <div className="w-100 w-md-auto mt-2 mt-md-0">
+                                            <div className="w-100 mt-1">
                                                 <PayPalButtons
                                                     createOrder={(data, actions) => {
                                                         return actions.order.create({

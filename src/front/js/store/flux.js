@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			currentUser: null,
+			currentUser: {},
 			userHotels: [],
 			message: null,
 			hotels: [],
@@ -96,10 +96,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			// Fetch personal information for the PersonalInfo page
 			fetchPersonalInfo: async () => {
 				const token = localStorage.getItem("user_session"); // Assuming the token is stored here
-				if (!token) {
-					console.error("No token found!");
-					return null;
-				}
+				const actions = getActions()
 				try {
 					const response = await fetch(`${process.env.BACKEND_URL}/api/personal-info`, {
 						headers: {
@@ -107,6 +104,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 						}
 					});
 					if (!response.ok) {
+						if (response.status == 401) {
+							actions.logOutAccount()
+						}
 						throw new Error("Failed to fetch personal info");
 					}
 					const data = await response.json();
@@ -284,8 +284,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 						// await getActions().loadUserData();
 
 						return data;
+					} else {
+						setStore({ currentUser: null })
 					}
 				} catch (error) {
+					setStore({ currentUser: null })
 					console.log(error);
 					return error;
 				}
@@ -481,11 +484,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			// Obtener las reservas de los usuarios en el carrito
 			getUserReservations: async () => {
+				const actions = getActions()
 				const token = localStorage.getItem("user_session"); // Assuming the token is stored here
-				if (!token) {
-					console.error("No token found!");
-					return false;
-				}
 				try {
 					const response = await fetch(process.env.BACKEND_URL + "api/user/reservations", {
 						method: "GET",
@@ -494,7 +494,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 							Authorization: `Bearer ${token}`
 						},
 					});
-
+					if (response.status == 401) {
+						actions.logOutAccount()
+						return null
+					}
 					const data = await response.json();
 					console.log('Datos de reservas:', data);  // Para depurar la respuesta
 					console.log('Usuario:', token);
