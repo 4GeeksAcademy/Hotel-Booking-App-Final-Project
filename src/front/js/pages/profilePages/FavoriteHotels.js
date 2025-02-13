@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../../store/appContext";
+import { Navigate } from "react-router-dom";
 
 const FavoriteHotels = () => {
   const { store, actions } = useContext(Context);
