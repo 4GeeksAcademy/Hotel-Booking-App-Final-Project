@@ -1,31 +1,17 @@
-#welcomePageTitleLogin{
-    font-size: 7vw;
+#sereniaPageTitleLogin {
+    font-size: 3rem;
     font-weight: bold;
-    Color: rgb(0,0,0)
+    color: #30728A;
 }
 
-#sereniaPageTitleLogin{
-    font-size:3rem;
-    font-weight:bold; 
-    color:#30728A;
-}
-
-#loginMessage{
-    font-weight:bold; 
-    color:#B9B9B9;
-}
-
-.loginInputData {
-    min-width: 14rem;
-    width: 30vw;
-    border:solid; 
-    border-radius: 20px; 
-    border-width:2px;
+#loginMessage {
+    font-weight: bold;
+    color: #B9B9B9;
 }
 
 #botonLogin {
-    min-width:230px;
-    max-width:230px;
+    min-width: 230px;
+    max-width: 230px;
     border: none;
     height: 40px;
     border-radius: 40px;
@@ -33,15 +19,15 @@
 }
 
 #botonForgotPassword {
-    min-width:230px;
-    max-width:230px;
-    border: none; 
+    min-width: 230px;
+    max-width: 230px;
+    border: none;
     height: 40px;
-    border-radius: 40px; 
-    background-color:#484848;
+    border-radius: 40px;
+    background-color: #484848;
 }
 
-#customMarginLogin{
+#customMarginLogin {
     margin-top: 15vh;
     padding: 35px;
 }

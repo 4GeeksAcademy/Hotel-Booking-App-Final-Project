@@ -4,16 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import "../../styles/login.css"
 
-
-
-
-
 export const LoginAccount = () => {
     const { store, actions } = useContext(Context);
     let navigate = useNavigate()
     let response = {}
-
-
 
     useEffect(() => {
         store.currentUser ? navigate("/") : console.log("user error")
@@ -24,7 +18,6 @@ export const LoginAccount = () => {
         username: "",
         password: "",
     });
-
 
     //Verifying user data
     const loginUserHandling = async (e) => {
@@ -55,13 +48,13 @@ export const LoginAccount = () => {
     return (
         <>
             <GoogleOAuthProvider clientId="168580669100-kncvlspb1adg5clh58ne7if2sbo1ocrm.apps.googleusercontent.com">
-                <div className='col-xs-auto container-fluid mt-0' >
+                <div className='col-xs-auto container-fluid mt-0 FontDesign'>
                     <div className="row d-flex justify-content-center mt-5 mb-0 pb-0">
 
-                        <div id="welcomePageTitleLogin" className="d-flex justify-content-center col-xs-12 col-md-auto">
-                            <div >Welcome to&nbsp;</div> <div className="colorTitle">Serenia</div>
+                        <div className="d-flex justify-content-center col-xs-12 col-md-auto">
+                            <span id="welcomePageTitleLogin">Welcome to&nbsp;</span>
+                            <span className="colorTitle">Serenia</span>
                         </div>
-
 
 
                     </div>
@@ -71,16 +64,16 @@ export const LoginAccount = () => {
                 </div>
 
 
-                <div className='col-xs-auto container-fluid w-100 border-secondary mt-0' id="customMarginLogin">
+                <div className='FontDesign col-xs-auto container-fluid w-100 border-secondary mt-0' id="customMarginLogin">
                     <form onSubmit={loginUserHandling}>
                         <div className=" row mt-1 mb-4 d-flex justify-content-center">
-                            <input type="text" className="loginInputData col-sm-auto form-control" placeholder="Enter your username" id="loginInputUser" name="username"
+                            <input type="text" className="InputData min-width-custom w-25 col-sm-auto form-control" placeholder="Enter your username" id="loginInputUser" name="username"
                                 value={data.username} onChange={inpuntHandling} />
                             <div class="invalid-feedback"></div>
                         </div>
 
                         <div className=" row mt-4 mb-4 d-flex justify-content-center">
-                            <input type="password" className="loginInputData form-control" placeholder="Enter your password" id="loginInputPass" name="password"
+                            <input type="password" className="InputData min-width-custom w-25 form-control" placeholder="Enter your password" id="loginInputPass" name="password"
                                 value={data.password} onChange={inpuntHandling}
                             />
                             <div class="invalid-feedback"></div>
