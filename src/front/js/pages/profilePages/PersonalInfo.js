@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../../store/appContext";
+import { Navigate } from "react-router-dom";
 
 const PersonalInfo = () => {
   const { actions, store } = useContext(Context); // Access store and actions from flux
@@ -31,7 +32,7 @@ const PersonalInfo = () => {
     };
 
     // if (shouldReload) {
-      loadUserInfo();
+    loadUserInfo();
     //   setShouldReload(false); // Reset reload flag after loading data
     // }
   }, []);
@@ -59,7 +60,9 @@ const PersonalInfo = () => {
       setShouldReload(true); // Trigger reload of user data
     }
   };
-
+  if (!store.currentUser) {
+    return <Navigate to={"/login"} />
+  }
   return (
     <div className="content container mt-4">
       {/* Header */}
