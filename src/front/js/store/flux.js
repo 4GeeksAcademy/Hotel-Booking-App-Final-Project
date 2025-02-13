@@ -16,6 +16,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			reservations: [],
 			signupData: {},
 			recovery_mail: [],
+			hotelDetails: [],
 			demo: [
 				{
 					title: "FIRST",

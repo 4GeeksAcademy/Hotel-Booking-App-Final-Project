@@ -110,6 +110,9 @@ export const Search = () => {
     //console.log(store.hotels)
 	return(
 		<>	
+		<div>
+
+	
 			{/*Busqueda de hoteles */}
 			<div className="container d-flex justify-content-center">
 				<form className= "d-flex flex-column justify-content-center" onSubmit={packageSearchFilter}>
@@ -291,7 +294,10 @@ export const Search = () => {
 																):  false) : false
 															} 
 																
-															<button className="btn custom-btn detailsButton ms-auto mb-2">
+															<button className="btn custom-btn detailsButton ms-auto mb-2" onClick={() => {
+																navigate("/details")
+																store.hotelDetails = item
+															}}>
 																View details
 															</button>
 														</div>
@@ -313,7 +319,7 @@ export const Search = () => {
 					</div>
 				</div>
 			</div>
-			
+		</div>
 		</>
 		
 	)

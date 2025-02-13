@@ -19,7 +19,9 @@ html, body {
 
 .footer {
     background-color: #40788c;
+    padding: 20px 0;
     width: 100%;
+    position: relative;
     margin-top: auto; 
 }
 
