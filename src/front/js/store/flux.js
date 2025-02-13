@@ -150,9 +150,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("No token found!");
 					return false;
 				}
-			
+
 				console.log("🚀 Sending updated hotel info:", formData);
-			
+
 				try {
 					const response = await fetch(`${process.env.BACKEND_URL}/api/hotel-personal-info`, {
 						method: "PUT",
@@ -162,11 +162,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 						},
 						body: JSON.stringify(formData),
 					});
-			
+
 					if (!response.ok) {
 						throw new Error("Failed to update hotel personal info");
 					}
-			
+
 					const data = await response.json();
 					console.log("✅ Hotel personal info updated:", data);
 					return true;
@@ -175,7 +175,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return false;
 				}
 			},
-			
+
 
 
 
@@ -446,13 +446,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("❌ No token found!");
 					return false;
 				}
-			
+
 				console.log("🚀 Sending updated info to backend:", formData); // ✅ Debugging log
-			
+
 				if (!formData.profile_image) {
 					console.warn("⚠️ WARNING: profile_image is missing before sending request!");
 				}
-			
+
 				try {
 					const response = await fetch(`${process.env.BACKEND_URL}/api/user/update`, {
 						method: "PUT",
@@ -462,25 +462,25 @@ const getState = ({ getStore, getActions, setStore }) => {
 						},
 						body: JSON.stringify(formData),
 					});
-			
+
 					if (!response.ok) {
 						throw new Error("❌ Failed to update personal info");
 					}
-			
+
 					const data = await response.json();
 					console.log("✅ Personal info updated successfully:", data); // ✅ Debugging log
-			
+
 					setStore({ personalInfo: { ...getStore().personalInfo, ...data } });
-			
+
 					return true;
 				} catch (error) {
 					console.error("❌ Error updating personal info:", error);
 					return false;
 				}
 			},
-			
-			
-			
+
+
+
 
 			// Obtener las reservas de los usuarios en el carrito
 			getUserReservations: async () => {
@@ -1323,44 +1323,44 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				}
 			}
-			},
+		},
 
-			/*getting the paid reservations only */
+		/*getting the paid reservations only */
 
-			getPaidReservations: async () => {
-				const token = localStorage.getItem("user_session");
-				if (!token) {
-					console.error("No token found!");
-					return false;
+		getPaidReservations: async () => {
+			const token = localStorage.getItem("user_session");
+			if (!token) {
+				console.error("No token found!");
+				return false;
+			}
+			try {
+				// Fetch all reservations (pending + paid)
+				const response = await fetch(`${process.env.BACKEND_URL}api/user/reservations`, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`
+					},
+				});
+
+				const data = await response.json();
+				console.log('📌 All User Reservations:', data);
+
+				if (response.ok) {
+					// ✅ Filter out only PAID reservations
+					const paidReservations = data.reservations.filter(reservation => reservation.is_paid);
+					setStore({ paidReservations });
+					console.log("✅ Stored only PAID reservations in Flux:", paidReservations);
+				} else {
+					console.error("❌ Error fetching reservations:", data.error || 'Unknown error');
 				}
-				try {
-					// Fetch all reservations (pending + paid)
-					const response = await fetch(`${process.env.BACKEND_URL}api/user/reservations`, {
-						method: "GET",
-						headers: {
-							"Content-Type": "application/json",
-							Authorization: `Bearer ${token}`
-						},
-					});
-			
-					const data = await response.json();
-					console.log('📌 All User Reservations:', data);
-			
-					if (response.ok) {
-						// ✅ Filter out only PAID reservations
-						const paidReservations = data.reservations.filter(reservation => reservation.is_paid);
-						setStore({ paidReservations });
-						console.log("✅ Stored only PAID reservations in Flux:", paidReservations);
-					} else {
-						console.error("❌ Error fetching reservations:", data.error || 'Unknown error');
-					}
-				} catch (error) {
-					console.error("❌ Error in request:", error);
-				}
-			},
-			
-		}
-	};
+			} catch (error) {
+				console.error("❌ Error in request:", error);
+			}
+		},
+
+	}
+};
 
 
 
