@@ -3,6 +3,7 @@ import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import "../../styles/login.css"
+import Swal from "sweetalert2";
 
 export const LoginAccount = () => {
     const { store, actions } = useContext(Context);
@@ -23,9 +24,17 @@ export const LoginAccount = () => {
     const loginUserHandling = async (e) => {
         e.preventDefault()
         let response = await actions.loginAccount(data.username, data.password)
-        //console.log(response)
-        store.currentUser ? navigate("/") : alert(response.msg)
-    }
+        if (response && store.currentUser) {
+            navigate("/");
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Invalid credentials, please try again!',
+            });
+        }
+    };
+    // store.currentUser ? navigate("/") : alert(response.msg)
 
     //getting the user values
     const inpuntHandling = e => {
@@ -37,14 +46,29 @@ export const LoginAccount = () => {
             }));
         //console.log(data);
     }
-
     const handleGoogleLogin = async (credentialResponse) => {
-        console.log(credentialResponse);
-        const email_data = await actions.getGoogleInformation(credentialResponse)
-        const login = await actions.loginGoogleAccount(email_data)
-        store.currentUser ? navigate("/") : alert("User is not registered")
-    }
-
+        try {
+            console.log(credentialResponse);
+            const email_data = await actions.getGoogleInformation(credentialResponse)
+            const login = await actions.loginGoogleAccount(email_data)
+            if (store.currentUser) {
+                navigate("/");
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'User not registered',
+                    text: 'Please sign up first.',
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Login Failed',
+                text: 'There was an error logging in with Google.',
+            });
+        }
+    };
+    // store.currentUser ? navigate("/") : alert("User is not registered")
     return (
         <>
             <GoogleOAuthProvider clientId="168580669100-kncvlspb1adg5clh58ne7if2sbo1ocrm.apps.googleusercontent.com">
@@ -56,7 +80,6 @@ export const LoginAccount = () => {
                             <span className="colorTitle">Serenia</span>
                         </div>
 
-
                     </div>
                     <div id="loginMessage" className="col-sm-auto d-flex justify-content-center mt-0 p-0 mb-0">
                         <p>Please, log in</p>
@@ -67,13 +90,13 @@ export const LoginAccount = () => {
                 <div className='FontDesign col-xs-auto container-fluid w-100 border-secondary mt-0' id="customMarginLogin">
                     <form onSubmit={loginUserHandling}>
                         <div className=" row mt-1 mb-4 d-flex justify-content-center">
-                            <input type="text" className="InputData min-width-custom w-25 col-sm-auto form-control" placeholder="Enter your username" id="loginInputUser" name="username"
+                            <input type="text" className="InputData min-width-custom w-50 col-sm-auto form-control" placeholder="Username" id="loginInputUser" name="username"
                                 value={data.username} onChange={inpuntHandling} />
                             <div class="invalid-feedback"></div>
                         </div>
 
                         <div className=" row mt-4 mb-4 d-flex justify-content-center">
-                            <input type="password" className="InputData min-width-custom w-25 form-control" placeholder="Enter your password" id="loginInputPass" name="password"
+                            <input type="password" className="InputData min-width-custom w-50 form-control" placeholder="Password" id="loginInputPass" name="password"
                                 value={data.password} onChange={inpuntHandling}
                             />
                             <div class="invalid-feedback"></div>
@@ -96,7 +119,6 @@ export const LoginAccount = () => {
                     <div className="d-flex justify-content-center">
                         <div className="w-25 mt-5 d-flex justify-content-center">
                             <GoogleLogin
-
                                 onSuccess={credentialResponse => {
                                     handleGoogleLogin(credentialResponse)
                                 }}

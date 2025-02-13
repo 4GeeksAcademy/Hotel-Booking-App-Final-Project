@@ -370,14 +370,14 @@
 /**************************************************************************INICIO DISEÑO LOGIN****************************************************************************************/
 #welcomePageTitleLogin {
     text-align: center;
-    font-size: 50px;
+    font-size: 30px;
     font-weight: bold;
     Color: rgb(0, 0, 0)
 }
 
 .colorTitle {
     font-weight: bold;
-    font-size: 50px;
+    font-size: 30px;
     color: #30728A;
 }
 
@@ -385,6 +385,22 @@
     border: solid;
     border-radius: 20px;
     border-width: 2px;
+}
+
+#botonLogin {
+    min-width: 230px;
+    max-width: 230px;
+}
+
+#botonForgotPassword {
+    min-width: 230px;
+    max-width: 230px;
+}
+
+#sereniaPageTitleLogin {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #30728A;
 }
 
 /**************************************************************************CIERRE DISEÑO LOGIN****************************************************************************************/
