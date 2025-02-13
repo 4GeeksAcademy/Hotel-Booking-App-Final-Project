@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Swal from "sweetalert2";
 import Header from './Header';
 import HotelSidebar from './HotelSidebar';
 import { Context } from '../../store/appContext';
+import "./hotelProfile.css";
 
 const Packages = () => {
   const { actions } = useContext(Context);
@@ -26,8 +28,6 @@ const Packages = () => {
     loadPackages();
   }, []);
 
-
-
   const handleEditClick = (pkg) => {
     setEditingPackageId(pkg.id);
     setEditedPackage({ ...pkg });
@@ -39,46 +39,55 @@ const Packages = () => {
   };
 
   const handleSave = async () => {
+    Swal.fire({
+      title: "Saving...",
+      text: "Please wait while we update the package details.",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
     const success = await actions.updatePackage(editedPackage);
     if (success) {
       setPackages((prev) => prev.map((pkg) => (pkg.id === editedPackage.id ? editedPackage : pkg)));
       setEditingPackageId(null);
+      Swal.fire("Success!", "Package has been updated successfully!", "success");
     } else {
-      alert('Failed to update package. Please try again.');
+      Swal.fire("Error!", "Failed to update package. Please try again.", "error");
     }
   };
 
   return (
-    <div className="d-flex">
+    <div className="hotel-container">
       <HotelSidebar />
-      <div className="flex-grow-1">
+      <div className="hotel-content">
         <Header title="Hotel Packages" />
-        <div className="p-4">
-          <div className="d-flex justify-content-between mb-3">
+        <div className="content-wrapper">
+          <div className="hotel-header">
             <h4>Packages List</h4>
             <button
-              className="btn btn-success"
+              className="custom-btn-green"
               onClick={() => navigate('/hotel-profile/add-package')}
             >
               Add Package
             </button>
           </div>
-          <div className="list-group">
+          <div className="hotel-list">
             {packages.map((pkg, index) => (
-              <div key={pkg.id_hotel_package || index} className="list-group-item">
+              <div key={pkg.id_hotel_package || index} className="hotel-item">
                 <h5>{pkg.package?.hotel_package_name || "No Name"}</h5>
-                <p className="mb-1"><strong>Hotel:</strong> {pkg.package?.hotel.name || "Unknown"}</p>
-                <p className="mb-1"><strong>Country:</strong> {pkg.package?.hotel.country || "Unknown"}</p>
-                <p className="mb-1"><strong>Location:</strong> {pkg.package?.hotel.location || "Unknown"}</p>
-                <p className="mb-1"><strong>Price:</strong> ${pkg.package?.price || "N/A"}</p>
-                <p className="mb-1"><strong>Start Date:</strong> {pkg.package?.start_date || "N/A"}</p>
-                <p className="mb-1"><strong>End Date:</strong> {pkg.package?.end_date || "N/A"}</p>
-                <p className="mb-1"><strong>Description:</strong> {pkg.package?.description || "No Description"}</p>
-                <button className="btn btn-primary mt-2">Edit</button>
+                <p className="hotel-info"><strong>Hotel:</strong> {pkg.package?.hotel.name || "Unknown"}</p>
+                <p className="hotel-info"><strong>Country:</strong> {pkg.package?.hotel.country || "Unknown"}</p>
+                <p className="hotel-info"><strong>Location:</strong> {pkg.package?.hotel.location || "Unknown"}</p>
+                <p className="hotel-info"><strong>Price:</strong> ${pkg.package?.price || "N/A"}</p>
+                <p className="hotel-info"><strong>Start Date:</strong> {pkg.package?.start_date || "N/A"}</p>
+                <p className="hotel-info"><strong>End Date:</strong> {pkg.package?.end_date || "N/A"}</p>
+                <p className="hotel-info"><strong>Description:</strong> {pkg.package?.description || "No Description"}</p>
+                <button className="custom-btn-blue mt-2" onClick={() => handleEditClick(pkg)}>Edit</button>
               </div>
             ))}
           </div>
-
         </div>
       </div>
     </div>

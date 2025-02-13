@@ -1,33 +1,37 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../../store/appContext";
+import "../../../styles/userProfile.css";
 import { Navigate } from "react-router-dom";
 
 const PersonalInfo = () => {
-  const { actions, store } = useContext(Context); // Access store and actions from flux
-  const [isEditable, setIsEditable] = useState(false); // State to manage editability
+  const { actions, store } = useContext(Context);
+  const [isEditable, setIsEditable] = useState(false);
+  const [profileImage, setProfileImage] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     last_name: "",
     username: "",
     email: "",
     country: "",
-    language: ""
+    language: "",
+    profile_image: "",
   });
-  const [shouldReload, setShouldReload] = useState(true); // State to control data reload
 
-  // Fetch user data when the component loads or shouldReload is true
   useEffect(() => {
     const loadUserInfo = async () => {
-      const personalInfo = await actions.fetchPersonalInfo(); // Fetch personal info from backend
+      const personalInfo = await actions.fetchPersonalInfo();
       if (personalInfo) {
         setFormData({
           name: personalInfo.name,
           last_name: personalInfo.last_name,
           username: personalInfo.username,
           email: personalInfo.email,
-          country: personalInfo.country || "", // Default value if not present
-          language: personalInfo.language || "" // Default value if not present
+          country: personalInfo.country || "",
+          language: personalInfo.language || "",
+          profile_image: personalInfo.profile_image || "",
         });
+
+        setProfileImage(personalInfo.profile_image || "");
       }
     };
 
@@ -37,27 +41,64 @@ const PersonalInfo = () => {
     // }
   }, []);
 
-  // Toggle edit mode
   const toggleEdit = () => {
     setIsEditable((prevState) => !prevState);
   };
 
-  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  // Handle Save Changes button click
+  const uploadImage = async (e) => {
+    try {
+      const file = e.target.files[0];
+      if (!file) {
+        console.error("No file selected");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await fetch(`${process.env.BACKEND_URL}/api/upload`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error uploading image:", errorData.error);
+        return;
+      }
+
+      const data = await response.json();
+      setProfileImage(data.image_url);
+      setFormData((prevState) => ({
+        ...prevState,
+        profile_image: data.image_url,
+      }));
+    } catch (error) {
+      console.error("Error in uploadImage:", error);
+    }
+  };
+
   const handleSaveChanges = async () => {
-    // Save the updated formData to the backend
-    const success = await actions.savePersonalInfo(formData);
+    console.log("🚀 Saving with data:", {
+      ...formData,
+      profile_image: profileImage,
+    });
+
+    const success = await actions.savePersonalInfo({
+      ...formData,
+      profile_image: profileImage,
+    });
+
     if (success) {
-      setIsEditable(false); // Exit edit mode
-      setShouldReload(true); // Trigger reload of user data
+      setIsEditable(false);
     }
   };
   if (!store.currentUser) {
@@ -65,19 +106,26 @@ const PersonalInfo = () => {
   }
   return (
     <div className="content container mt-4">
-      {/* Header */}
       <h2 className="text-center mb-4">Personal Info</h2>
-
-      {/* Profile Picture */}
       <div className="d-flex justify-content-center mb-4">
-        <div
-          className="rounded-circle bg-secondary"
-          style={{ width: "100px", height: "100px" }}
-        ></div>
+        <label htmlFor="profile-upload" className="position-relative">
+          <img
+            src={profileImage || "https://via.placeholder.com/100"}
+            alt="Profile"
+            className="rounded-circle profile-image"
+          />
+          {isEditable && (
+            <input
+              type="file"
+              id="profile-upload"
+              accept="image/*"
+              onChange={uploadImage}
+              className="d-none"
+            />
+          )}
+        </label>
       </div>
-
-      {/* User Info Form */}
-      <form className="w-100" style={{ maxWidth: "800px", margin: "0 auto" }}>
+      <form className="user-info-form">
         <div className="row mb-3">
           <div className="col-md-6">
             <label className="form-label">First Name</label>
@@ -126,48 +174,12 @@ const PersonalInfo = () => {
             />
           </div>
         </div>
-        <div className="row mb-3">
-          {/* <div className="col-md-6">
-            <label className="form-label">Country of Residence</label>
-            <input
-              type="text"
-              className="form-control"
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
-              disabled={!isEditable}
-            />
-          </div>
-          <div className="col-md-6">
-            <label className="form-label">Language</label>
-            <input
-              type="text"
-              className="form-control"
-              name="language"
-              value={formData.language}
-              onChange={handleChange}
-              disabled={!isEditable}
-            />
-          </div> */}
-        </div>
       </form>
-
-      {/* Buttons */}
-      <div
-        className="d-flex justify-content-end mt-4"
-        style={{ maxWidth: "800px", margin: "0 auto" }}
-      >
-        <button
-          className={`btn ${isEditable ? "btn-secondary" : "btn-warning"} me-2`}
-          onClick={toggleEdit}
-        >
+      <div className="d-flex justify-content-end mt-4">
+        <button className={`custom-btn-yellow me-2`} onClick={toggleEdit}>
           {isEditable ? "Cancel" : "Edit Info"}
         </button>
-        <button
-          className="btn btn-success"
-          disabled={!isEditable}
-          onClick={handleSaveChanges}
-        >
+        <button className="custom-btn-green" disabled={!isEditable} onClick={handleSaveChanges}>
           Save Changes
         </button>
       </div>
