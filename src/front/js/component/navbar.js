@@ -72,9 +72,6 @@ export const Navbar = () => {
 							{/* Botón de Login si no está logueado */}
 							{(
 								<>
-									<div className="col mb-0 navBar w-100 Dropdown-Setup row d-flex justify-content-start">
-										<p className="col m-auto h-100 fw-none text-light text-end" onClick={() => { navigate("/search") }}> Browse </p>
-									</div>
 									<button
 										className="custom-btn-grey"
 										onClick={() => navigate("/login")}
@@ -92,12 +89,14 @@ export const Navbar = () => {
 							<i className="fa-solid fa-calendar-check"></i>
 						</Link>
 					) : false}
-					<button
-						className="custom-btn-grey"
-						onClick={() => { navigate("/search") }}
-					>
-						Browse
-					</button>
+					{location.pathname === "/" && (
+						<button
+							className={localStorage.getItem("user_session") && store.currentUser ? "custom-btn-grey" : "custom-btn-yellow"}
+							onClick={() => navigate("/search")}
+						>
+							Browse
+						</button>
+					)}
 				</div>
 			</div>
 		</nav >
