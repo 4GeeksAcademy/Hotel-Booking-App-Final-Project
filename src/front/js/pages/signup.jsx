@@ -101,48 +101,54 @@ export const SignUp = () => {
     return (
         <div className="FontDesign container py-5">
             <div className="col-12 col-md-8 col-lg-6 mx-auto">
-                <h2 className="FontDesign text-center fw-bold fs-4">Welcome to <span>Serenia</span></h2>
-                <h5 className="FontDesign text-center fw-bold text-muted fs-5"><strong>Sign Up</strong></h5>
+                <div className="d-flex justify-content-center col-xs-12 col-md-auto">
+                    <span id="welcomePageTitleLogin">Welcome to&nbsp;</span>
+                    <span className="colorTitle">Serenia</span>
+                </div>
+                <div id="loginMessage" className="col-sm-auto d-flex justify-content-center mt-0 p-0 mb-0">
+                    <p>Sign Up</p>
+                </div>
                 <form onSubmit={handleSubmit} className="FontDesign">
                     <h5 className="fs-6 mt-4">Name</h5>
-                    <input type="text" className="form-control rounded-pill" value={name} onChange={(e) => setName(e.target.value)} required />
+                    <input type="text" className="form-control rounded-pill border-2 border-dark" value={name} onChange={(e) => setName(e.target.value)} required />
 
                     <h5 className="fs-6 mt-4">Last Name</h5>
-                    <input type="text" className="form-control rounded-pill" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
+                    <input type="text" className="form-control rounded-pill border-2 border-dark" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
 
                     <h5 className="fs-6 mt-4">Email</h5>
-                    <input type="email" className="form-control rounded-pill" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                    <input type="email" className="form-control rounded-pill border-2 border-dark" value={email} onChange={(e) => setEmail(e.target.value)} required />
 
                     <h5 className="fs-6 mt-4">Username</h5>
-                    <input type="text" className="form-control rounded-pill" value={userName} onChange={(e) => setUserName(e.target.value)} required />
+                    <input type="text" className="form-control rounded-pill border-2 border-dark" value={userName} onChange={(e) => setUserName(e.target.value)} required />
 
                     <h5 className="fs-6 mt-4">Password</h5>
-                    <input type="password" className="form-control rounded-pill" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                    <input type="password" className="form-control rounded-pill border-2 border-dark" value={password} onChange={(e) => setPassword(e.target.value)} required />
 
                     <h5 className="fs-6 mt-4">Confirm Password</h5>
-                    <input type="password" className="form-control rounded-pill" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+                    <input type="password" className="form-control rounded-pill border-2 border-dark" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
 
-                    <h5 className="fs-6 mt-4">Phone Number</h5>
+                    <h5 className="fs-6 mt-4 border-2 border-dark">Phone Number</h5>
                     <PhoneInput
                         country={"us"}
                         value={phoneNumber}
-                        inputClass="form-control rounded-pill"
+                        inputClass="form-control rounded-pill border-2 border-dark" // Aseguramos bordes aquí
+                        buttonClass="border-2 border-dark"
                         onChange={phone => setPhoneNumber(phone)}
                         required
                     />
 
                     <h5 className="fs-6 mt-4">Purpose of registration</h5>
                     <div className="form-check">
-                        <input className="form-check-input" type="radio" name="userTypeOptions" value="cliente" checked={userType === "cliente"} onChange={(e) => setUserType(e.target.value)} required />
+                        <input className="form-check-input border-2 border-dark" type="radio" name="userTypeOptions" value="cliente" checked={userType === "cliente"} onChange={(e) => setUserType(e.target.value)} required />
                         <label className="form-check-label">Client: Book packages.</label>
                     </div>
                     <div className="form-check">
-                        <input className="form-check-input" type="radio" name="userTypeOptions" value="hotel" checked={userType === "hotel"} onChange={(e) => setUserType(e.target.value)} required />
+                        <input className="form-check-input border-2 border-dark" type="radio" name="userTypeOptions" value="hotel" checked={userType === "hotel"} onChange={(e) => setUserType(e.target.value)} required />
                         <label className="form-check-label">Hotel: Publish and manage packages.</label>
                     </div>
 
                     <div className="form-check mt-3">
-                        <input className="form-check-input" type="checkbox" id="termsCheckbox" checked={acceptTerms} onChange={() => setAcceptTerms(!acceptTerms)} />
+                        <input className="form-check-input border-2 border-dark" type="checkbox" id="termsCheckbox" checked={acceptTerms} onChange={() => setAcceptTerms(!acceptTerms)} />
                         <label className="form-check-label" htmlFor="termsCheckbox">
                             I accept the <Link to="/terms">Terms and Conditions</Link>
                         </label>

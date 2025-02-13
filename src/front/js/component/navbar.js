@@ -48,26 +48,23 @@ export const Navbar = () => {
 						<>
 							{/* Botón de funciones de usuario */}
 							{localStorage.getItem("user_session") && (
-								<div className="col mb-0 navBar w-100 Dropdown-Setup row d-flex justify-content-start">
-									<p className="col m-auto h-100 fw-none text-light text-end" onClick={() => { navigate("/search") }}> Browse </p>
-									{/* Mensaje saludando al usuario */}
-									<p className="col m-auto h-100 w-75 fw-none text-light text-end">Hello, {store.currentUser && store.currentUser.name}</p>
-
-									{/* Funciones especificas del usuario a traves del navBar */}
-									<div className="dropdown w-25 h-100 m-auto  d-flex justify-content-start">
+								<div className="d-flex align-items-center gap-3">
+									<p className="m-0 fw-none text-light">Hello, {store.currentUser && store.currentUser.name}</p>
+									<div className="dropdown">
 										<a className="dropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-											<i className="fs-2  fa-solid fa-circle-user text-light"></i>
+											<i className="fs-2 fa-solid fa-circle-user text-light"></i>
 										</a>
-										<ul class="dropdown-menu dropdown-menu-end userProfileButton bg-light">
-											<li><button className="navBarProfileButton text-start w-100 h-100"
-												onClick={handleUserProfile} href="#">User profile</button></li>
+										<ul className="dropdown-menu dropdown-menu-end userProfileButton bg-light">
+											<li>
+												<button className="navBarProfileButton text-start w-100" onClick={handleUserProfile}>User profile</button>
+											</li>
 											<li><hr className="dropdown-divider bg-dark mb-0"></hr></li>
-											<li><button className="navBarProfileButton text-start text-danger mt-0 w-100 h-100"
-												onClick={handleLogOut} href="#">Logout</button></li>
+											<li>
+												<button className="navBarProfileButton text-start text-danger mt-0 w-100" onClick={handleLogOut}>Logout</button>
+											</li>
 										</ul>
 									</div>
 								</div>
-
 							)}
 						</>
 					) : location.pathname == "/login" ? false : (
@@ -95,6 +92,12 @@ export const Navbar = () => {
 							<i className="fa-solid fa-calendar-check"></i>
 						</Link>
 					) : false}
+					<button
+						className="custom-btn-grey"
+						onClick={() => { navigate("/search") }}
+					>
+						Browse
+					</button>
 				</div>
 			</div>
 		</nav >
