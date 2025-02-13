@@ -36,7 +36,7 @@ export const Navbar = () => {
 			<div className="container-fluid d-flex justify-content-between align-items-center ms-5 me-5">
 				<Link to="/" className="SereniaTitle d-flex align-items-center text-light ms-0">
 					<i className="fa-solid fa-location-dot fs-4 me-1"></i>
-					<span className="navbar-brand mb-0 h3 text-light">
+					<span className="navbar-brand mb-0 text-light">
 						Serenia
 					</span>
 				</Link>
@@ -52,6 +52,7 @@ export const Navbar = () => {
 									<p className="col m-auto h-100 fw-none text-light text-end" onClick={() => { navigate("/search") }}> Browse </p>
 									{/* Mensaje saludando al usuario */}
 									<p className="col m-auto h-100 w-75 fw-none text-light text-end">Hello, {store.currentUser && store.currentUser.name}</p>
+
 									{/* Funciones especificas del usuario a traves del navBar */}
 									<div className="dropdown w-25 h-100 m-auto  d-flex justify-content-start">
 										<a className="dropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -78,7 +79,7 @@ export const Navbar = () => {
 										<p className="col m-auto h-100 fw-none text-light text-end" onClick={() => { navigate("/search") }}> Browse </p>
 									</div>
 									<button
-										className="custom-btn-login"
+										className="custom-btn-grey"
 										onClick={() => navigate("/login")}
 									>
 										Login
