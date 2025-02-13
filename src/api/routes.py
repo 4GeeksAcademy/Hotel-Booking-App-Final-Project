@@ -1031,3 +1031,34 @@ def delete_all_reservations():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": "Error deleting reservations", "details": str(e)}), 500
+    
+
+@api.route('/user/update', methods=['PUT'])
+@jwt_required()
+def update_user_profile():
+    username = get_jwt_identity()  # ✅ Get username from token
+    print(f"🚀 Retrieved username from JWT: {username}")  # Debugging log
+
+    user = User.query.filter_by(username=username).first()  # ✅ Query by username
+    if not user:
+        print("❌ ERROR: User not found!")
+        return jsonify({"error": "User not found"}), 404
+
+    data = request.get_json()
+    print("🚀 Received update request:", data)  # ✅ Debugging log
+
+    user.name = data.get("name", user.name)
+    user.last_name = data.get("last_name", user.last_name)
+ 
+
+    if "profile_image" in data:
+        user.profile_image = data["profile_image"]
+        print(f"✅ Updating Profile Image in DB: {user.profile_image}")
+
+    db.session.commit()
+    print("✅ Successfully updated user profile.")
+
+    return jsonify({
+        "message": "Profile updated successfully",
+        "profile_image": user.profile_image
+    }), 200

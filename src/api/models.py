@@ -18,6 +18,7 @@ class User(db.Model):
     phone_number = db.Column(db.String(20), unique=True, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     hotels = db.relationship('Hotel', back_populates='user', lazy=True)  # Relationship to hotels
+    profile_image = db.Column(db.String(255), nullable=True)
         # Campos específicos para usuarios tipo 'hotel'
     
     # faltan las foreign keys, van acá
@@ -42,6 +43,7 @@ class User(db.Model):
             "user_type": self.user_type,
             "phone_number": self.phone_number,
             "is_active": self.is_active,
+            "profile_image": self.profile_image
         }
 
         #Serializar favoritos

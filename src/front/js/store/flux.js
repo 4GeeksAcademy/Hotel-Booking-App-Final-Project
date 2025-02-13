@@ -145,11 +145,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			/*edita el personal information del hotel desde el perfil de hotel */
 			updateHotelPersonalInfo: async (formData) => {
-				const token = localStorage.getItem("user_session"); // Assuming the token is stored here
+				const token = localStorage.getItem("user_session");
 				if (!token) {
 					console.error("No token found!");
 					return false;
 				}
+			
+				console.log("🚀 Sending updated hotel info:", formData);
+			
 				try {
 					const response = await fetch(`${process.env.BACKEND_URL}/api/hotel-personal-info`, {
 						method: "PUT",
@@ -159,19 +162,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 						},
 						body: JSON.stringify(formData),
 					});
-
+			
 					if (!response.ok) {
 						throw new Error("Failed to update hotel personal info");
 					}
-
+			
 					const data = await response.json();
-					console.log("Hotel personal info updated:", data);
-					return true; // Return success
+					console.log("✅ Hotel personal info updated:", data);
+					return true;
 				} catch (error) {
-					console.error("Error updating hotel personal info:", error);
-					return false; // Return failure
+					console.error("❌ Error updating hotel personal info:", error);
+					return false;
 				}
 			},
+			
 
 
 
@@ -434,37 +438,46 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			/*send personal info cliente to API*/
 			savePersonalInfo: async (formData) => {
-				const token = localStorage.getItem("user_session"); // Assuming the token is stored here
+				const token = localStorage.getItem("user_session");
 				if (!token) {
-					console.error("No token found!");
+					console.error("❌ No token found!");
 					return false;
 				}
+			
+				console.log("🚀 Sending updated info to backend:", formData); // ✅ Debugging log
+			
+				if (!formData.profile_image) {
+					console.warn("⚠️ WARNING: profile_image is missing before sending request!");
+				}
+			
 				try {
-					const response = await fetch(`${process.env.BACKEND_URL}/api/personal-info`, {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/user/update`, {
 						method: "PUT",
 						headers: {
 							"Content-Type": "application/json",
-							Authorization: `Bearer ${token}`
+							Authorization: `Bearer ${token}`,
 						},
-						body: JSON.stringify(formData)
+						body: JSON.stringify(formData),
 					});
-
+			
 					if (!response.ok) {
-						throw new Error("Failed to update personal info");
+						throw new Error("❌ Failed to update personal info");
 					}
-
+			
 					const data = await response.json();
-					console.log("Personal info updated successfully:", data);
-
-					// Update the personalInfo in the store
-					setStore({ personalInfo: data });
-
+					console.log("✅ Personal info updated successfully:", data); // ✅ Debugging log
+			
+					setStore({ personalInfo: { ...getStore().personalInfo, ...data } });
+			
 					return true;
 				} catch (error) {
-					console.error("Error updating personal info:", error);
+					console.error("❌ Error updating personal info:", error);
 					return false;
 				}
 			},
+			
+			
+			
 
 			// Obtener las reservas de los usuarios en el carrito
 			getUserReservations: async () => {
@@ -1345,7 +1358,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			
 		}
 	};
-};
+
 
 
 export default getState;
