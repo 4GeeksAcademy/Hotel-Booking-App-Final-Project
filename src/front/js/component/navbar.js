@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
+import { googleLogout } from '@react-oauth/google';
 
 export const Navbar = () => {
 	const { store, actions } = useContext(Context);
@@ -10,6 +11,7 @@ export const Navbar = () => {
 	const handleLogOut = (e) => {
 		e.preventDefault()
 		actions.logOutAccount()
+		googleLogout()
 		navigate("/")
 
 	}

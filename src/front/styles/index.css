@@ -199,15 +199,6 @@
     text-overflow: ellipsis;
 }
 
-.imgPackage  img{
-    height: 100%;
-    border-radius: 20px 0 0 20px; 
-}
-
-.hotelPackageList li img:hover{
-    box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
-}
-
 .detailsButton{
     min-height: 2rem;
     min-width: 8rem;

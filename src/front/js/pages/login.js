@@ -109,6 +109,8 @@ export const LoginAccount = () => {
                                 onError={() => {
                                     console.log('Login Failed');
                                 }}
+
+                                locale="en-US"
                             />
                         </div>
                     </div>

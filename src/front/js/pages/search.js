@@ -2,8 +2,6 @@ import React, { useRef, useContext, useEffect, useState} from "react";
 import "../../styles/home.css";
 import Swal from 'sweetalert2';
 
-import * as maptilersdk from "@maptiler/sdk";
-import "@maptiler/sdk/dist/maptiler-sdk.css";
 
 
 import { useNavigate } from "react-router-dom";
@@ -18,11 +16,8 @@ export const Search = () => {
 	const [rangeTest, setRangeTest] = useState(null)
 
 	//data del mapa
-	const mapContainer = useRef(null);
-	const map = useRef(null);
 	const tokyo = { lng: 139.753, lat: 35.6844 };
 	const zoom = 14;
-	maptilersdk.config.apiKey = 'XI6RmsHtaHLwSaq5qpLM';
 
 	const urlParams = new URLSearchParams(window.location.search);
 
@@ -35,22 +30,6 @@ export const Search = () => {
 				confirmButtonText: 'OK'
 			});
 		};
-
-
-	useEffect(() => {
-		if (map.current) return; // stops map from intializing more than once
-	  
-		map.current = new maptilersdk.Map({
-		  container: mapContainer.current,
-		  style: maptilersdk.MapStyle.STREETS,
-		  center: [tokyo.lng, tokyo.lat],
-		  zoom: zoom
-		});
-		new maptilersdk.Marker({color: "#FF0000"})
-			.setLngLat([139.7525,35.6846])
-			.addTo(map.current);
-	  
-	  }, [tokyo.lng, tokyo.lat, zoom]);
 
 
 	
@@ -267,25 +246,25 @@ export const Search = () => {
 			<div className="searchBackground container-fluid mt-5 pb-5">
 				<div className="hotelPackageList  packageDetails container-fluid d-flex justify-content-start w-100 ms-md-3 mb-5 pb-5">
 					<div className="d-inline-flex flex-column">
-						<div className="row">
-							<div className="col-12 col-md-7">
+						<div className="row justify-content-center">
+							
 								{ filteredData.length > 0 ? filteredData.map((item, index) => {
 								return (
 									<div
 										key={index}
-										className="mt-4 hotel-card"
+										className="col-10 mt-4 hotel-card ps-0 pe-0"
 										>
-										<div className="row w-100">
+										<div className="row w-100 justify-content-sm-center m-0 justify-content-md-start p-0">
 										{/*
 											<div className="col-12 col-md-7 d-flex justify-content-center">
 												<div className="d-inline-flex flex-column">
 													*/}
-													<div className="col-12 col-md-3 imgPackage">
-														<img className="w-100" src={item.hotel.image_url}/>
+													<div className="col-12 col-md-3 p-0 rounded-3 rounded-md-0">
+														<img className="w-100 h-100" src={item.hotel.image_url}/>
 													</div>
 													
 
-													<div className="col-12 col-md-7 overflow-hidden">
+													<div className="col-12 col-md-7 ms-sm-2 ms-md-0 overflow-hidden">
 														<div className="w-100">
 															<div className="fs-1">{item.hotel.name}</div>
 															<div className="fs-4 "><p>{item.hotel_package_name}</p></div>
@@ -299,23 +278,20 @@ export const Search = () => {
 													</div>
 													
 
-													<div className="col-12 col-md-2 text-break mt-auto ">
-														<div className="w-100 d-flex justify-content-sm-center">
+													<div className="col-12 col-md-2 mb-2 mt-auto d-flex justify-content-center">
+														<div className="row">
 															<div className="d-inline-flex flex-column">
-																<div className="row mb-2">
-																	<button className="btn custom-btn detailsButton mb-2 me-2" onClick={() =>{
+																	<button className="w-100 btn custom-btn detailsButton mb-2 me-2" onClick={() =>{
 																		store.currentUser ? handleAddToCart(item): showLoginAlert()
 																		}}> 
 																		Add to cart
 																	</button>
-																	<button className="btn custom-btn detailsButton " onClick={() => {
+																	<button className="w-100 btn custom-btn detailsButton " onClick={() => {
 																	navigate("/details")
 																	store.hotelDetails = item
 																	}}>
 																		View details
 																	</button>
-																</div>
-																
 															</div>		
 														</div>
 													</div>
@@ -328,12 +304,12 @@ export const Search = () => {
 								);
 							}) : <p className="d-flex text-end">There are currently no packages with those details.</p> 
 						}
-						</div>
-							<div className="d-none d-md-flex col-md-5 mt-4 h-100 mb-5  justify-content-center">
+						
+							{/* <div className="d-none d-md-flex col-md-5 mt-4 h-100 mb-5  justify-content-center">
 								<div ref={mapContainer} className="map h-100" />
-							</div>
+							</div> */}
 						</div>	
-						<nav className="col-12 col-md-7 mt-3" aria-label="Page navigation example">
+						<nav className="col-12 mt-3" aria-label="Page navigation example">
 							<ul class="pagination d-flex justify-content-center">
 								<li class="page-item">
 								<a class="page-link" href="#" aria-label="Previous">
