@@ -48,13 +48,13 @@ export const Navbar = () => {
 						<>
 							{/* Botón de funciones de usuario */}
 							{(
-								<div className="col-3 mb-0 navBar w-100 Dropdown-Setup row d-flex justify-content-start">
-									<p className="col m-auto h-100 fw-none text-light text-end" onClick={() => { navigate("/search") }}> Browse </p>
+								<div className="row mb-0 navBar w-100 Dropdown-Setup row d-flex justify-content-start">
+									<p className="col-3 m-auto h-100 fw-none text-light text-end" onClick={() => { navigate("/search") }}> Browse </p>
 									{/* Mensaje saludando al usuario */}
-									<p className="col-4 m-auto h-100 w-75 fw-none text-light text-end">Hello, {store.currentUser && store.currentUser.name}</p>
+									<p className="col-7 m-auto h-100 fw-none text-light text-end">Hello, {store.currentUser && store.currentUser.name}</p>
 
 									{/* Funciones especificas del usuario a traves del navBar */}
-									<div className="col-5 dropdown w-25 h-100 m-auto  d-flex justify-content-start">
+									<div className="col-2 dropdown  h-100 m-auto d-flex justify-content-start">
 										<a className="dropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 											<i className="fs-2  fa-solid fa-circle-user text-light"></i>
 										</a>

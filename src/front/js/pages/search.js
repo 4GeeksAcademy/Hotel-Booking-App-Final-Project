@@ -1,5 +1,6 @@
 import React, { useRef, useContext, useEffect, useState} from "react";
 import "../../styles/home.css";
+import Swal from 'sweetalert2';
 
 import * as maptilersdk from "@maptiler/sdk";
 import "@maptiler/sdk/dist/maptiler-sdk.css";
@@ -24,6 +25,17 @@ export const Search = () => {
 	maptilersdk.config.apiKey = 'XI6RmsHtaHLwSaq5qpLM';
 
 	const urlParams = new URLSearchParams(window.location.search);
+
+
+	const showLoginAlert = () => {
+			Swal.fire({
+				icon: 'warning',
+				title: 'Login Required',
+				text: 'Please log in to make a reservation.',
+				confirmButtonText: 'OK'
+			});
+		};
+
 
 	useEffect(() => {
 		if (map.current) return; // stops map from intializing more than once
@@ -105,16 +117,21 @@ export const Search = () => {
 	const handleAddToCart = async (package_info) => {
 		console.log('entered')
 		await actions.addToCart(package_info)
+		Swal.fire({
+			icon: 'success',
+			title: 'Item added',
+			text: 'The item was successfully added to the cart!',
+			timer: 2000,
+            showConfirmButton: false,
+		});
 	}
 
     //console.log(store.hotels)
 	return(
 		<>	
-		<div>
-
-	
+		<div className="h-auto mb-5">
 			{/*Busqueda de hoteles */}
-			<div className="container d-flex justify-content-center">
+			<div className="container d-flex justify-content-center mt-5">
 				<form className= "d-flex flex-column justify-content-center" onSubmit={packageSearchFilter}>
 							<div className="row searchBarConfig">
 								{/*Por nombre de hotel*/}
@@ -248,7 +265,7 @@ export const Search = () => {
 			
 			{/* Listado de los paquetes */}
 			<div className="searchBackground container-fluid mt-5 pb-5">
-				<div className="hotelPackageList  packageDetails container-fluid d-flex justify-content-start w-100 ms-3 mb-5 ps-0 pb-5">
+				<div className="hotelPackageList  packageDetails container-fluid d-flex justify-content-start w-100 ms-md-3 mb-5 pb-5">
 					<div className="d-inline-flex flex-column">
 						<div className="row">
 							<div className="col-12 col-md-7">
@@ -256,7 +273,7 @@ export const Search = () => {
 								return (
 									<div
 										key={index}
-										className="packageCard d-flex mt-4"
+										className="mt-4 hotel-card"
 										>
 										<div className="row w-100">
 										{/*
@@ -264,14 +281,14 @@ export const Search = () => {
 												<div className="d-inline-flex flex-column">
 													*/}
 													<div className="col-12 col-md-3 imgPackage">
-														<img className="" src={item.hotel.image_url}/>
+														<img className="w-100" src={item.hotel.image_url}/>
 													</div>
 													
 
 													<div className="col-12 col-md-7 overflow-hidden">
 														<div className="w-100">
 															<div className="fs-1">{item.hotel.name}</div>
-															<div className="fs-4 text-nowrap"><p>{item.hotel_package_name}</p></div>
+															<div className="fs-4 "><p>{item.hotel_package_name}</p></div>
 															<div className="fs-4"><i className="fa-solid fa-location-dot"></i> {item.hotel.location}</div>
 															<div className="fs-6"><i className="fa-regular fa-calendar"></i> Starting date: {item.start_date}</div>
 															<div className="fs-6"><i className="fa-solid fa-calendar"></i> Lasts until: {item.end_date}</div>
@@ -282,24 +299,24 @@ export const Search = () => {
 													</div>
 													
 
-													<div className="col-12 col-md-2 text-break mt-auto">
-														<div className="w-100">
-															{store.currentUser ? (store.currentUser.user_type == "cliente"? (<>
-																<button className="btn custom-btn detailsButton mb-2 ms-auto" onClick={() =>{
-																	handleAddToCart(item)
-																	}}> 
-																	Add to cart
-																</button>
-															</>
-																):  false) : false
-															} 
+													<div className="col-12 col-md-2 text-break mt-auto ">
+														<div className="w-100 d-flex justify-content-sm-center">
+															<div className="d-inline-flex flex-column">
+																<div className="row mb-2">
+																	<button className="btn custom-btn detailsButton mb-2 me-2" onClick={() =>{
+																		store.currentUser ? handleAddToCart(item): showLoginAlert()
+																		}}> 
+																		Add to cart
+																	</button>
+																	<button className="btn custom-btn detailsButton " onClick={() => {
+																	navigate("/details")
+																	store.hotelDetails = item
+																	}}>
+																		View details
+																	</button>
+																</div>
 																
-															<button className="btn custom-btn detailsButton ms-auto mb-2" onClick={() => {
-																navigate("/details")
-																store.hotelDetails = item
-															}}>
-																View details
-															</button>
+															</div>		
 														</div>
 													</div>
 
@@ -311,13 +328,31 @@ export const Search = () => {
 								);
 							}) : <p className="d-flex text-end">There are currently no packages with those details.</p> 
 						}
-							</div>
-							<div className="col-md-5 mt-4 h-100">
-								<div ref={mapContainer} className="map" />
+						</div>
+							<div className="d-none d-md-flex col-md-5 mt-4 h-100 mb-5  justify-content-center">
+								<div ref={mapContainer} className="map h-100" />
 							</div>
 						</div>	
+						<nav className="col-12 col-md-7 mt-3" aria-label="Page navigation example">
+							<ul class="pagination d-flex justify-content-center">
+								<li class="page-item">
+								<a class="page-link" href="#" aria-label="Previous">
+									<span aria-hidden="true">&laquo;</span>
+								</a>
+								</li>
+								<li class="page-item"><a class="page-link" href="#">1</a></li>
+								<li class="page-item"><a class="page-link" href="#">2</a></li>
+								<li class="page-item"><a class="page-link" href="#">3</a></li>
+								<li class="page-item">
+								<a class="page-link" href="#" aria-label="Next">
+									<span aria-hidden="true">&raquo;</span>
+								</a>
+								</li>
+							</ul>
+						</nav>
 					</div>
 				</div>
+				
 			</div>
 		</div>
 		</>
