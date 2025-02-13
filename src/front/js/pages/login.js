@@ -80,13 +80,14 @@ export const LoginAccount = () => {
                         </div>
 
                         {/* Botones de login y de perdida de contraseña */}
-                        <div className="col-xs-auto d-flex justify-content-center mt-5">
-                            <button id="botonLogin" className='col-xs-auto ps-4 pe-4' type="submit">
-                                <div className='text-light fw-bold' >Login</div>
+                        <div className="d-flex flex-column align-items-center justify-content-center mt-5">
+                            <button id="botonLogin" className='custom-btn' type="submit">
+                                Login
                             </button>
                         </div>
+
                         <div className="col-12 d-flex justify-content-center">
-                            <button id="botonForgotPassword" className='mt-3 ps-4 pe-4' type="submit" onClick={() => navigate("reset")}>
+                            <button id="botonForgotPassword" className="custom-btn-grey mt-3" type="submit" onClick={() => navigate("reset")}>
                                 <div className='text-light fw-bold'>Forgot your password?</div>
                             </button>
                         </div>
