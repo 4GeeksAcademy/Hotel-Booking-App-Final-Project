@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 
@@ -6,6 +6,7 @@ export const Navbar = () => {
 	const { store, actions } = useContext(Context);
 	const location = useLocation();
 	const navigate = useNavigate();
+	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // Estado para controlar la visibilidad en pantallas pequeñas
 
 	const handleLogOut = (e) => {
 		e.preventDefault();
@@ -26,6 +27,17 @@ export const Navbar = () => {
 		}
 	};
 
+	// Verificar si la ruta está en la lista de exclusión
+	const shouldDisplayMenu =
+		location.pathname !== "/" &&
+		location.pathname !== "/login" &&
+		location.pathname !== "/signup" &&
+		location.pathname !== "/reservationcart" &&
+		location.pathname !== "/search";
+
+	const shouldHideHamburgerMenu =
+		location.pathname === "/login" || location.pathname === "/signup";
+
 	return (
 		<nav className="navbar navbar-expand-lg navBarfooterConfig FontDesign container-fluid p-0">
 			<div className="container-fluid d-flex justify-content-between align-items-center px-4">
@@ -42,14 +54,15 @@ export const Navbar = () => {
 					data-bs-toggle="collapse"
 					data-bs-target="#navbarContent"
 					aria-controls="navbarContent"
-					aria-expanded="false"
+					aria-expanded={isMobileMenuOpen ? "true" : "false"}
 					aria-label="Toggle navigation"
+					onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} // Controlar estado del menú móvil
 				>
 					<i className="fa-solid fa-bars fs-3"></i>
 				</button>
 
 				{/* Contenido del Navbar */}
-				<div className="collapse navbar-collapse" id="navbarContent">
+				<div className={`collapse navbar-collapse ${isMobileMenuOpen ? "show" : ""}`} id="navbarContent">
 					<div className="navbar-nav ms-auto align-items-center gap-3">
 						{/* Usuario logueado */}
 						{localStorage.getItem("user_session") && store.currentUser ? (
@@ -123,6 +136,34 @@ export const Navbar = () => {
 							>
 								Browse
 							</button>
+						)}
+
+						{/* Mostrar las opciones del sidebar solo en pantallas pequeñas */}
+						{isMobileMenuOpen && store.currentUser?.user_type === "hotel" && shouldDisplayMenu && (
+							<>
+								<Link to="/hotel-profile/personal-info" className="nav-link text-light">
+									Personal Info
+								</Link>
+								<Link to="/hotel-profile/hotels" className="nav-link text-light">
+									Hotels
+								</Link>
+								<Link to="/hotel-profile/packages" className="nav-link text-light">
+									Packages
+								</Link>
+							</>
+						)}
+						{isMobileMenuOpen && store.currentUser?.user_type === "cliente" && shouldDisplayMenu && (
+							<>
+								<Link to="/profile/personal-info" className="nav-link text-light">
+									Personal Information
+								</Link>
+								<Link to="/profile/favorite-hotels" className="nav-link text-light">
+									Favorite Hotels
+								</Link>
+								<Link to="/profile/stay-history" className="nav-link text-light">
+									Stay History
+								</Link>
+							</>
 						)}
 					</div>
 				</div>

@@ -6,9 +6,9 @@ import '../../../styles/userProfile.css';
 const UserProfile = () => {
   return (
     <div className="user-profile">
-      <div className="user-profile-header">
+      {/* <div className="user-profile-header">
         User Profile
-      </div>
+      </div> */}
       <div className="d-flex">
         {/* Sidebar */}
         <Sidebar />

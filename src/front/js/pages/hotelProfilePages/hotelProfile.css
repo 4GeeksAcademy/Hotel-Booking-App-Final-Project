@@ -315,3 +315,101 @@
   font-weight: bold;
   Color: rgb(45, 45, 45)
 }
+
+
+
+
+
+
+
+
+
+/* hotelProfile.css */
+.hotel-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100%;
+  background-color: #30728A;
+  color: white;
+  padding: 20px;
+  transition: all 0.3s ease;
+  z-index: 999;
+}
+
+.sidebar-open {
+  left: 0;
+  /* El sidebar está abierto */
+}
+
+.sidebar-title {
+  font-size: 1.25rem;
+  margin-bottom: 15px;
+}
+
+.sidebar-link {
+  color: white;
+  text-decoration: none;
+  display: block;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.sidebar-link:hover {
+  background-color: #495057;
+}
+
+/* Media queries para ocultar el sidebar en pantallas pequeñas */
+@media (max-width: 768px) {
+  .hotel-sidebar {
+    width: 250px;
+    left: -250px;
+    /* El sidebar está oculto por defecto */
+    position: fixed;
+    top: 0;
+    height: 100%;
+    transition: left 0.3s ease;
+    /* Deslizar el sidebar desde la izquierda */
+  }
+
+  .sidebar-open {
+    left: 0;
+    /* El sidebar se desliza a la izquierda cuando está abierto */
+  }
+
+  .sidebar-link {
+    font-size: 1rem;
+  }
+
+  /* El botón de hamburguesa */
+  .btn-hamburger {
+    background-color: #30728A;
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    padding: 10px;
+    cursor: pointer;
+  }
+
+  .btn-hamburger i {
+    color: white;
+  }
+
+  .btn-hamburger:hover {
+    background-color: #30728A;
+  }
+}
+
+/* Media queries para mantener el sidebar fijo en pantallas grandes */
+@media (min-width: 769px) {
+  .hotel-sidebar {
+    left: 0;
+    /* El sidebar siempre estará visible */
+  }
+
+  .btn-hamburger {
+    display: none;
+    /* El botón hamburguesa se oculta en pantallas grandes */
+  }
+}

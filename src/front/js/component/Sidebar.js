@@ -6,8 +6,9 @@ import "../../styles/sidebar.css";
 
 const Sidebar = () => {
   return (
-    <div className="sidebar col-3 p-4">
-      <ul className="list-unstyled">
+    <div className="sidebar d-none d-md-block FontDesign"> {/* Ocultar en pantallas pequeñas */}
+      <h4 className="sidebar-title">User Profile</h4>
+      <ul className="list-unstyled ps-3">
         <li className="mb-4">
           <Link to="/profile/personal-info" className="d-flex align-items-center text-decoration-none sidebar-link">
             <FontAwesomeIcon icon={faUser} className="fa-icon mr-2" />
