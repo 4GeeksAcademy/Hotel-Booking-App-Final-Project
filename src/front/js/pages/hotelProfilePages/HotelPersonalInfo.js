@@ -71,34 +71,37 @@ const HotelPersonalInfo = () => {
   };
 
   return (
-    <div className="hotel-container">
+    <div className="hotel-container FontDesign">
       <HotelSidebar />
       <div className="hotel-content">
         <Header title="Personal Information" />
         <div className="content-wrapper">
-          <h2 className="section-title">Hotel User Information</h2>
+          <div className="d-flex justify-content-center col-xs-12 col-md-auto">
+            <span className="colorTitleHotel">Hotel&nbsp;</span>
+            <span id="TitleHotelInfo">User Information</span>
+          </div>
           <form className="hotel-form">
-            <div className="form-group">
-              <label>First Name</label>
-              <input type="text" name="name" value={formData.name} onChange={handleChange} disabled={!isEditable} />
+            <div className="form-group FontDesign">
+              <label className="FontDesign mb-3">First Name</label>
+              <input type="text" className="mb-2 rounded-pill border-2 border-dark" name="name" value={formData.name} onChange={handleChange} disabled={!isEditable} />
             </div>
             <div className="form-group">
-              <label>Last Name</label>
-              <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} disabled={!isEditable} />
+              <label className="FontDesign mb-3">Last Name</label>
+              <input type="text" className="mb-2 rounded-pill border-2 border-dark" name="last_name" value={formData.last_name} onChange={handleChange} disabled={!isEditable} />
             </div>
             <div className="form-group">
-              <label>Username</label>
-              <input type="text" name="username" value={formData.username} onChange={handleChange} disabled={!isEditable} />
+              <label className="FontDesign mb-3">Username</label>
+              <input type="text" className="mb-2 rounded-pill border-2 border-dark" name="username" value={formData.username} onChange={handleChange} disabled={!isEditable} />
             </div>
             <div className="form-group">
-              <label>Email</label>
-              <input type="email" name="email" value={formData.email} disabled />
+              <label className="FontDesign mb-3">Email</label>
+              <input type="email" className="mb-2 rounded-pill border-2 border-dark" name="email" value={formData.email} disabled />
             </div>
             <div className="form-group">
-              <label>Current Plan</label>
+              <label className="FontDesign mb-3">Current Plan</label>
               <div className="plan-selection">
-                <input type="text" value={formData.plan} disabled />
-                <button type="button" onClick={() => setShowPlanSelection(!showPlanSelection)}>
+                <input type="text" className="rounded-pill border-2 border-dark" value={formData.plan} disabled />
+                <button type="button" className="custom-btn" onClick={() => setShowPlanSelection(!showPlanSelection)}>
                   Change Plan
                 </button>
               </div>
@@ -123,7 +126,7 @@ const HotelPersonalInfo = () => {
 
           <div className="form-buttons">
             <button className="custom-btn-yellow" onClick={toggleEdit}>{isEditable ? "Cancel" : "Edit Information"}</button>
-            <button className="custom-btn-green" onClick={handleSave} disabled={!isEditable}>Save Changes</button>
+            <button className="custom-btn-grey" onClick={handleSave} disabled={!isEditable}>Save Changes</button>
           </div>
         </div>
       </div>

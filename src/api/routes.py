@@ -141,7 +141,8 @@ def handle_login():
 def get_hotels_with_priority_package(package_name):
     hotels = db.session.query(Hotel).join(User).join(User_Hotel_Admin_Package).join(Hotel_Admin_Package).filter(
         User.user_type == 'hotel',
-        Hotel_Admin_Package.package_name == package_name
+        Hotel_Admin_Package.package_name == package_name,
+        Hotel.is_active == True
     ).all()
 
     result = [hotel.serialize() for hotel in hotels]
@@ -612,7 +613,7 @@ def get_hotel_details(hotel_id):
 
     return jsonify({
         "country": hotel.country,
-        "location": hotel.location
+        "location": hotel.location,
     }), 200
 
 
