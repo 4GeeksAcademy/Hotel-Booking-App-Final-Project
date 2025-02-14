@@ -105,9 +105,12 @@ const PersonalInfo = () => {
     return <Navigate to={"/login"} />
   }
   return (
-    <div className="content container mt-4">
-      <h2 className="text-center mb-4">Personal Info</h2>
-      <div className="d-flex justify-content-center mb-4">
+    <div className="content container mt-4 FontDesign">
+      <div className="mb-5 d-flex justify-content-center col-xs-12 col-md-auto">
+        <span className="colorTitleHotel">User&nbsp;</span>
+        <span id="TitleHotelInfo">Profile Information</span>
+      </div>
+      {/* <div className="d-flex justify-content-center mb-4">
         <label htmlFor="profile-upload" className="position-relative">
           <img
             src={profileImage || "https://via.placeholder.com/100"}
@@ -124,14 +127,14 @@ const PersonalInfo = () => {
             />
           )}
         </label>
-      </div>
+      </div> */}
       <form className="user-info-form">
         <div className="row mb-3">
           <div className="col-md-6">
-            <label className="form-label">First Name</label>
+            <label className="form-label text-dark">First Name</label>
             <input
               type="text"
-              className="form-control"
+              className="mb-5 form-control rounded-pill border-2 border-dark"
               name="name"
               value={formData.name}
               onChange={handleChange}
@@ -139,10 +142,10 @@ const PersonalInfo = () => {
             />
           </div>
           <div className="col-md-6">
-            <label className="form-label">Last Name</label>
+            <label className="form-label text-dark">Last Name</label>
             <input
               type="text"
-              className="form-control"
+              className="mb-5 form-control rounded-pill border-2 border-dark"
               name="last_name"
               value={formData.last_name}
               onChange={handleChange}
@@ -152,10 +155,10 @@ const PersonalInfo = () => {
         </div>
         <div className="row mb-3">
           <div className="col-md-6">
-            <label className="form-label">Username</label>
+            <label className="form-label text-dark">Username</label>
             <input
               type="text"
-              className="form-control"
+              className="mb-5 form-control rounded-pill border-2 border-dark"
               name="username"
               value={formData.username}
               onChange={handleChange}
@@ -163,10 +166,10 @@ const PersonalInfo = () => {
             />
           </div>
           <div className="col-md-6">
-            <label className="form-label">Email</label>
+            <label className="form-label text-dark">Email</label>
             <input
               type="email"
-              className="form-control"
+              className="mb-5 form-control rounded-pill border-2 border-dark"
               name="email"
               value={formData.email}
               onChange={handleChange}
@@ -179,7 +182,7 @@ const PersonalInfo = () => {
         <button className={`custom-btn-yellow me-2`} onClick={toggleEdit}>
           {isEditable ? "Cancel" : "Edit Info"}
         </button>
-        <button className="custom-btn-green" disabled={!isEditable} onClick={handleSaveChanges}>
+        <button className="custom-btn" disabled={!isEditable} onClick={handleSaveChanges}>
           Save Changes
         </button>
       </div>

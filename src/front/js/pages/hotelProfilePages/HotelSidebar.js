@@ -5,9 +5,9 @@ import "./hotelProfile.css";
 
 const HotelSidebar = () => {
   return (
-    <div className="hotel-sidebar FontDesign">
+    <div className="hotel-sidebar FontDesign vh-100">
       <h4 className="sidebar-title">User Profile</h4>
-      <ul className="list-unstyled ps-3">
+      <ul className="list-unstyled ps-3 flex-grow-1">
         <li>
           <NavLink to="/hotel-profile/personal-info" className="sidebar-link">
             <i className="fa fa-user me-2"></i> Personal Information

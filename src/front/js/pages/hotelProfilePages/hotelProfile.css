@@ -3,11 +3,8 @@
   background-color: #40788c;
   background-image: url("https://www.transparenttextures.com/patterns/swirl.png");
   background-repeat: repeat;
-  background-size: 70px 70px;
   filter: contrast(1.2);
-  min-height: 100vh;
   color: #ffffff;
-  font-family: "Doppio One", serif;
   padding: 1rem;
 }
 
@@ -49,9 +46,9 @@
   transition: color 0.3s ease, transform 0.3s ease;
 }
 
-.sidebar-link:hover {
-  color: #f7f7f7;
-  transform: scale(1.05);
+:hover {
+  color: #ffffff;
+  .sidebar-linktransform: scale(1.05);
   text-shadow: 0px 0px 5px rgba(248, 248, 248, 0.8);
 }
 
@@ -354,10 +351,6 @@
   display: block;
   padding: 10px;
   font-size: 1rem;
-}
-
-.sidebar-link:hover {
-  background-color: #495057;
 }
 
 /* Media queries para ocultar el sidebar en pantallas pequeñas */

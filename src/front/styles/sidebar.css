@@ -44,3 +44,9 @@
     transform: scale(1.2);
 }
 
+.sidebar-link:hover {
+    color: #ffffff !important;
+    /* Opcional: agrega un fondo dorado para contraste */
+    transform: scale(1.05);
+    text-shadow: 0px 0px 5px rgba(248, 248, 248, 0.8);
+}
