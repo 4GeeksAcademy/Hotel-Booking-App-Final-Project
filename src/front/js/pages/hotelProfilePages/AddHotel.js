@@ -25,14 +25,14 @@ const AddHotel = () => {
       image_url: myImage
     };
 
-    Swal.fire({
-      title: "Adding Hotel...",
-      text: "Please wait while we save the hotel details.",
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      },
-    });
+    // Swal.fire({
+    //   title: "Adding Hotel...",
+    //   text: "Please wait while we save the hotel details.",
+    //   allowOutsideClick: false,
+    //   didOpen: () => {
+    //     Swal.showLoading();
+    //   },
+    // });
 
     const success = await actions.addHotel(newHotel);
     if (success) {
@@ -75,7 +75,7 @@ const AddHotel = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container FontDesign">
       <h2 className='mt-5 mb-5'>Add a Hotel</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
@@ -96,8 +96,8 @@ const AddHotel = () => {
         </div>
         <div className="mb-3">
           <label htmlFor="hotelImage" className="form-label">Hotel Image</label>
-          <input id="hotelImage" type='file' className="form-control " onChange={uploadImage} required />
-          {myImage && <img src={myImage} alt="Hotel Preview" className="img-preview" />}
+          <input id="hotelImage" type='file' className="form-control rounded-pill border-2 border-dark" onChange={uploadImage} required />
+          {myImage && <img src={myImage} alt="Hotel Preview" className="img-preview mt-3" />}
         </div>
         <div className='mb-5 mt-5'>
           <button type="button" className="custom-btn-red me-2" onClick={() => navigate('/hotel-profile/hotels')}>Cancel</button>

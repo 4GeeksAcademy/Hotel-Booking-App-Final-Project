@@ -11,6 +11,15 @@
   padding: 1rem;
 }
 
+.img-preview {
+  width: 300px;
+  height: auto;
+  border-radius: 10px;
+  margin-top: 10px;
+  border: 1px solid #000;
+}
+
+
 .resizeInput {
   resize: none;
   padding: 10px,
