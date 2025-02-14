@@ -153,7 +153,7 @@ export const Dashboard = () => {
                                         View Packages
                                     </button>
                                     <button
-                                        className="custom-btn-grey mt-2"
+                                        className="custom-btn-grey"
                                         onClick={() => toggleExpandHotel(hotel.id_hotel)}
                                     >
                                         {expandedHotels[hotel.id_hotel] ? "Show Less" : "Show More"}
