@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import HotelSidebar from "./HotelSidebar";
 import { Context } from "../../store/appContext";
+import "./hotelProfile.css";
 
 const AddPackage = () => {
     const { actions, store } = useContext(Context);
@@ -43,13 +44,11 @@ const AddPackage = () => {
 
         setPackageData(prevData => ({
             ...prevData,
-            hotelId: selected.id_hotel,  // ✅ Use `id_hotel`
+            hotelId: selected.id_hotel,
             country: selected.country,
             location: selected.location
         }));
     };
-
-
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -70,29 +69,37 @@ const AddPackage = () => {
     };
 
     return (
-        <div className="d-flex">
+        <div className="container FontDesign d-flex">
             <HotelSidebar />
             <div className="flex-grow-1">
                 <Header title="Add Package" />
                 <div className="p-4">
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
-                            <h5>Add Package</h5>
+                            <h5 className="mt-3 mb-5"><strong>Add Package</strong></h5>
                         </div>
-                        <div className="mb-3">
+
+                        {/* Package Name */}
+                        <div className="mb-4">
                             <label className="form-label">Package Name</label>
                             <input
                                 type="text"
-                                className="form-control"
+                                className="form-control rounded-pill border-2 border-dark"
                                 name="packageName"
                                 value={packageData.packageName}
                                 onChange={handleChange}
                                 required
                             />
                         </div>
-                        <div className="mb-3">
+
+                        {/* Hotel Selection */}
+                        <div className="mb-4">
                             <label className="form-label">Hotel Name</label>
-                            <select className="form-control" onChange={handleHotelChange} required>
+                            <select
+                                className="form-control rounded-pill border-2 border-dark"
+                                onChange={handleHotelChange}
+                                required
+                            >
                                 <option value="">Select a Hotel</option>
                                 {hotels.map(hotel => (
                                     <option key={hotel.id_hotel} value={hotel.id_hotel}>
@@ -100,35 +107,89 @@ const AddPackage = () => {
                                     </option>
                                 ))}
                             </select>
+                        </div>
 
-                        </div>
-                        <div className="mb-3">
+                        {/* Country and Location */}
+                        <div className="mb-4">
                             <label className="form-label">Country</label>
-                            <input type="text" className="form-control" value={packageData.country} disabled />
+                            <input
+                                type="text"
+                                className="form-control rounded-pill border-2 border-dark"
+                                value={packageData.country}
+                                disabled
+                            />
                         </div>
-                        <div className="mb-3">
+                        <div className="mb-4">
                             <label className="form-label">Location</label>
-                            <input type="text" className="form-control" value={packageData.location} disabled />
+                            <input
+                                type="text"
+                                className="form-control rounded-pill border-2 border-dark"
+                                value={packageData.location}
+                                disabled
+                            />
                         </div>
-                        <div className="mb-3">
+
+                        {/* Price, Dates, and Description */}
+                        <div className="mb-4">
                             <label className="form-label">Price</label>
-                            <input type="number" className="form-control" name="price" value={packageData.price} onChange={handleChange} required />
+                            <input
+                                type="number"
+                                className="form-control rounded-pill border-2 border-dark"
+                                name="price"
+                                value={packageData.price}
+                                onChange={handleChange}
+                                required
+                            />
                         </div>
-                        <div className="mb-3">
+                        <div className="mb-4">
                             <label className="form-label">Start Date</label>
-                            <input type="date" className="form-control" name="startDate" value={packageData.startDate} onChange={handleChange} required />
+                            <input
+                                type="date"
+                                className="form-control rounded-pill border-2 border-dark"
+                                name="startDate"
+                                value={packageData.startDate}
+                                onChange={handleChange}
+                                required
+                            />
                         </div>
-                        <div className="mb-3">
+                        <div className="mb-4">
                             <label className="form-label">End Date</label>
-                            <input type="date" className="form-control" name="endDate" value={packageData.endDate} onChange={handleChange} required />
+                            <input
+                                type="date"
+                                className="form-control rounded-pill border-2 border-dark"
+                                name="endDate"
+                                value={packageData.endDate}
+                                onChange={handleChange}
+                                required
+                            />
                         </div>
-                        <div className="mb-3">
+                        <div className="mb-4">
                             <label className="form-label">Description</label>
-                            <textarea className="form-control" name="description" value={packageData.description} onChange={handleChange} rows="3" required />
+                            <textarea
+                                className="resizeInput form-control rounded-pill border-2 border-dark mb-4"
+                                name="description"
+                                value={packageData.description}
+                                onChange={handleChange}
+                                rows="3"
+                                required
+                            />
                         </div>
-                        <div className="mb-3">
-                            <button type="button" className="btn btn-secondary me-2" onClick={() => navigate("/hotel-profile/packages")}>Go Back</button>
-                            <button type="submit" className="btn btn-success">Add Package</button>
+
+                        {/* Buttons */}
+                        <div className="mb-4 d-flex justify-content-between">
+                            <button
+                                type="button"
+                                className="btn custom-btn-grey"
+                                onClick={() => navigate("/hotel-profile/packages")}
+                            >
+                                Go Back
+                            </button>
+                            <button
+                                type="submit"
+                                className="btn custom-btn-yellow"
+                            >
+                                Add Package
+                            </button>
                         </div>
                     </form>
                 </div>
