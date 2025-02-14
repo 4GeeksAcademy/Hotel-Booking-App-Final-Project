@@ -186,7 +186,17 @@ button.custom-btn-yellow {
 
 }
 
+.details-card img {
+    border-radius: 20px;
+}
+
+.details-title {
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+}
+
 /*Configuracion de los inputs de busqueda*/
+
 .searchBarConfig input {
     border-radius: 50px;
     min-height: 2rem;
@@ -223,43 +233,37 @@ button.custom-btn-yellow {
 
 /*Configuracion de los paquetes de hoteles*/
 .hotelPackageList {
-    border-radius: 20px;
-    padding: 0px;
-    margin: 0px;
-}
-
-.hotelPackageList li {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    border: 1px solid grey;
-    border-radius: 20px;
-    box-shadow: 0px 0px 10px #888888;
-}
-
-.hotelPackageList .imgPackage {
-    margin-left: 0px;
-    margin-bottom: 0px;
-    padding: 0px;
-    border: none;
-}
-
-.imgPackage img {
-    margin: 0;
-    padding: 0;
-    width: 100%;
     height: 100%;
-    border-radius: 20px 0 0 20px;
 }
 
-.hotelPackageList li img:hover {
-    box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+.hotelPackageList .packageCard {
+    border-radius: 20px;
+    box-shadow: 10px 0px 15px #888888;
+    text-overflow: ellipsis;
+}
+
+.packageCard .img-fluid{
+    height: 100%;
+    max-width: 100%;
+    display: block;
+    margin: auto;
 }
 
 .detailsButton {
     min-height: 2rem;
     min-width: 8rem;
 }
+
+/*Map config*/
+.map-wrap { 
+    width: 100%;
+    height: 100%
+  }
+  
+  .map {
+    width: 100%;
+    height: 100%;
+  }
 
 
 /*Estilos de la pagina de reinicio de password*/

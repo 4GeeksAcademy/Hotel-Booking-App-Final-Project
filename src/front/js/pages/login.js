@@ -3,7 +3,11 @@ import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import "../../styles/login.css"
-import Swal from "sweetalert2";
+import Swal from 'sweetalert2';
+
+
+
+
 
 export const LoginAccount = () => {
     const { store, actions } = useContext(Context);
@@ -11,7 +15,7 @@ export const LoginAccount = () => {
     let response = {}
 
     useEffect(() => {
-        store.currentUser ? navigate("/") : console.log("user error")
+        store.currentUser ? navigate("/") : false
     }, [])
 
     //console.log(store.user)
@@ -24,17 +28,25 @@ export const LoginAccount = () => {
     const loginUserHandling = async (e) => {
         e.preventDefault()
         let response = await actions.loginAccount(data.username, data.password)
-        if (response && store.currentUser) {
-            navigate("/");
-        } else {
+        //console.log(response)
+        if(store.currentUser){
             Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Invalid credentials, please try again!',
-            });
+                    icon: 'success',
+                    title: 'Logged in!',
+                    text: 'Successfully logged into the system',
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+            setTimeout(() => {navigate("/")}, 2000)
+        } else{
+            Swal.fire({
+                    icon: 'warning',
+                    title: 'Incorrect Credentials',
+                    text: response,
+                    confirmButtonText: 'OK'
+                });
         }
-    };
-    // store.currentUser ? navigate("/") : alert(response.msg)
+    }
 
     //getting the user values
     const inpuntHandling = e => {
@@ -47,32 +59,32 @@ export const LoginAccount = () => {
         //console.log(data);
     }
     const handleGoogleLogin = async (credentialResponse) => {
-        try {
-            console.log(credentialResponse);
-            const email_data = await actions.getGoogleInformation(credentialResponse)
-            const login = await actions.loginGoogleAccount(email_data)
-            if (store.currentUser) {
-                navigate("/");
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'User not registered',
-                    text: 'Please sign up first.',
-                });
-            }
-        } catch (error) {
+        //console.log(credentialResponse);
+        const email_data = await actions.getGoogleInformation(credentialResponse)
+        const login = await actions.loginGoogleAccount(email_data)
+        if(store.currentUser){
             Swal.fire({
-                icon: 'error',
-                title: 'Login Failed',
-                text: 'There was an error logging in with Google.',
-            });
+                    icon: 'success',
+                    title: 'Logged in!',
+                    text: 'Successfully logged into the system',
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+            setTimeout(() => {navigate("/")}, 2000)
+        } else{
+            Swal.fire({
+                    icon: 'warning',
+                    title: 'Incorrect Credentials',
+                    text: login,
+                    confirmButtonText: 'OK'
+                });
         }
-    };
-    // store.currentUser ? navigate("/") : alert("User is not registered")
+    }
+
     return (
         <>
             <GoogleOAuthProvider clientId="168580669100-kncvlspb1adg5clh58ne7if2sbo1ocrm.apps.googleusercontent.com">
-                <div className='col-xs-auto container-fluid mt-0 FontDesign'>
+                <div className='col-xs-auto container-fluid mt-0'>
                     <div className="row d-flex justify-content-center mt-5 mb-0 pb-0">
 
                         <div className="d-flex justify-content-center col-xs-12 col-md-auto">
@@ -90,14 +102,14 @@ export const LoginAccount = () => {
                 <div className='FontDesign col-xs-auto container-fluid w-100 border-secondary mt-0' id="customMarginLogin">
                     <form onSubmit={loginUserHandling}>
                         <div className=" row mt-1 mb-4 d-flex justify-content-center">
-                            <input type="text" className="InputData min-width-custom w-50 col-sm-auto form-control" placeholder="Username" id="loginInputUser" name="username"
-                                value={data.username} onChange={inpuntHandling} />
+                            <input type="text" className="loginInputData col-sm-auto form-control" placeholder="Enter your username" id="loginInputUser" name="username"
+                                value={data.username} onChange={inpuntHandling} required/>
                             <div class="invalid-feedback"></div>
                         </div>
 
-                        <div className=" row mt-4 mb-5 d-flex justify-content-center">
-                            <input type="password" className="InputData min-width-custom w-50 form-control" placeholder="Password" id="loginInputPass" name="password"
-                                value={data.password} onChange={inpuntHandling}
+                        <div className=" row mt-4 mb-4 d-flex justify-content-center">
+                            <input type="password" className="loginInputData form-control" placeholder="Enter your password" id="loginInputPass" name="password"
+                                value={data.password} onChange={inpuntHandling} required
                             />
                             <div class="invalid-feedback mb-5"></div>
                         </div>
@@ -115,9 +127,12 @@ export const LoginAccount = () => {
                             </button>
                         </div>
                     </form>
-
-                    <div className="d-flex justify-content-center mb-4">
-                        <div className="w-25 mt-5 d-flex justify-content-center">
+                    <div className="d-flex justify-content-center">
+                        <hr className="loginDivider"/>
+                    </div>
+                    
+                    <div className="d-flex justify-content-center">
+                        <div className="w-25  d-flex justify-content-center">
                             <GoogleLogin
                                 onSuccess={credentialResponse => {
                                     handleGoogleLogin(credentialResponse)
@@ -125,6 +140,9 @@ export const LoginAccount = () => {
                                 onError={() => {
                                     console.log('Login Failed');
                                 }}
+                                size="large"
+                                shape="pill"
+                                text="signin_with"
                             />
                         </div>
                     </div>
