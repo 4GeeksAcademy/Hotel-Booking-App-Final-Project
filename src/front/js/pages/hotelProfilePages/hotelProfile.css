@@ -323,17 +323,19 @@
 
 /* hotelProfile.css */
 .hotel-sidebar {
-  position: fixed;
-  top: 0;
+  position: relative;
+  top: 0px; 
   left: 0;
   width: 250px;
-  height: 100%;
+  height: calc(100% - 10px); /* Adjust height so it doesn't overflow */
   background-color: #30728A;
-  color: white;
+  
   padding: 20px;
-  transition: all 0.3s ease;
-  z-index: 999;
+  overflow-y: auto; 
+  z-index: 999; 
 }
+
+
 
 .sidebar-open {
   left: 0;
