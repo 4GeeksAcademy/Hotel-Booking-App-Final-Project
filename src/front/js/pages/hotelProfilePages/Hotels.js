@@ -123,9 +123,6 @@ const Hotels = () => {
         }
     };
 
-
-
-
     const goToAddHotel = () => {
         navigate('/hotel-profile/add-hotel');
     };
@@ -145,7 +142,7 @@ const Hotels = () => {
                     <div className="hotel-list">
                         {hotels.length > 0 ? (
                             hotels.map((hotel) => (
-                                <div className="hotel-item" key={hotel.id_hotel}>
+                                <div className="hotel-item text-start" key={hotel.id_hotel}>
                                     <div>
                                         <h5 className='text-dark'>{hotel.name}</h5>
                                         <p className="FontDesign text-dark">Location: {hotel.location}</p>

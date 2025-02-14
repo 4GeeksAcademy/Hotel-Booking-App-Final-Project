@@ -19,7 +19,7 @@
 
 .resizeInput {
   resize: none;
-  padding: 10px,
+  padding: 10px;
 }
 
 .sidebar-title {
@@ -46,11 +46,11 @@
   transition: color 0.3s ease, transform 0.3s ease;
 }
 
-:hover {
-  color: #ffffff;
-  .sidebar-linktransform: scale(1.05);
+.sidebar-link:hover {
+  transform: scale(1.05);
   text-shadow: 0px 0px 5px rgba(248, 248, 248, 0.8);
 }
+
 
 .sidebar-link.active {
   color: #ffffff;

@@ -1,9 +1,15 @@
 
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import "./hotelProfile.css";
 
 const HotelSidebar = () => {
+  const location = useLocation();
+
+  if (location.pathname === "/hotel-profile/add-package") {
+    return null;
+  }
+
   return (
     <div className="hotel-sidebar FontDesign vh-100">
       <h4 className="sidebar-title">User Profile</h4>

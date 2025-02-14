@@ -81,7 +81,7 @@ export const Navbar = () => {
 										data-bs-toggle="dropdown"
 										aria-expanded="false"
 									>
-										<i className="fs-2 fa-solid fa-circle-user text-light"></i>
+										<i className="fs-2 fa-solid fa-circle-user text-light icon-app"></i>
 									</a>
 									<ul className="dropdown-menu dropdown-menu-end userProfileButton bg-light">
 										<li>

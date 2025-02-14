@@ -54,7 +54,7 @@ export const StayHistory = () => {
                     </div>
                 ))
             ) : (
-                <p className="empty-message">You have no past stays.</p>
+                <p className="empty-message"><i className="fas fa-info-circle me-2 text-warning"></i>You have no past stays.</p>
             )}
         </div>
     );

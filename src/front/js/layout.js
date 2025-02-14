@@ -14,7 +14,7 @@ import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 import { ReservationCart } from "./pages/reservationCart.jsx";
 import { Search } from "./pages/search.js";
-import {PasswordReset} from "./pages/passReset.js"
+import { PasswordReset } from "./pages/passReset.js"
 
 import UserProfile from "./pages/profilePages/UserProfile";
 import PersonalInfo from "./pages/profilePages/PersonalInfo";
@@ -55,8 +55,8 @@ const Layout = () => {
                         <Route element={<Search />} path="/search" />
                         <Route element={<TermsAndConditions />} path="/terms" />
                         <Route element={<SearchDetails />} path="/details" />
-                        
-                        
+
+
 
                         {/* User Profile Routes */}
                         <Route element={<UserProfile />} path="/profile">
