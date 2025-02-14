@@ -61,14 +61,6 @@
   transform: none;
 }
 
-/* Hotel Profile Styles */
-.hotel-container {
-  display: flex;
-  flex-direction: row;
-  min-height: 100vh;
-  width: 100%;
-}
-
 .hotel-sidebar {
   width: 250px;
   background-color: #40788c;
@@ -80,12 +72,6 @@
   font-family: "Doppio One", serif;
   padding: 1rem;
   flex-shrink: 0;
-}
-
-.hotel-content {
-  flex-grow: 1;
-  padding: 20px;
-  overflow-y: auto;
 }
 
 .content-wrapper {
@@ -238,12 +224,6 @@
   overflow-y: auto;
 }
 
-.content-wrapper {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding-top: 20px;
-}
-
 .hotel-header {
   display: flex;
   justify-content: space-between;
@@ -274,14 +254,14 @@
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-.hotel-info-container {
+/* .hotel-info-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 15px;
   padding: 10px 0;
-}
+} */
 
-.hotel-info {
+/* .hotel-info {
   font-size: 16px;
   line-height: 1.6;
   font-weight: bold;
@@ -289,13 +269,13 @@
   word-wrap: break-word;
   overflow-wrap: break-word;
   max-width: 100%;
-}
+} */
 
-.hotel-info span {
+/* .hotel-info span {
   font-weight: normal;
   display: block;
   margin-top: 5px;
-}
+} */
 
 .hotel-description {
   word-wrap: break-word;

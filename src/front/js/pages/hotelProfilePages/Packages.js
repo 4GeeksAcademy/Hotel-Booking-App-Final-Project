@@ -59,15 +59,15 @@ const Packages = () => {
   };
 
   return (
-    <div className="hotel-container">
+    <div className="FontDesign hotel-container">
       <HotelSidebar />
       <div className="hotel-content">
         <Header title="Hotel Packages" />
         <div className="content-wrapper">
           <div className="hotel-header">
-            <h4>Packages List</h4>
+            <h4 className='FontDesign'><strong>Packages List</strong></h4>
             <button
-              className="custom-btn-green"
+              className="custom-btn"
               onClick={() => navigate('/hotel-profile/add-package')}
             >
               Add Package
@@ -77,14 +77,14 @@ const Packages = () => {
             {packages.map((pkg, index) => (
               <div key={pkg.id_hotel_package || index} className="hotel-item">
                 <h5>{pkg.package?.hotel_package_name || "No Name"}</h5>
-                <p className="hotel-info"><strong>Hotel:</strong> {pkg.package?.hotel.name || "Unknown"}</p>
-                <p className="hotel-info"><strong>Country:</strong> {pkg.package?.hotel.country || "Unknown"}</p>
-                <p className="hotel-info"><strong>Location:</strong> {pkg.package?.hotel.location || "Unknown"}</p>
-                <p className="hotel-info"><strong>Price:</strong> ${pkg.package?.price || "N/A"}</p>
-                <p className="hotel-info"><strong>Start Date:</strong> {pkg.package?.start_date || "N/A"}</p>
-                <p className="hotel-info"><strong>End Date:</strong> {pkg.package?.end_date || "N/A"}</p>
-                <p className="hotel-info"><strong>Description:</strong> {pkg.package?.description || "No Description"}</p>
-                <button className="custom-btn-blue mt-2" onClick={() => handleEditClick(pkg)}>Edit</button>
+                <p className="hotel-info text-dark fs-6"><strong>Hotel:</strong> {pkg.package?.hotel.name || "Unknown"}</p>
+                <p className="hotel-info text-dark"><strong>Country:</strong> {pkg.package?.hotel.country || "Unknown"}</p>
+                <p className="hotel-info text-dark"><strong>Location:</strong> {pkg.package?.hotel.location || "Unknown"}</p>
+                <p className="hotel-info text-dark"><strong>Price:</strong> ${pkg.package?.price || "N/A"}</p>
+                <p className="hotel-info text-dark"><strong>Start Date:</strong> {pkg.package?.start_date || "N/A"}</p>
+                <p className="hotel-info text-dark"><strong>End Date:</strong> {pkg.package?.end_date || "N/A"}</p>
+                <p className="hotel-info text-dark"><strong>Description:</strong> {pkg.package?.description || "No Description"}</p>
+                {/* <button className="custom-btn mt-2" onClick={() => handleEditClick(pkg)}>Edit</button> */}
               </div>
             ))}
           </div>

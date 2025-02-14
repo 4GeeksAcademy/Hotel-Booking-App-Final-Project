@@ -146,21 +146,10 @@ const Hotels = () => {
                         {hotels.length > 0 ? (
                             hotels.map((hotel) => (
                                 <div className="hotel-item" key={hotel.id_hotel}>
-
-
-                                    {/* <div className="col-12 col-md-4">
-                                        <img
-                                            src={stay_package.hotel.image_url}
-                                            alt={stay_package.hotel.name}
-                                            className="img-fluid rounded-start imagen-hotel-reservas"
-                                        />
-                                    </div> */}
-
-
                                     <div>
                                         <h5>{hotel.name}</h5>
-                                        <p className="hotel-info">Location: {hotel.location}</p>
-                                        <p className="hotel-info">Country: {hotel.country}</p>
+                                        <p className="FontDesign">Location: {hotel.location}</p>
+                                        <p className="FontDesign">Country: {hotel.country}</p>
                                     </div>
                                     <div>
                                         {hotel.is_active ? (
