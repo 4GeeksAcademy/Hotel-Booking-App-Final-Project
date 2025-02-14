@@ -97,13 +97,13 @@ export const Search = () => {
 		}
 		
 		let hotel_reduced_search = hotel_packages_copy.reduce((hotel_package, details)=>{
-			if(details.hotel_package_name.location.toLowerCase().includes(searchInfo.package_name.toLowerCase()) || 
-			details.hotel.name.location.toLowerCase().includes(searchInfo.hotel_name.toLowerCase()) ||
+			if(details.hotel_package_name.includes(searchInfo.package_name) || 
+			details.hotel.name.includes(searchInfo.hotel_name) ||
 			((searchInfo.min_price ? (parseFloat(details.price) >= parseFloat(searchInfo.min_price)) : searchInfo.max_price ? true : false) 
 				&& (searchInfo.max_price ? (parseFloat(details.price) <= parseFloat(searchInfo.max_price)) : searchInfo.min_price ? true : false)) ||
 						(new Date(searchInfo.package_date).getTime() < new Date(details.end_date).getTime() && 
 							new Date(searchInfo.package_date).getTime() > new Date(details.start_date).getTime()) ||
-								details.hotel.location.toLowerCase().includes(searchInfo.hotel_location.locationtoLowerCase())){
+								details.hotel.location.includes(searchInfo.hotel_location)){
 									hotel_package.push(details);
 			}
 			return hotel_package;
@@ -303,9 +303,9 @@ export const Search = () => {
 								return (
 									<div
 										key={index}
-										className="col-11 mt-4 hotel-card ps-0 pe-0"
+										className="col-10 mt-4 hotel-card ps-0 pe-0"
 										>
-										<div className="row w-100 justify-content-sm-center m-0 justify-content-md-start p-0 packageCard">
+										<div className="row w-100 justify-content-sm-center m-0 justify-content-md-start pe-0 ps-0 packageCard">
 										{/*
 											<div className="col-12 col-md-7 d-flex justify-content-center">
 												<div className="d-inline-flex flex-column">
@@ -360,9 +360,12 @@ export const Search = () => {
 								<div ref={mapContainer} className="map h-100" />
 							</div> */}
 						</div>	
+						
 						<nav className="col-12 mt-3" aria-label="Page navigation example">
-							<ul class="pagination d-flex justify-content-center">
+							{slicedHotels.length ? 
+								<ul class="pagination d-flex justify-content-center">
 								<li class="page-item">
+									
 								<a class="page-link" href="#" aria-label="Previous" 
 								onClick={() =>{
 										if(currentPage > 1){
@@ -385,7 +388,7 @@ export const Search = () => {
 										}><a class="page-link" href="#">{index+1}</a></li>
 										)
 										})
-								: <li class="page-item"><a class="page-link" href="#">1</a></li>
+								: false
 								}
 								<li class="page-item">
 								<a class="page-link" href="#" aria-label="Next" 
@@ -399,6 +402,10 @@ export const Search = () => {
 								</a>
 								</li>
 							</ul>
+							
+							
+							: false}
+							
 						</nav>
 					</div>
 				</div>
