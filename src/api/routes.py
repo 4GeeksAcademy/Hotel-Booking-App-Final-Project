@@ -742,7 +742,7 @@ def password_reset():
     user_exists = User.query.filter(User.email == current_user).first()
 
     if not user_exists:
-        return jsonify({"message": "account not found"}), 401
+        return jsonify({"account": "account not found"}), 401
     
     return jsonify({"message": "reset link sent"}), 200
 
@@ -900,29 +900,39 @@ def add_favorite_hotel():
 def verification_code_date():
     data = request.get_json()
     print(data)
-    
+
     try:
         verified_user = User.query.filter_by(email = data["email"]).first()
-        code_date =  int(verified_user.password_reset_date)
-
-        print(verified_user.password_reset, data["code"])
-        print(verified_user.password_reset_date, data["code_date"])
-
+        
         if not verified_user:
             return jsonify({"message": "This email is not registered within the system"}), 401
         
+        print(verified_user.password_reset)
+        print(verified_user.password_reset_date)
+
         if not verified_user.password_reset:
             return jsonify({"message": "A code has yet to be requested"}), 402
+
+
+        if verified_user.password_reset != data["code"]:
+            return jsonify({"message": "Wrong code input"}), 402
+
+        if not verified_user.password_reset_date:
+            return jsonify({"message": "A code has yet to be requested"}), 402  
         
-        if not code_date > data["code_date"]:
+        
+        code_date =  int(verified_user.password_reset_date)
+
+        if code_date < data["code_date"]:
             return jsonify({"message": "The code has expired"}), 403
 
+   
         if verified_user.password_reset == data["code"] and (code_date > data["code_date"]):
             print("Correct!")
             verified_user.password_reset = ""
             verified_user.password_reset_date = ""
             db.session.commit()
-            return jsonify({"Code": True})
+            return jsonify({"code": data["code"]}), 200
         
     except Exception as e:
          return jsonify({"error": "Internal Server Error", "details": str(e)}), 500

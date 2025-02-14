@@ -272,7 +272,7 @@ button.custom-btn-yellow {
     width: 30rem;
     height: 22rem;
     margin-top: 12rem;
-    padding: 2rem;
+    padding: 1rem;
     border: solid 2px;
     border-radius: 3%;
     border-color: black;
@@ -289,18 +289,10 @@ button.custom-btn-yellow {
 }
 
 .resetConfigForm input {
-    width: 5rem;
-    height: 6rem;
     border-radius: 10%;
-    font-size: 4rem;
+    width: 3rem;
+    font-size: 2rem;
     text-align: center;
-}
-
-.resetConfigForm input:hover {
-    width: 5rem;
-    height: 6rem;
-    padding-top: 2px;
-    box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
 }
 
 

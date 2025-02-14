@@ -689,7 +689,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					if (!response.ok) {
 						const errorData = await response.json();
 						console.error("❌ Backend error:", errorData.message);
-						return null;
+						return errorData;
 					}
 
 					//Generacion del codigo de renicio de password con su timer de 15 minutos
@@ -887,42 +887,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-
-
-
-			checkPasswordRecovery: async (email, verificationCode) => {
-				const recoveryDate = Date.now()
-
-				const response = await fetch(`${process.env.BACKEND_URL}api/pass-reset-check`, {
-					method: "PUT",
-					headers: {
-						"Content-type": "application/json"
-					},
-					body: JSON.stringify(
-						{
-							"email": email,
-							"code": verificationCode,
-							"code_date": recoveryDate
-						}
-					)
-				});
-
-				if (!response.ok) {
-					const errorData = await response.json();
-					console.error("❌ Backend error:", errorData.message);
-					return null;
-				}
-
-				try {
-					const data = response.json()
-					console.log(data)
-					return data;
-				}
-				catch (error) {
-					console.error("Error removing favorite hotel:", error);
-					return false;
-				}
-			},
 			changePassword: async (newPassword, email) => {
 				const response = await fetch(`${process.env.BACKEND_URL}api/change-password`, {
 					method: "PUT",
@@ -1029,8 +993,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				if (!response.ok) {
 					const errorData = await response.json();
-					console.error("❌ Backend error:", errorData.message);
-					return null;
+					console.log(errorData.message)
+					return errorData;
 				}
 
 				try {
