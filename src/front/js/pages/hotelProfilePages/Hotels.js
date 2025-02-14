@@ -4,8 +4,7 @@ import Header from './Header';
 import HotelSidebar from './HotelSidebar';
 import { Context } from '../../store/appContext';
 import "./hotelProfile.css";
-
-
+import Swal from 'sweetalert2';
 
 const Hotels = () => {
     const { store, actions } = useContext(Context);
@@ -27,46 +26,119 @@ const Hotels = () => {
     }, [store.userHotels]);
 
     const deactivateHotel = async (hotelId) => {
-        const success = await actions.deactivateHotel(hotelId);
-        if (success) {
-            setHotels((prevHotels) =>
-                prevHotels.map((hotel) =>
-                    hotel.id_hotel === hotelId ? { ...hotel, is_active: false } : hotel
-                )
-            );
-            alert("Hotel deactivated successfully!");
+        // SweetAlert2 para confirmar acción
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you really want to deactivate this hotel?",
+            icon: 'warning',
+            showCancelButton: true, // Habilitar botón de cancelar
+            confirmButtonText: 'Yes, deactivate it!',
+            cancelButtonText: 'No, cancel',
+            reverseButtons: true, // Cambiar orden de los botones
+        });
+
+        if (result.isConfirmed) {
+            // El usuario confirmó la acción
+            const success = await actions.deactivateHotel(hotelId);
+            if (success) {
+                setHotels((prevHotels) =>
+                    prevHotels.map((hotel) =>
+                        hotel.id_hotel === hotelId ? { ...hotel, is_active: false } : hotel
+                    )
+                );
+
+                // Alerta de éxito
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Deactivated!',
+                    text: 'The hotel has been successfully deactivated.',
+                    confirmButtonText: 'OK',
+                });
+            } else {
+                // Alerta de error
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to deactivate the hotel. Please try again.',
+                    confirmButtonText: 'Retry',
+                });
+            }
         } else {
-            alert("Failed to deactivate the hotel. Please try again.");
+            // El usuario canceló la acción
+            Swal.fire({
+                icon: 'info',
+                title: 'Cancelled',
+                text: 'The hotel was not deactivated.',
+                confirmButtonText: 'OK',
+            });
         }
     };
 
     const reactivateHotel = async (hotelId) => {
-        const success = await actions.reactivateHotel(hotelId);
-        if (success) {
-            setHotels((prevHotels) =>
-                prevHotels.map((hotel) =>
-                    hotel.id_hotel === hotelId ? { ...hotel, is_active: true } : hotel
-                )
-            );
-            alert("Hotel reactivated successfully!");
+        // SweetAlert2 para confirmar acción
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to reactivate this hotel? This action will make it available again.",
+            icon: 'warning',
+            showCancelButton: true, // Habilitar botón de cancelar
+            confirmButtonText: 'Yes, reactivate it!',
+            cancelButtonText: 'No, cancel',
+            reverseButtons: true, // Cambiar el orden de los botones
+        });
+
+        if (result.isConfirmed) {
+            // El usuario confirmó la acción
+            const success = await actions.reactivateHotel(hotelId);
+            if (success) {
+                setHotels((prevHotels) =>
+                    prevHotels.map((hotel) =>
+                        hotel.id_hotel === hotelId ? { ...hotel, is_active: true } : hotel
+                    )
+                );
+
+                // Alerta de éxito
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Reactivated!',
+                    text: 'The hotel has been successfully reactivated.',
+                    confirmButtonText: 'OK',
+                });
+            } else {
+                // Alerta de error
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to reactivate the hotel. Please try again.',
+                    confirmButtonText: 'Retry',
+                });
+            }
         } else {
-            alert("Failed to reactivate the hotel. Please try again.");
+            // El usuario canceló la acción
+            Swal.fire({
+                icon: 'info',
+                title: 'Cancelled',
+                text: 'The hotel was not reactivated.',
+                confirmButtonText: 'OK',
+            });
         }
     };
+
+
+
 
     const goToAddHotel = () => {
         navigate('/hotel-profile/add-hotel');
     };
 
     return (
-        <div className="hotel-container">
+        <div className="FontDesign hotel-container">
             <HotelSidebar />
             <div className="hotel-content">
                 <Header title="Hoteles" />
                 <div className="content-wrapper">
                     <div className="hotel-header">
-                        <h4>Hotels List</h4>
-                        <button className="custom-btn-green" onClick={goToAddHotel}>
+                        <h4 id='TitleHotelInfo'>Hotels List</h4>
+                        <button className="custom-btn-yellow" onClick={goToAddHotel}>
                             Add Hotel
                         </button>
                     </div>
@@ -74,6 +146,17 @@ const Hotels = () => {
                         {hotels.length > 0 ? (
                             hotels.map((hotel) => (
                                 <div className="hotel-item" key={hotel.id_hotel}>
+
+
+                                    {/* <div className="col-12 col-md-4">
+                                        <img
+                                            src={stay_package.hotel.image_url}
+                                            alt={stay_package.hotel.name}
+                                            className="img-fluid rounded-start imagen-hotel-reservas"
+                                        />
+                                    </div> */}
+
+
                                     <div>
                                         <h5>{hotel.name}</h5>
                                         <p className="hotel-info">Location: {hotel.location}</p>
@@ -85,7 +168,7 @@ const Hotels = () => {
                                                 Deactivate
                                             </button>
                                         ) : (
-                                            <button className="custom-btn-green" onClick={() => reactivateHotel(hotel.id_hotel)}>
+                                            <button className="custom-btn-grey" onClick={() => reactivateHotel(hotel.id_hotel)}>
                                                 Reactivate
                                             </button>
                                         )}

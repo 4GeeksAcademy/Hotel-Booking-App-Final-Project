@@ -82,23 +82,23 @@ const HotelPersonalInfo = () => {
           </div>
           <form className="hotel-form">
             <div className="form-group FontDesign">
-              <label className="FontDesign">First Name</label>
-              <input type="text" className="rounded-pill border-2 border-dark" name="name" value={formData.name} onChange={handleChange} disabled={!isEditable} />
+              <label className="FontDesign mb-3">First Name</label>
+              <input type="text" className="mb-2 rounded-pill border-2 border-dark" name="name" value={formData.name} onChange={handleChange} disabled={!isEditable} />
             </div>
             <div className="form-group">
-              <label>Last Name</label>
-              <input type="text" className="rounded-pill border-2 border-dark" name="last_name" value={formData.last_name} onChange={handleChange} disabled={!isEditable} />
+              <label className="FontDesign mb-3">Last Name</label>
+              <input type="text" className="mb-2 rounded-pill border-2 border-dark" name="last_name" value={formData.last_name} onChange={handleChange} disabled={!isEditable} />
             </div>
             <div className="form-group">
-              <label>Username</label>
-              <input type="text" className="rounded-pill border-2 border-dark" name="username" value={formData.username} onChange={handleChange} disabled={!isEditable} />
+              <label className="FontDesign mb-3">Username</label>
+              <input type="text" className="mb-2 rounded-pill border-2 border-dark" name="username" value={formData.username} onChange={handleChange} disabled={!isEditable} />
             </div>
             <div className="form-group">
-              <label>Email</label>
-              <input type="email" className="rounded-pill border-2 border-dark" name="email" value={formData.email} disabled />
+              <label className="FontDesign mb-3">Email</label>
+              <input type="email" className="mb-2 rounded-pill border-2 border-dark" name="email" value={formData.email} disabled />
             </div>
             <div className="form-group">
-              <label>Current Plan</label>
+              <label className="FontDesign mb-3">Current Plan</label>
               <div className="plan-selection">
                 <input type="text" className="rounded-pill border-2 border-dark" value={formData.plan} disabled />
                 <button type="button" className="custom-btn" onClick={() => setShowPlanSelection(!showPlanSelection)}>

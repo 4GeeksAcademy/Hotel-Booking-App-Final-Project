@@ -1,11 +1,11 @@
 
 import React from "react";
 import { NavLink } from "react-router-dom";
-import "./hotelProfile.css"; 
+import "./hotelProfile.css";
 
 const HotelSidebar = () => {
   return (
-    <div className="hotel-sidebar">
+    <div className="hotel-sidebar FontDesign">
       <h4 className="sidebar-title">User Profile</h4>
       <ul className="list-unstyled ps-3">
         <li>

@@ -76,32 +76,32 @@ const AddHotel = () => {
 
   return (
     <div className="container">
-      <h2>Add a Hotel</h2>
+      <h2 className='mt-5 mb-5'>Add a Hotel</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="hotelName" className="form-label">Hotel Name</label>
-          <input type="text" id="hotelName" className="form-control" value={hotelName} onChange={(e) => setHotelName(e.target.value)} required />
+          <input type="text" id="hotelName" className="form-control rounded-pill border-2 border-dark" value={hotelName} onChange={(e) => setHotelName(e.target.value)} required />
         </div>
         <div className="mb-3">
           <label htmlFor="hotelLocation" className="form-label">Hotel Location</label>
-          <input type="text" id="hotelLocation" className="form-control" value={hotelLocation} onChange={(e) => setHotelLocation(e.target.value)} required />
+          <input type="text" id="hotelLocation" className="form-control rounded-pill border-2 border-dark" value={hotelLocation} onChange={(e) => setHotelLocation(e.target.value)} required />
         </div>
         <div className="mb-3">
           <label htmlFor="hotelCountry" className="form-label">Country</label>
-          <input type="text" id="hotelCountry" className="form-control" value={hotelCountry} onChange={(e) => setHotelCountry(e.target.value)} required />
+          <input type="text" id="hotelCountry" className="form-control rounded-pill border-2 border-dark" value={hotelCountry} onChange={(e) => setHotelCountry(e.target.value)} required />
         </div>
         <div className="mb-3">
           <label htmlFor="hotelDescription" className="form-label">Hotel Description</label>
-          <textarea id="hotelDescription" className="form-control" value={hotelDescription} onChange={(e) => setHotelDescription(e.target.value)} required />
+          <textarea id="hotelDescription" className="form-control rounded-pill border-2 border-dark resizeInput" value={hotelDescription} onChange={(e) => setHotelDescription(e.target.value)} required />
         </div>
         <div className="mb-3">
           <label htmlFor="hotelImage" className="form-label">Hotel Image</label>
-          <input id="hotelImage" type='file' className="form-control" onChange={uploadImage} required />
+          <input id="hotelImage" type='file' className="form-control " onChange={uploadImage} required />
           {myImage && <img src={myImage} alt="Hotel Preview" className="img-preview" />}
         </div>
-        <div>
+        <div className='mb-5 mt-5'>
           <button type="button" className="custom-btn-red me-2" onClick={() => navigate('/hotel-profile/hotels')}>Cancel</button>
-          <button type="submit" className="custom-btn-green">Add Hotel</button>
+          <button type="submit" className="custom-btn">Add Hotel</button>
         </div>
       </form>
     </div>

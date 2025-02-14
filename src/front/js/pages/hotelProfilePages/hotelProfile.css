@@ -11,6 +11,11 @@
   padding: 1rem;
 }
 
+.resizeInput {
+  resize: none;
+  padding: 10px,
+}
+
 .sidebar-title {
   font-size: 22px;
   font-weight: bold;
@@ -36,9 +41,9 @@
 }
 
 .sidebar-link:hover {
-  color: #FFD700;
+  color: #f7f7f7;
   transform: scale(1.05);
-  text-shadow: 0px 0px 5px rgba(255, 215, 0, 0.8);
+  text-shadow: 0px 0px 5px rgba(248, 248, 248, 0.8);
 }
 
 .sidebar-link.active {

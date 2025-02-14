@@ -613,7 +613,7 @@ def get_hotel_details(hotel_id):
 
     return jsonify({
         "country": hotel.country,
-        "location": hotel.location
+        "location": hotel.location,
     }), 200
 
 
