@@ -3,6 +3,7 @@ import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import "../../styles/login.css"
+import Swal from 'sweetalert2';
 
 
 
@@ -16,7 +17,7 @@ export const LoginAccount = () => {
 
 
     useEffect(() => {
-        store.currentUser ? navigate("/") : console.log("user error")
+        store.currentUser ? navigate("/") : false
     }, [])
 
     //console.log(store.user)
@@ -31,7 +32,23 @@ export const LoginAccount = () => {
         e.preventDefault()
         let response = await actions.loginAccount(data.username, data.password)
         //console.log(response)
-        store.currentUser ? navigate("/") : alert(response.msg)
+        if(store.currentUser){
+            Swal.fire({
+                    icon: 'success',
+                    title: 'Logged in!',
+                    text: 'Successfully logged into the system',
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+            setTimeout(() => {navigate("/")}, 2000)
+        } else{
+            Swal.fire({
+                    icon: 'warning',
+                    title: 'Incorrect Credentials',
+                    text: response,
+                    confirmButtonText: 'OK'
+                });
+        }
     }
 
     //getting the user values
@@ -46,16 +63,32 @@ export const LoginAccount = () => {
     }
 
     const handleGoogleLogin = async (credentialResponse) => {
-        console.log(credentialResponse);
+        //console.log(credentialResponse);
         const email_data = await actions.getGoogleInformation(credentialResponse)
         const login = await actions.loginGoogleAccount(email_data)
-        store.currentUser ? navigate("/") : alert("User is not registered")
+        if(store.currentUser){
+            Swal.fire({
+                    icon: 'success',
+                    title: 'Logged in!',
+                    text: 'Successfully logged into the system',
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+            setTimeout(() => {navigate("/")}, 2000)
+        } else{
+            Swal.fire({
+                    icon: 'warning',
+                    title: 'Incorrect Credentials',
+                    text: login,
+                    confirmButtonText: 'OK'
+                });
+        }
     }
 
     return (
         <>
             <GoogleOAuthProvider clientId="168580669100-kncvlspb1adg5clh58ne7if2sbo1ocrm.apps.googleusercontent.com">
-                <div className='col-xs-auto container-fluid mt-0' >
+                <div className='col-xs-auto container-fluid mt-0'>
                     <div className="row d-flex justify-content-center mt-5 mb-0 pb-0">
 
                         <div id="welcomePageTitleLogin" className="d-flex justify-content-center col-xs-12 col-md-auto">
@@ -75,13 +108,13 @@ export const LoginAccount = () => {
                     <form onSubmit={loginUserHandling}>
                         <div className=" row mt-1 mb-4 d-flex justify-content-center">
                             <input type="text" className="loginInputData col-sm-auto form-control" placeholder="Enter your username" id="loginInputUser" name="username"
-                                value={data.username} onChange={inpuntHandling} />
+                                value={data.username} onChange={inpuntHandling} required/>
                             <div class="invalid-feedback"></div>
                         </div>
 
                         <div className=" row mt-4 mb-4 d-flex justify-content-center">
                             <input type="password" className="loginInputData form-control" placeholder="Enter your password" id="loginInputPass" name="password"
-                                value={data.password} onChange={inpuntHandling}
+                                value={data.password} onChange={inpuntHandling} required
                             />
                             <div class="invalid-feedback"></div>
                         </div>
@@ -98,19 +131,22 @@ export const LoginAccount = () => {
                             </button>
                         </div>
                     </form>
-
                     <div className="d-flex justify-content-center">
-                        <div className="w-25 mt-5 d-flex justify-content-center">
+                        <hr className="loginDivider"/>
+                    </div>
+                    
+                    <div className="d-flex justify-content-center">
+                        <div className="w-25  d-flex justify-content-center">
                             <GoogleLogin
-
                                 onSuccess={credentialResponse => {
                                     handleGoogleLogin(credentialResponse)
                                 }}
                                 onError={() => {
                                     console.log('Login Failed');
                                 }}
-
-                                locale="en-US"
+                                size="large"
+                                shape="pill"
+                                text="signin_with"
                             />
                         </div>
                     </div>

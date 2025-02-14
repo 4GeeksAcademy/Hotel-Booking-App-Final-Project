@@ -13,16 +13,22 @@ export const Search = () => {
 	const [filterState, setFilterState] = useState(false)
 	const [filteredData, setFilterData] = useState([])
 	const [searchInfo, setSearchInfo] = useState({})
-	const [rangeTest, setRangeTest] = useState(null)
-
-	//data del mapa
-	const tokyo = { lng: 139.753, lat: 35.6844 };
-	const zoom = 14;
-
-	const urlParams = new URLSearchParams(window.location.search);
+	const [currentPage, setCurrentPage] = useState(1)
+	const [slicedHotels, setSlicedHotels] = useState([])
 
 
 	const showLoginAlert = () => {
+		//console.log(store.currentUser.user_type)
+		if(store.currentUser.user_type == "hotel"){
+			//console.log("AAAAAAAAA")
+			Swal.fire({
+				icon: 'warning',
+				title: 'Client only feature',
+				text: 'Please log in as a client user to make a reservation.',
+				confirmButtonText: 'OK'
+			});
+			return true;
+		}
 			Swal.fire({
 				icon: 'warning',
 				title: 'Login Required',
@@ -45,13 +51,18 @@ export const Search = () => {
 				searchInfo.hotel_name = store.clicked_hotel
 				packageSearchFilter()
 			}
+			const sliced_data = filteredData.slice((currentPage - 1 *6), (currentPage - 1 *6) + 6 )
+			console.log(sliced_data)
 		}
 		
 		loadPage();
 		//console.log(filterState)
-		
-
 	}, []);
+
+	useEffect(() => {
+		const sliced_data = filteredData.slice((currentPage - 1 *6), (currentPage - 1 *6) + 6 )
+		console.log(sliced_data)
+	}, [currentPage])
 
 
 	const packageSearchFilter = (e) => {
@@ -81,10 +92,12 @@ export const Search = () => {
 
 		//console.log(hotel_reduced_search)
 	
+		//setPageSize([...hotel_reduced_search])
 		setFilterState(true)
 		setFilterData([...hotel_reduced_search])	
 	}
-	console.log(filteredData)
+	//console.log(pageSize)
+	
 
 	const clearFilters = (e) => {
 		e.preventDefault()
@@ -94,7 +107,7 @@ export const Search = () => {
 	}
 
 	const handleAddToCart = async (package_info) => {
-		console.log('entered')
+		//console.log('entered')
 		await actions.addToCart(package_info)
 		Swal.fire({
 			icon: 'success',
@@ -108,7 +121,7 @@ export const Search = () => {
     //console.log(store.hotels)
 	return(
 		<>	
-		<div className="h-auto mb-5">
+		<div className="h-auto FontDesign">
 			{/*Busqueda de hoteles */}
 			<div className="container d-flex justify-content-center mt-5">
 				<form className= "d-flex flex-column justify-content-center" onSubmit={packageSearchFilter}>
@@ -243,24 +256,25 @@ export const Search = () => {
 			</div>
 			
 			{/* Listado de los paquetes */}
-			<div className="searchBackground container-fluid mt-5 pb-5">
-				<div className="hotelPackageList  packageDetails container-fluid d-flex justify-content-start w-100 ms-md-3 mb-5 pb-5">
+			<div className="searchBackground container-fluid mt-5">
+				<div className="hotelPackageList  packageDetails container-fluid d-flex justify-content-start w-100 ms-md-3">
 					<div className="d-inline-flex flex-column">
 						<div className="row justify-content-center">
 							
-								{ filteredData.length > 0 ? filteredData.map((item, index) => {
+								{ filteredData.length > 0 ? 
+									filteredData.map((item, index) => {
 								return (
 									<div
 										key={index}
 										className="col-10 mt-4 hotel-card ps-0 pe-0"
 										>
-										<div className="row w-100 justify-content-sm-center m-0 justify-content-md-start p-0">
+										<div className="row w-100 justify-content-sm-center m-0 justify-content-md-start p-0 packageCard">
 										{/*
 											<div className="col-12 col-md-7 d-flex justify-content-center">
 												<div className="d-inline-flex flex-column">
 													*/}
-													<div className="col-12 col-md-3 p-0 rounded-3 rounded-md-0">
-														<img className="w-100 h-100" src={item.hotel.image_url}/>
+													<div className="col-12 col-md-3 p-0 rounded-md-0">
+														<img className="img-fluid h-100" src={item.hotel.image_url}/>
 													</div>
 													
 
@@ -282,7 +296,7 @@ export const Search = () => {
 														<div className="row">
 															<div className="d-inline-flex flex-column">
 																	<button className="w-100 btn custom-btn detailsButton mb-2 me-2" onClick={() =>{
-																		store.currentUser ? handleAddToCart(item): showLoginAlert()
+																		(store.currentUser.user_type == "cliente") ? handleAddToCart(item): showLoginAlert()
 																		}}> 
 																		Add to cart
 																	</button>
@@ -316,9 +330,15 @@ export const Search = () => {
 									<span aria-hidden="true">&laquo;</span>
 								</a>
 								</li>
-								<li class="page-item"><a class="page-link" href="#">1</a></li>
-								<li class="page-item"><a class="page-link" href="#">2</a></li>
-								<li class="page-item"><a class="page-link" href="#">3</a></li>
+								{filteredData.length > 0 ? 
+									filteredData.slice((currentPage - 1 *6), (currentPage - 1 *6) + 6 ).map((item, index) => {
+										console.log("AAAA")
+										return (
+											<li class="page-item"><a class="page-link" href="#">{index+1}</a></li>
+										)
+										})
+								: <li class="page-item"><a class="page-link" href="#">1</a></li>
+								}
 								<li class="page-item">
 								<a class="page-link" href="#" aria-label="Next">
 									<span aria-hidden="true">&raquo;</span>

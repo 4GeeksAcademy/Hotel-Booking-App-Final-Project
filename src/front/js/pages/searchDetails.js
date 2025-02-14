@@ -23,13 +23,24 @@ export const SearchDetails = () => {
     }, []);
 
     const showLoginAlert = () => {
+        if(store.currentUser.user_type == "hotel"){
+            console.log("AAAAAAAAA")
             Swal.fire({
                 icon: 'warning',
-                title: 'Login Required',
-                text: 'Please log in to make a reservation.',
+                title: 'Client only feature',
+                text: 'Please log in as a client user to make a reservation.',
                 confirmButtonText: 'OK'
             });
-           };
+            return true;
+        }
+        Swal.fire({
+            icon: 'warning',
+            title: 'Login Required',
+            text: 'Please log in to make a reservation.',
+            confirmButtonText: 'OK'
+        });
+    };
+           
 
 
     const handleAddToCart = async (package_info) => {
@@ -47,7 +58,7 @@ export const SearchDetails = () => {
     console.log(store.hotelDetails)
     //console.log(store.hotels)
     return(
-        <div className="h-100 w-75 m-auto mt-5 details-card mb-5">	
+        <div className="h-100 w-75 m-auto mt-5 details-card mb-5 FontDesign">	
             { store.hotelDetails.length < 1 ? false : 
                 (
                 <div className="d-flex justify-content-center">
@@ -74,7 +85,7 @@ export const SearchDetails = () => {
                                         </div>
                                         <div className="row d-flex justify-content-center">
                                             <button className="btn custom-btn detailsButton mb-3 w-25" onClick={() =>{
-                                                    store.currentUser ? handleAddToCart(store.hotelDetails): showLoginAlert()
+                                                  (store.currentUser.user_type == "cliente") ? handleAddToCart(store.hotelDetails): showLoginAlert()
                                                 }}> 
                                                 Add to cart
                                             </button>

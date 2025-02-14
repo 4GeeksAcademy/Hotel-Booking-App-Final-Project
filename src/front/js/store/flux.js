@@ -189,16 +189,19 @@ const getState = ({ getStore, getActions, setStore }) => {
 							password: password
 						})
 					});
-
-					const data = await response.json();
-					if (response.ok) {
-						//Seteo de los datos necesarios del usuario
-						localStorage.setItem("user_session", data.access_token);
-						setStore({ currentUser: data.user })
-						// await getActions().loadUserData();
-
-						return data;
+					if (!response.ok) {
+						const errorData = await response.json();
+						return errorData.msg
 					}
+					
+					const data = await response.json();
+					//Seteo de los datos necesarios del usuario
+					localStorage.setItem("user_session", data.access_token);
+					setStore({ currentUser: data.user })
+					// await getActions().loadUserData();
+
+					return data;
+					
 
 				} catch (error) {
 					console.log("Error loading message from backend", error);
@@ -1170,7 +1173,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 							}
 						)
 					});
-
+					if(!response.ok){
+						const errorMsg = await response.json()
+						return errorMsg.msg
+					}
 
 					const data = await response.json();
 					console.log(data)

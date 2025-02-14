@@ -193,10 +193,16 @@
 }
 
 .hotelPackageList .packageCard {
-    border: 1px solid grey;
     border-radius: 20px;
     box-shadow: 10px 0px 15px #888888;
     text-overflow: ellipsis;
+}
+
+.packageCard .img-fluid{
+    height: 100%;
+    max-width: 100%;
+    display: block;
+    margin: auto;
 }
 
 .detailsButton{

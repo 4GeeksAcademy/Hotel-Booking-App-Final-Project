@@ -15,6 +15,10 @@
     color:#B9B9B9;
 }
 
+.loginDivider{
+    width: 17rem;
+}
+
 .loginInputData {
     min-width: 14rem;
     width: 30vw;
