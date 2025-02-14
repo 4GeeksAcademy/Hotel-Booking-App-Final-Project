@@ -22,7 +22,7 @@ html, body {
     padding: 20px 0;
     width: 100%;
     position: relative;
-    margin-top: auto; 
+    margin-top: 0 !important;
 }
 
 /* Footer Content */
@@ -44,7 +44,7 @@ html, body {
 .footer .app-name {
     font-family: 'Dancing Script', cursive;
     font-size: 20px;
-    margin-top: 5px;
+    margin-top: 0 !important;
 }
 
 .footer .contact-link {
