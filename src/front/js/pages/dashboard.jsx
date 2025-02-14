@@ -91,7 +91,10 @@ export const Dashboard = () => {
             </p>
 
             {/* Hoteles prioritarios */}
-            <h3 className="text-center mb-4 fw-bold fs-5">Our Most Recommended Hotels</h3>
+            <div className="d-flex justify-content-center w-100">
+                <h3 className="mb-4 fw-bold fs-5 custom-underline">Our Most Recommended Hotels</h3>
+            </div>
+            {/* <h3 className="mb-4 fw-bold fs-5 text-center" style={{ borderBottom: "1px solid #ffe800", display: "inline-block" }}>Our Most Recommended Hotels</h3> */}
             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
                 {priorityHotels.map((hotel) => (
                     <div key={hotel.id_hotel} className="col">
