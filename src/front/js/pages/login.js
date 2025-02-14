@@ -29,22 +29,22 @@ export const LoginAccount = () => {
         e.preventDefault()
         let response = await actions.loginAccount(data.username, data.password)
         //console.log(response)
-        if(store.currentUser){
+        if (store.currentUser) {
             Swal.fire({
-                    icon: 'success',
-                    title: 'Logged in!',
-                    text: 'Successfully logged into the system',
-                    timer: 2000,
-                    showConfirmButton: false,
-                });
-            setTimeout(() => {navigate("/")}, 2000)
-        } else{
+                icon: 'success',
+                title: 'Logged in!',
+                text: 'Successfully logged into the system',
+                timer: 2000,
+                showConfirmButton: false,
+            });
+            setTimeout(() => { navigate("/") }, 2000)
+        } else {
             Swal.fire({
-                    icon: 'warning',
-                    title: 'Incorrect Credentials',
-                    text: response,
-                    confirmButtonText: 'OK'
-                });
+                icon: 'warning',
+                title: 'Incorrect Credentials',
+                text: response,
+                confirmButtonText: 'OK'
+            });
         }
     }
 
@@ -62,22 +62,22 @@ export const LoginAccount = () => {
         //console.log(credentialResponse);
         const email_data = await actions.getGoogleInformation(credentialResponse)
         const login = await actions.loginGoogleAccount(email_data)
-        if(store.currentUser){
+        if (store.currentUser) {
             Swal.fire({
-                    icon: 'success',
-                    title: 'Logged in!',
-                    text: 'Successfully logged into the system',
-                    timer: 2000,
-                    showConfirmButton: false,
-                });
-            setTimeout(() => {navigate("/")}, 2000)
-        } else{
+                icon: 'success',
+                title: 'Logged in!',
+                text: 'Successfully logged into the system',
+                timer: 2000,
+                showConfirmButton: false,
+            });
+            setTimeout(() => { navigate("/") }, 2000)
+        } else {
             Swal.fire({
-                    icon: 'warning',
-                    title: 'Incorrect Credentials',
-                    text: login,
-                    confirmButtonText: 'OK'
-                });
+                icon: 'warning',
+                title: 'Incorrect Credentials',
+                text: login,
+                confirmButtonText: 'OK'
+            });
         }
     }
 
@@ -103,7 +103,7 @@ export const LoginAccount = () => {
                     <form onSubmit={loginUserHandling}>
                         <div className=" row mt-1 mb-4 d-flex justify-content-center">
                             <input type="text" className="loginInputData col-sm-auto form-control" placeholder="Enter your username" id="loginInputUser" name="username"
-                                value={data.username} onChange={inpuntHandling} required/>
+                                value={data.username} onChange={inpuntHandling} required />
                             <div class="invalid-feedback"></div>
                         </div>
 
@@ -128,9 +128,9 @@ export const LoginAccount = () => {
                         </div>
                     </form>
                     <div className="d-flex justify-content-center">
-                        <hr className="loginDivider"/>
+                        <hr className="loginDivider" />
                     </div>
-                    
+
                     <div className="d-flex justify-content-center">
                         <div className="w-25  d-flex justify-content-center">
                             <GoogleLogin
