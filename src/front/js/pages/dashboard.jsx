@@ -72,12 +72,15 @@ export const Dashboard = () => {
         }
     };
 
+
+
     const toggleExpandHotel = (hotelId) => {
-        setExpandedHotels((prevState) => ({
-            ...prevState,
-            [hotelId]: !prevState[hotelId],
+        setExpandedHotels((prev) => ({
+            ...prev,
+            [hotelId]: !prev[hotelId], // Toggle only the clicked hotel
         }));
     };
+
 
     return (
         <div className="FontDesign container py-5">
@@ -133,17 +136,31 @@ export const Dashboard = () => {
             <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-5">
                 {basicHotels.map((hotel) => (
                     <div key={hotel.id_hotel} className="col">
-                        <div className="card shadow-lg h-100 hotel-img">
+                        <div className="card shadow-lg hotel-img" style={{ height: "auto" }}>
+
                             <img
                                 src={hotel.image_url || "https://via.placeholder.com/200x200.png?text=No+Image"}
                                 alt={hotel.name}
-                                className="card-img-top"
+                                className="card-img-top hotel-img"
+                                style={{ width: "100%", height: "200px", objectFit: "cover" }}
                             />
+
                             <div className="card-body d-flex flex-column">
                                 <h5 className="card-title">{hotel.name}</h5>
-                                <p className={`card-text ${expandedHotels[hotel.id_hotel] ? "d-block" : "text-truncate"}`}>
+                                <p
+                                    className="card-text"
+                                    style={{
+                                        display: "-webkit-box",
+                                        WebkitLineClamp: expandedHotels[hotel.id_hotel] ? "unset" : "2",
+                                        WebkitBoxOrient: "vertical",
+                                        overflow: "hidden",
+                                    }}
+                                >
                                     {hotel.description}
                                 </p>
+
+
+
                                 <p className="card-text">{hotel.location}, {hotel.country}</p>
                                 <div className="d-flex justify-content-between align-items-center mt-auto">
                                     <button className="btn btn-light custom-btn me-3" onClick={() => {
@@ -158,6 +175,7 @@ export const Dashboard = () => {
                                     >
                                         {expandedHotels[hotel.id_hotel] ? "Show Less" : "Show More"}
                                     </button>
+
                                 </div>
                                 <FontAwesomeIcon
                                     icon={isHotelFavorited(hotel.id_hotel) ? solidStar : regularStar}
