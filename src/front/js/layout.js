@@ -20,6 +20,7 @@ import UserProfile from "./pages/profilePages/UserProfile";
 import PersonalInfo from "./pages/profilePages/PersonalInfo";
 import FavoriteHotels from "./pages/profilePages/FavoriteHotels";
 import StayHistory from "./pages/profilePages/StayHistory";
+import { SearchDetails } from "./pages/searchDetails.js";
 
 import HotelPersonalInfo from "./pages/hotelProfilePages/HotelPersonalInfo";
 import Hotels from "./pages/hotelProfilePages/Hotels";
@@ -53,6 +54,9 @@ const Layout = () => {
                         <Route element={<ReservationCart />} path="/reservationcart" />
                         <Route element={<Search />} path="/search" />
                         <Route element={<TermsAndConditions />} path="/terms" />
+                        <Route element={<SearchDetails />} path="/details" />
+                        
+                        
 
                         {/* User Profile Routes */}
                         <Route element={<UserProfile />} path="/profile">
