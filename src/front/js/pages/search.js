@@ -20,15 +20,18 @@ export const Search = () => {
 
 	const showLoginAlert = () => {
 		//console.log(store.currentUser.user_type)
-		if(store.currentUser.user_type == "hotel"){
-			//console.log("AAAAAAAAA")
-			Swal.fire({
-				icon: 'warning',
-				title: 'Client only feature',
-				text: 'Please log in as a client user to make a reservation.',
-				confirmButtonText: 'OK'
-			});
-			return true;
+		if(store.currentUser){
+			if(store.currentUser.user_type == "hotel"){
+				//console.log("AAAAAAAAA")
+				Swal.fire({
+					icon: 'warning',
+					title: 'Client-only feature',
+					text: 'Please log in as a client user to make a reservation.',
+					confirmButtonText: 'OK'
+				});
+				return true;
+			}
+			
 		}
 			Swal.fire({
 				icon: 'warning',
@@ -333,7 +336,12 @@ export const Search = () => {
 														<div className="row">
 															<div className="d-inline-flex flex-column">
 																	<button className="w-100 btn custom-btn detailsButton mb-2 me-2" onClick={() =>{
-																		(store.currentUser.user_type == "cliente") ? handleAddToCart(item): showLoginAlert()
+																		 if(store.currentUser){
+																			store.currentUser.user_type == "cliente" ? handleAddToCart(store.hotelDetails): showLoginAlert()
+																		}
+																		else{
+																			showLoginAlert()
+																		}
 																		}}> 
 																		Add to cart
 																	</button>

@@ -23,23 +23,27 @@ export const SearchDetails = () => {
     }, []);
 
     const showLoginAlert = () => {
-        if(store.currentUser.user_type == "hotel"){
-            console.log("AAAAAAAAA")
-            Swal.fire({
-                icon: 'warning',
-                title: 'Client only feature',
-                text: 'Please log in as a client user to make a reservation.',
-                confirmButtonText: 'OK'
-            });
-            return true;
-        }
-        Swal.fire({
-            icon: 'warning',
-            title: 'Login Required',
-            text: 'Please log in to make a reservation.',
-            confirmButtonText: 'OK'
-        });
-    };
+            //console.log(store.currentUser.user_type)
+            if(store.currentUser){
+                if(store.currentUser.user_type == "hotel"){
+                    //console.log("AAAAAAAAA")
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Client-only feature',
+                        text: 'Please log in as a client user to make a reservation.',
+                        confirmButtonText: 'OK'
+                    });
+                    return true;
+                }
+                
+            }
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Login Required',
+                    text: 'Please log in to make a reservation.',
+                    confirmButtonText: 'OK'
+                });
+            };
            
 
 
@@ -83,9 +87,14 @@ export const SearchDetails = () => {
                                             <div className="fs-6"><i className="fa-solid fa-location-dot"></i> {store.hotelDetails.hotel.location}</div>
                                             <div className="fs-6 mt-3 mb-5 text-break "> {store.hotelDetails.description}</div>
                                         </div>
-                                        <div className="row d-flex justify-content-center">
-                                            <button className="btn custom-btn detailsButton mb-3 w-25" onClick={() =>{
-                                                  (store.currentUser.user_type == "cliente") ? handleAddToCart(store.hotelDetails): showLoginAlert()
+                                        <div className="row d-flex justify-content-center mt-auto">
+                                            <button className="btn custom-btn detailsButton mb-3 w-25 " onClick={() =>{
+                                                if(store.currentUser){
+                                                    store.currentUser.user_type == "cliente" ? handleAddToCart(store.hotelDetails): showLoginAlert()
+                                                }
+                                                else{
+                                                    showLoginAlert()
+                                                }
                                                 }}> 
                                                 Add to cart
                                             </button>
