@@ -33,6 +33,31 @@
     color: #ffffff;
 }
 
+/* BOTÓN AMARILLO PERSONALIZADO */
+button.custom-btn-yellow {
+    background-color: #d6a810;
+    /* Amarillo más oscuro para el estado normal */
+    border: none;
+    color: white;
+    /* Texto blanco */
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-size: 0.85rem;
+}
+
+/* Hover para el botón amarillo */
+.custom-btn-yellow:hover {
+    background-color: #fad43b;
+    /* Amarillo más brillante al pasar el ratón */
+    transform: scale(1.05);
+    /* Efecto de ampliación */
+    color: white;
+    /* El texto sigue siendo blanco */
+}
+
 /* DISEÑO ICONOS DEL NAVBAR */
 /* Diseño icono reservas: */
 .icon-app {
@@ -406,3 +431,11 @@
 }
 
 /**************************************************************************CIERRE DISEÑO LOGIN****************************************************************************************/
+/**************************************************************************INICIO DISEÑO NAVBAR****************************************************************************************/
+@media (max-width: 768px) {
+    .navbar-menu-btn {
+        margin-bottom: 1rem;
+    }
+}
+
+/**************************************************************************CIERRE DISEÑO NAVBAR****************************************************************************************/
