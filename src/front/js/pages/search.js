@@ -15,6 +15,7 @@ export const Search = () => {
 	const [searchInfo, setSearchInfo] = useState({})
 	const [currentPage, setCurrentPage] = useState(1)
 	const [slicedHotels, setSlicedHotels] = useState([])
+	const [pagination, setPagination] = useState([])
 
 
 	const showLoginAlert = () => {
@@ -41,18 +42,17 @@ export const Search = () => {
 	
 	useEffect(()=> {
 		const loadPage = async () => {
-			
-
 			let base_packages = await actions.loadHotelPackages()
 			if(base_packages){
-				setFilterData([...store.hotel_packages])
+				setSlicedHotels([...store.hotel_packages.slice(0, 6)])
+				for(let i = 0; i <= Math.floor(store.hotel_packages.length/6); i++){
+					setPagination(prevPagination => [...prevPagination, i])
+				}
 			}
 			if (store.clicked_hotel){
 				searchInfo.hotel_name = store.clicked_hotel
 				packageSearchFilter()
 			}
-			const sliced_data = filteredData.slice((currentPage - 1 *6), (currentPage - 1 *6) + 6 )
-			console.log(sliced_data)
 		}
 		
 		loadPage();
@@ -60,9 +60,27 @@ export const Search = () => {
 	}, []);
 
 	useEffect(() => {
-		const sliced_data = filteredData.slice((currentPage - 1 *6), (currentPage - 1 *6) + 6 )
+		changeData()
+	}, [currentPage, filterState, filteredData])
+
+	const changeData= () => {
+		console.log(filteredData)
+		let hotel_copy = [...store.hotel_packages]
+
+		if(filterState){
+			console.log("entrado")
+			hotel_copy = []
+			hotel_copy = [...filteredData]
+		}
+		
+		console.log(hotel_copy)
+		const pageNumber = currentPage
+		const startIndex = (pageNumber - 1 ) * 6
+    	const endIndex = startIndex + 6
+		const sliced_data = hotel_copy.slice(startIndex, endIndex)
 		console.log(sliced_data)
-	}, [currentPage])
+		setSlicedHotels([...sliced_data])
+	}
 
 
 	const packageSearchFilter = (e) => {
@@ -73,37 +91,53 @@ export const Search = () => {
 		//console.log(searchInfo)
 		if (Object.keys(searchInfo).length == 0){
 			setFilterState(false)
-			setFilterData([...store.hotel_packages])
+			//setFilterData([...store.hotel_packages])
+			setSlicedHotels([...store.hotel_packages.slice(0, 6)])
 			return false
 		}
 		
 		let hotel_reduced_search = hotel_packages_copy.reduce((hotel_package, details)=>{
-			if(details.hotel_package_name.includes(searchInfo.package_name) || 
-			details.hotel.name.includes(searchInfo.hotel_name) ||
-			((searchInfo.min_price ? details.price >= searchInfo.min_price : searchInfo.max_price ? true : false) 
-				&& (searchInfo.max_price ? details.price <= searchInfo.max_price : searchInfo.min_price ? true : false)) ||
+			if(details.hotel_package_name.location.toLowerCase().includes(searchInfo.package_name.toLowerCase()) || 
+			details.hotel.name.location.toLowerCase().includes(searchInfo.hotel_name.toLowerCase()) ||
+			((searchInfo.min_price ? (parseFloat(details.price) >= parseFloat(searchInfo.min_price)) : searchInfo.max_price ? true : false) 
+				&& (searchInfo.max_price ? (parseFloat(details.price) <= parseFloat(searchInfo.max_price)) : searchInfo.min_price ? true : false)) ||
 						(new Date(searchInfo.package_date).getTime() < new Date(details.end_date).getTime() && 
 							new Date(searchInfo.package_date).getTime() > new Date(details.start_date).getTime()) ||
-								details.hotel.location.includes(searchInfo.hotel_location)){
-							hotel_package.push(details);
+								details.hotel.location.toLowerCase().includes(searchInfo.hotel_location.locationtoLowerCase())){
+									hotel_package.push(details);
 			}
 			return hotel_package;
 		}, []);
 
-		//console.log(hotel_reduced_search)
-	
-		//setPageSize([...hotel_reduced_search])
-		setFilterState(true)
-		setFilterData([...hotel_reduced_search])	
-	}
-	//console.log(pageSize)
-	
+		setPagination([])
+		for(let i = 0; i <= Math.floor(hotel_reduced_search.length/6); i++){
+			setPagination(prevPagination => [...prevPagination, i])
+		}
+		//console.log(Math.floor(hotel_reduced_search.length/6))
 
-	const clearFilters = (e) => {
-		e.preventDefault()
+		setFilterState(true)
+		setFilterData([...hotel_reduced_search])
+
+		if(currentPage != 1){
+			setCurrentPage(1)
+		}
+		else{
+			changeData()
+		}
+	}
+
+	
+	
+	const clearFilters = async ()=> {
 		setFilterState(false)
 		setSearchInfo({})
-		setFilterData([...store.hotel_packages])
+		setPagination([])
+		for(let i = 0; i <= Math.floor(store.hotel_packages.length/6); i++){
+			setPagination(prevPagination => [...prevPagination, i])
+		}
+		
+		changeData()
+		
 	}
 
 	const handleAddToCart = async (package_info) => {
@@ -118,7 +152,7 @@ export const Search = () => {
 		});
 	}
 
-    //console.log(store.hotels)
+    
 	return(
 		<>	
 		<div className="h-auto FontDesign">
@@ -242,13 +276,16 @@ export const Search = () => {
 							</div>	
 						
 						<div className="col mt-3 d-flex justify-content-center">
-							{/*Boton de limpieza de filtro */}
-							<button  className='btn btn-secondary searchButton me-2' type="button" onClick={clearFilters}>
-								<div className='text-light fw-bold'>Clear</div>
-							</button>
 							{/*Boton de busqueda */}
-							<button  className='btn btn-success searchButton ms-2' type="submit">
+							<button  className='btn btn-success searchButton me-2' type="submit">
 								<div className='text-light fw-bold'>Search</div>
+							</button>
+
+							{/*Boton de limpieza de filtro */}
+							<button  className='btn btn-secondary searchButton ms-2' type="button" onClick={() => {
+								clearFilters()
+							}}>
+								<div className='text-light fw-bold'>Clear</div>
 							</button>
 						</div>
 						
@@ -261,12 +298,12 @@ export const Search = () => {
 					<div className="d-inline-flex flex-column">
 						<div className="row justify-content-center">
 							
-								{ filteredData.length > 0 ? 
-									filteredData.map((item, index) => {
+								{ slicedHotels.length > 0 ? 
+									slicedHotels.map((item, index) => {
 								return (
 									<div
 										key={index}
-										className="col-10 mt-4 hotel-card ps-0 pe-0"
+										className="col-11 mt-4 hotel-card ps-0 pe-0"
 										>
 										<div className="row w-100 justify-content-sm-center m-0 justify-content-md-start p-0 packageCard">
 										{/*
@@ -326,21 +363,38 @@ export const Search = () => {
 						<nav className="col-12 mt-3" aria-label="Page navigation example">
 							<ul class="pagination d-flex justify-content-center">
 								<li class="page-item">
-								<a class="page-link" href="#" aria-label="Previous">
+								<a class="page-link" href="#" aria-label="Previous" 
+								onClick={() =>{
+										if(currentPage > 1){
+											setCurrentPage(currentPage-1)
+											
+										}
+										}}>
 									<span aria-hidden="true">&laquo;</span>
 								</a>
 								</li>
-								{filteredData.length > 0 ? 
-									filteredData.slice((currentPage - 1 *6), (currentPage - 1 *6) + 6 ).map((item, index) => {
-										console.log("AAAA")
+								{pagination.length > 0 ? 
+									pagination.map((item, index) => {
 										return (
-											<li class="page-item"><a class="page-link" href="#">{index+1}</a></li>
+											<li class="page-item" onClick={() =>{
+												setCurrentPage(index+1)
+												
+												
+											}
+											
+										}><a class="page-link" href="#">{index+1}</a></li>
 										)
 										})
 								: <li class="page-item"><a class="page-link" href="#">1</a></li>
 								}
 								<li class="page-item">
-								<a class="page-link" href="#" aria-label="Next">
+								<a class="page-link" href="#" aria-label="Next" 
+									onClick={() =>{
+											if(currentPage < (pagination.length )){
+												setCurrentPage(currentPage + 1)
+											}
+						
+										}}>
 									<span aria-hidden="true">&raquo;</span>
 								</a>
 								</li>
