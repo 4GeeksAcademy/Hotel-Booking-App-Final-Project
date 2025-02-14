@@ -2,18 +2,19 @@ import React, { useState, useEffect, useContext } from "react";
 import Header from "./Header";
 import HotelSidebar from "./HotelSidebar";
 import { Context } from "../../store/appContext";
+import "./hotelProfile.css";
 
 const HotelPersonalInfo = () => {
   const { actions } = useContext(Context);
   const [isEditable, setIsEditable] = useState(false);
-  const [showPlanSelection, setShowPlanSelection] = useState(false); // Toggle for showing plan selection
+  const [showPlanSelection, setShowPlanSelection] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     last_name: "",
     username: "",
     email: "",
-    plan: "basic" // Default plan (this should be fetched from backend)
+    plan: "basic"
   });
 
   useEffect(() => {
@@ -25,7 +26,7 @@ const HotelPersonalInfo = () => {
           last_name: hotelInfo.last_name || "",
           username: hotelInfo.username || "",
           email: hotelInfo.email || "",
-          plan: hotelInfo.plan || "basic" // Fetching the current plan
+          plan: hotelInfo.plan || "basic"
         });
       }
     };
@@ -61,160 +62,69 @@ const HotelPersonalInfo = () => {
     const result = await actions.selectPlan(planId);
 
     if (result) {
-      alert(result); // Success message
-      setFormData({ ...formData, plan: planId === 1 ? "priority" : "basic" }); // Update UI
-      setShowPlanSelection(false); // Hide selection panel
+      alert(result);
+      setFormData({ ...formData, plan: planId === 1 ? "priority" : "basic" });
+      setShowPlanSelection(false);
     } else {
       alert("❌ Failed to update plan. Please try again.");
     }
   };
 
-
-
   return (
-    <div className="d-flex">
+    <div className="hotel-container">
       <HotelSidebar />
-      <div className="flex-grow-1">
+      <div className="hotel-content">
         <Header title="Personal Information" />
-
-        <div className="content container mt-4">
-          <h2 className="text-center mb-4">Hotel User Information</h2>
-
-          {/* Profile Form */}
-          <form className="w-100" style={{ maxWidth: "800px", margin: "0 auto" }}>
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <label className="form-label">First Name</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  disabled={!isEditable}
-                />
-              </div>
-              <div className="col-md-6">
-                <label className="form-label">Last Name</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="last_name"
-                  value={formData.last_name}
-                  onChange={handleChange}
-                  disabled={!isEditable}
-                />
-              </div>
+        <div className="content-wrapper">
+          <h2 className="section-title">Hotel User Information</h2>
+          <form className="hotel-form">
+            <div className="form-group">
+              <label>First Name</label>
+              <input type="text" name="name" value={formData.name} onChange={handleChange} disabled={!isEditable} />
             </div>
-
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <label className="form-label">Username</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="username"
-                  value={formData.username}
-                  onChange={handleChange}
-                  disabled={!isEditable}
-                />
-              </div>
-              <div className="col-md-6">
-                <label className="form-label">Email</label>
-                <input
-                  type="email"
-                  className="form-control"
-                  name="email"
-                  value={formData.email}
-                  disabled
-                />
-              </div>
+            <div className="form-group">
+              <label>Last Name</label>
+              <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} disabled={!isEditable} />
             </div>
-
-            {/* Display and Change Plan */}
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <label className="form-label">Current Plan</label>
-                <div className="d-flex align-items-center">
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={formData.plan}
-                    disabled
-                  />
-                  <button
-                    className="btn btn-outline-primary ms-2"
-                    type="button"
-                    onClick={() => setShowPlanSelection(!showPlanSelection)}
-                  >
-                    Change Plan
-                  </button>
-                </div>
+            <div className="form-group">
+              <label>Username</label>
+              <input type="text" name="username" value={formData.username} onChange={handleChange} disabled={!isEditable} />
+            </div>
+            <div className="form-group">
+              <label>Email</label>
+              <input type="email" name="email" value={formData.email} disabled />
+            </div>
+            <div className="form-group">
+              <label>Current Plan</label>
+              <div className="plan-selection">
+                <input type="text" value={formData.plan} disabled />
+                <button type="button" onClick={() => setShowPlanSelection(!showPlanSelection)}>
+                  Change Plan
+                </button>
               </div>
             </div>
           </form>
 
-          {/* Plan Selection Section (Shows when "Change Plan" is clicked) */}
           {showPlanSelection && (
-            <div className="row mt-4">
-              <h3 className="text-center mb-3">Select a New Plan</h3>
-              <div className="col-md-6">
-                <div
-                  className={`card ${selectedPlan === "Priority" ? "border-primary" : ""}`}
-                  onClick={() => handlePlanSelection("Priority")}
-                  style={{ cursor: "pointer" }}
-                >
-                  <div className="card-body">
-                    <h5 className="card-title">Priority Plan</h5>
-                    <p className="card-text">✅Get your plans featured at the top of the main screen for more visibility.
-                      ✅Unlimited packages listed.
-                      ✅Single payment subscription.
-                    </p>
-                  </div>
-                </div>
+            <div className="plan-container">
+              <h3>Select a New Plan</h3>
+              <div className="plan-card" onClick={() => handlePlanSelection("Priority")}>
+                <h5>Priority Plan</h5>
+                <p>✅ Get your plans featured at the top of the main screen for more visibility.</p>
               </div>
-              <div className="col-md-6">
-                <div
-                  className={`card ${selectedPlan === "basic" ? "border-primary" : ""}`}
-                  onClick={() => handlePlanSelection("basic")}
-                  style={{ cursor: "pointer" }}
-                >
-                  <div className="card-body">
-                    <h5 className="card-title">Basic Plan</h5>
-                    <p className="card-text">✅Standard visibility for your packages.
-                      ✅Unlimited packages listed. </p>
-                  </div>
-                </div>
+              <div className="plan-card" onClick={() => handlePlanSelection("basic")}>
+                <h5>Basic Plan</h5>
+                <p>✅ Standard visibility for your packages.</p>
               </div>
-              <div className="text-center mt-3">
-                <button onClick={() => {
-                  console.log("Button clicked for Priority Plan, sending ID: 1");
-                  confirmPlanSelection(1);
-                }}>
-                  Select Priority Plan
-                </button>
-
-                <button onClick={() => {
-                  console.log("Button clicked for Basic Plan, sending ID: 2");
-                  confirmPlanSelection(2);
-                }}>
-                  Select Basic Plan
-                </button>
-
-              </div>
+              <button onClick={() => confirmPlanSelection(1)}>Select Priority Plan</button>
+              <button onClick={() => confirmPlanSelection(2)}>Select Basic Plan</button>
             </div>
           )}
 
-          {/* Buttons */}
-          <div className="d-flex justify-content-end mt-4" style={{ maxWidth: "800px", margin: "0 auto" }}>
-            <button className={`btn ${isEditable ? "btn-secondary" : "btn-warning"} me-2`} onClick={toggleEdit}>
-              {isEditable ? "Cancel" : "Edit Information"}
-            </button>
-            <button className="btn btn-success" onClick={handleSave} disabled={!isEditable}>
-              Save Changes
-            </button>
+          <div className="form-buttons">
+            <button className="custom-btn-yellow" onClick={toggleEdit}>{isEditable ? "Cancel" : "Edit Information"}</button>
+            <button className="custom-btn-green" onClick={handleSave} disabled={!isEditable}>Save Changes</button>
           </div>
-
         </div>
       </div>
     </div>

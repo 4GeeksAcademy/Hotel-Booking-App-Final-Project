@@ -14,8 +14,6 @@ export const LoginAccount = () => {
     let navigate = useNavigate()
     let response = {}
 
-
-
     useEffect(() => {
         store.currentUser ? navigate("/") : false
     }, [])
@@ -25,7 +23,6 @@ export const LoginAccount = () => {
         username: "",
         password: "",
     });
-
 
     //Verifying user data
     const loginUserHandling = async (e) => {
@@ -61,7 +58,6 @@ export const LoginAccount = () => {
             }));
         //console.log(data);
     }
-
     const handleGoogleLogin = async (credentialResponse) => {
         //console.log(credentialResponse);
         const email_data = await actions.getGoogleInformation(credentialResponse)
@@ -91,20 +87,19 @@ export const LoginAccount = () => {
                 <div className='col-xs-auto container-fluid mt-0'>
                     <div className="row d-flex justify-content-center mt-5 mb-0 pb-0">
 
-                        <div id="welcomePageTitleLogin" className="d-flex justify-content-center col-xs-12 col-md-auto">
-                            <div >Welcome to&nbsp;</div> <div className="colorTitle">Serenia</div>
+                        <div className="d-flex justify-content-center col-xs-12 col-md-auto">
+                            <span id="welcomePageTitleLogin">Welcome to&nbsp;</span>
+                            <span className="colorTitle">Serenia</span>
                         </div>
 
-
-
                     </div>
-                    <div id="loginMessage" className="col-sm-auto d-flex justify-content-center mt-0 p-0 mb-0">
+                    <div id="loginMessage" className="col-sm-auto d-flex justify-content-center mt-0 p-0 mb-4">
                         <p>Please, log in</p>
                     </div>
                 </div>
 
 
-                <div className='col-xs-auto container-fluid w-100 border-secondary mt-0' id="customMarginLogin">
+                <div className='FontDesign col-xs-auto container-fluid w-100 border-secondary mt-0' id="customMarginLogin">
                     <form onSubmit={loginUserHandling}>
                         <div className=" row mt-1 mb-4 d-flex justify-content-center">
                             <input type="text" className="loginInputData col-sm-auto form-control" placeholder="Enter your username" id="loginInputUser" name="username"
@@ -116,17 +111,18 @@ export const LoginAccount = () => {
                             <input type="password" className="loginInputData form-control" placeholder="Enter your password" id="loginInputPass" name="password"
                                 value={data.password} onChange={inpuntHandling} required
                             />
-                            <div class="invalid-feedback"></div>
+                            <div class="invalid-feedback mb-5"></div>
                         </div>
 
                         {/* Botones de login y de perdida de contraseña */}
-                        <div className="col-xs-auto d-flex justify-content-center mt-5">
-                            <button id="botonLogin" className='col-xs-auto ps-4 pe-4' type="submit">
-                                <div className='text-light fw-bold' >Login</div>
+                        <div className="d-flex flex-column align-items-center justify-content-center mt-5">
+                            <button id="botonLogin" className='custom-btn' type="submit">
+                                Login
                             </button>
                         </div>
+
                         <div className="col-12 d-flex justify-content-center">
-                            <button id="botonForgotPassword" className='mt-3 ps-4 pe-4' type="submit" onClick={() => navigate("reset")}>
+                            <button id="botonForgotPassword" className="custom-btn-grey mt-3" type="submit" onClick={() => navigate("reset")}>
                                 <div className='text-light fw-bold'>Forgot your password?</div>
                             </button>
                         </div>

@@ -1,42 +1,63 @@
-import React from 'react';
-import '../../../styles/userProfile.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarAlt, faTag, faHotel, faTrash } from '@fortawesome/free-solid-svg-icons';
 
-const StayHistory = () => {
-  return (
-    <div className="history-container">
-      <h2>Stay History</h2>
-      <input type="text" placeholder="Buscar estadía..." className="form-control search-bar" />
-      <div className="package-list">
-        {[1, 2, 3].map((item) => (
-          <div key={item} className="package-item">
-            <div className="package-image"></div>
-            <div className="package-details">
-              <h5>Package Name</h5>
-              <div className="package-meta">
-                <div className="meta-item">
-                  <FontAwesomeIcon icon={faCalendarAlt} /> Stay Date
-                </div>
-                <div className="meta-item">
-                  <FontAwesomeIcon icon={faTag} /> Price
-                </div>
-                <div className="meta-item">
-                  <FontAwesomeIcon icon={faHotel} /> Hotel
-                </div>
-                <FontAwesomeIcon icon={faTrash} className="delete-icon" />
-              </div>
-              <div className="package-description">
-                <p>Package Description</p>
-                <a href="#">Go to package</a>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-      <button className="btn btn-info">Save Changes</button>
-    </div>
-  );
+import React, { useContext, useEffect, useState } from "react";
+import { Context } from "../../store/appContext";
+import moment from "moment";
+import '../../../styles/userProfile.css';
+
+export const StayHistory = () => {
+    const { store, actions } = useContext(Context);
+    const [loading, setLoading] = useState(true);
+    const [paidReservations, setPaidReservations] = useState([]);
+
+    useEffect(() => {
+        const fetchReservations = async () => {
+            try {
+                await actions.getUserReservations();
+                const paidStays = store.reservations.filter(reservation => reservation.is_paid);
+                setPaidReservations(paidStays);
+            } catch (error) {
+                console.error("Error fetching reservations:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchReservations();
+    }, []);
+
+    if (loading) {
+        return <div className="loading-container"><p><i className="fas fa-spinner fa-spin"></i> Loading stay history...</p></div>;
+    }
+
+    return (
+        <div className="stay-history-container">
+            <h2 className="section-title">Stay History</h2>
+
+            {paidReservations.length > 0 ? (
+                paidReservations.map((reservation, index) => (
+                    <div key={index} className="stay-card">
+                        <div className="stay-card-body">
+                            <h5 className="stay-card-title">Stay #{index + 1}</h5>
+                            <p className="stay-info"><strong>Reservation Date:</strong> {moment(reservation.reservation_date).format("YYYY-MM-DD HH:mm:ss")}</p>
+                            <p className="stay-info"><strong>Package Name:</strong> {reservation.stay_package.hotel_package_name}</p>
+                            <p className="stay-info"><strong>Amount Paid:</strong> ${reservation.stay_package.price}</p>
+                            <div className="stay-contact">
+                                {reservation.phone_number ? (
+                                    <a href={`https://wa.me/${reservation.phone_number}`} target="_blank" rel="noopener noreferrer" className="custom-btn-green">
+                                        <i className="fab fa-whatsapp"></i> Contact via WhatsApp
+                                    </a>
+                                ) : (
+                                    <span className="no-contact">No contact available</span>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                ))
+            ) : (
+                <p className="empty-message">You have no past stays.</p>
+            )}
+        </div>
+    );
 };
 
 export default StayHistory;

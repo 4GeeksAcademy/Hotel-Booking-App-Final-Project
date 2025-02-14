@@ -17,88 +17,119 @@ export const Navbar = () => {
 	}
 
 	const handleUserProfile = (e) => {
-		e.preventDefault()
+		e.preventDefault();
 		if (store.currentUser) {
-			if (store.currentUser.user_type == "cliente") {
-				navigate("/profile")
-			}
-			else if (store.currentUser.user_type == "hotel") {
-				navigate("/hotel-profile/personal-info")
-			}
-			else if (store.currentUser.user_type == "admin") {
-				navigate("/admin/personal-info")
+			if (store.currentUser.user_type === "cliente") {
+				navigate("/profile");
+			} else if (store.currentUser.user_type === "hotel") {
+				navigate("/hotel-profile/personal-info");
+			} else if (store.currentUser.user_type === "admin") {
+				navigate("/admin/personal-info");
 			}
 		}
-	}
-
-	console.log(location.pathname)
+	};
 
 	return (
-		<nav className="navbar navBarfooterConfig p-0 FontDesign container-fluid">
-			<div className="container-fluid d-flex justify-content-between align-items-center ms-5 me-5">
-				<Link to="/" className="SereniaTitle d-flex align-items-center text-light ms-0">
+		<nav className="navbar navbar-expand-lg navBarfooterConfig FontDesign container-fluid p-0">
+			<div className="container-fluid d-flex justify-content-between align-items-center px-4">
+				{/* Logo */}
+				<Link to="/" className="SereniaTitle d-flex align-items-center text-light">
 					<i className="fa-solid fa-location-dot fs-4 me-1"></i>
-					<span className="navbar-brand mb-0 text-light">
-						Serenia
-					</span>
+					<span className="navbar-brand mb-0 text-light">Serenia</span>
 				</Link>
 
-				{/* <div className="ml-auto d-flex"> */}
-				<div className="d-flex align-items-center gap-3">
-					{/* Mostrar el botón de Logout si el usuario está logueado */}
-					{localStorage.getItem("user_session") && store.currentUser ? (
-						<>
-							{/* Botón de funciones de usuario */}
-							{(
-								<div className="row mb-0 navBar w-100 Dropdown-Setup row d-flex justify-content-start">
-									<p className="col-3 m-auto h-100 fw-none text-light text-end" onClick={() => { navigate("/search") }}> Browse </p>
-									{/* Mensaje saludando al usuario */}
-									<p className="col-7 m-auto h-100 fw-none text-light text-end">Hello, {store.currentUser && store.currentUser.name}</p>
+				{/* Botón de menú para pantallas pequeñas */}
+				<button
+					className="navbar-toggler text-light border-0"
+					type="button"
+					data-bs-toggle="collapse"
+					data-bs-target="#navbarContent"
+					aria-controls="navbarContent"
+					aria-expanded="false"
+					aria-label="Toggle navigation"
+				>
+					<i className="fa-solid fa-bars fs-3"></i>
+				</button>
 
-									{/* Funciones especificas del usuario a traves del navBar */}
-									<div className="col-2 dropdown  h-100 m-auto d-flex justify-content-start">
-										<a className="dropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-											<i className="fs-2  fa-solid fa-circle-user text-light"></i>
-										</a>
-										<ul class="dropdown-menu dropdown-menu-end userProfileButton bg-light">
-											<li><button className="navBarProfileButton text-start w-100 h-100"
-												onClick={handleUserProfile} href="#">User profile</button></li>
-											<li><hr className="dropdown-divider bg-dark mb-0"></hr></li>
-											<li><button className="navBarProfileButton text-start text-danger mt-0 w-100 h-100"
-												onClick={handleLogOut} href="#">Logout</button></li>
-										</ul>
-									</div>
-								</div>
-
-							)}
-						</>
-					) : location.pathname == "/login" ? false : (
-						<>
-							{/* Botón de Login si no está logueado */}
-							{(
-								<>
-									<div className="col mb-0 navBar w-100 Dropdown-Setup row d-flex justify-content-start">
-										<p className="col m-auto h-100 fw-none text-light text-end" onClick={() => { navigate("/search") }}> Browse </p>
-									</div>
-									<button
-										className="custom-btn-grey"
-										onClick={() => navigate("/login")}
+				{/* Contenido del Navbar */}
+				<div className="collapse navbar-collapse" id="navbarContent">
+					<div className="navbar-nav ms-auto align-items-center gap-3">
+						{/* Usuario logueado */}
+						{localStorage.getItem("user_session") && store.currentUser ? (
+							<div className="d-flex align-items-center gap-3">
+								<p className="m-0 fw-none text-light">
+									Hello, {store.currentUser?.name}
+								</p>
+								<div className="dropdown">
+									<a
+										className="dropdown"
+										href="#"
+										role="button"
+										data-bs-toggle="dropdown"
+										aria-expanded="false"
 									>
-										Login
-									</button>
-								</>
+										<i className="fs-2 fa-solid fa-circle-user text-light"></i>
+									</a>
+									<ul className="dropdown-menu dropdown-menu-end userProfileButton bg-light">
+										<li>
+											<button
+												className="navBarProfileButton text-start w-100"
+												onClick={handleUserProfile}
+											>
+												User profile
+											</button>
+										</li>
+										<li>
+											<hr className="dropdown-divider bg-dark mb-0"></hr>
+										</li>
+										<li>
+											<button
+												className="navBarProfileButton text-start text-danger mt-0 w-100"
+												onClick={handleLogOut}
+											>
+												Logout
+											</button>
+										</li>
+									</ul>
+								</div>
+							</div>
+						) : location.pathname === "/login" ? (
+							false
+						) : (
+							<button
+								className="custom-btn-grey navbar-menu-btn"
+								onClick={() => navigate("/login")}
+							>
+								Login
+							</button>
+						)}
 
-							)}
-						</>
-					)}
-					{/* Botón del carrito de reservas, solo en "/" y para clientes */}
-					{store.currentUser?.user_type === "cliente" && location.pathname !== "/reservationcart" ? (
-						<Link to="/reservationcart" className="icon-app text-light fs-3 ms-3">
-							<i className="fa-solid fa-calendar-check"></i>
-						</Link>
-					) : false}
+						{/* Carrito de reservas */}
+						{store.currentUser?.user_type === "cliente" &&
+							location.pathname !== "/reservationcart" ? (
+							<Link
+								to="/reservationcart"
+								className="icon-app text-light fs-3 ms-3"
+							>
+								<i className="fa-solid fa-calendar-check"></i>
+							</Link>
+						) : null}
+
+						{/* Botón de Browse */}
+						{location.pathname === "/" && (
+							<button
+								className={`${localStorage.getItem("user_session") && store.currentUser
+									? "custom-btn-grey navbar-menu-btn"
+									: "custom-btn-yellow navbar-menu-btn"
+									}`}
+								onClick={() => navigate("/search")}
+							>
+								Browse
+							</button>
+						)}
+					</div>
 				</div>
 			</div>
-		</nav >
+		</nav>
 	);
 };

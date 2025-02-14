@@ -88,7 +88,7 @@
 		"react-phone-number-input": "^3.4.11",
 		"react-polyfills": "0.0.1",
 		"react-router-dom": "^6.3.0",
-		"sweetalert2": "^11.15.10",
+		"sweetalert2": "^11.16.0",
 		"swiper": "^11.2.2"
 	}
 }

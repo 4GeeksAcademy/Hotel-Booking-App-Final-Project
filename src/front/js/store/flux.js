@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			currentUser: null,
+			currentUser: {},
 			userHotels: [],
 			message: null,
 			hotels: [],
@@ -97,10 +97,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			// Fetch personal information for the PersonalInfo page
 			fetchPersonalInfo: async () => {
 				const token = localStorage.getItem("user_session"); // Assuming the token is stored here
-				if (!token) {
-					console.error("No token found!");
-					return null;
-				}
+				const actions = getActions()
 				try {
 					const response = await fetch(`${process.env.BACKEND_URL}/api/personal-info`, {
 						headers: {
@@ -108,6 +105,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 						}
 					});
 					if (!response.ok) {
+						if (response.status == 401) {
+							actions.logOutAccount()
+						}
 						throw new Error("Failed to fetch personal info");
 					}
 					const data = await response.json();
@@ -146,11 +146,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			/*edita el personal information del hotel desde el perfil de hotel */
 			updateHotelPersonalInfo: async (formData) => {
-				const token = localStorage.getItem("user_session"); // Assuming the token is stored here
+				const token = localStorage.getItem("user_session");
 				if (!token) {
 					console.error("No token found!");
 					return false;
 				}
+
+				console.log("🚀 Sending updated hotel info:", formData);
+
 				try {
 					const response = await fetch(`${process.env.BACKEND_URL}/api/hotel-personal-info`, {
 						method: "PUT",
@@ -166,13 +169,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 
 					const data = await response.json();
-					console.log("Hotel personal info updated:", data);
-					return true; // Return success
+					console.log("✅ Hotel personal info updated:", data);
+					return true;
 				} catch (error) {
-					console.error("Error updating hotel personal info:", error);
-					return false; // Return failure
+					console.error("❌ Error updating hotel personal info:", error);
+					return false;
 				}
 			},
+
 
 
 
@@ -284,8 +288,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 						// await getActions().loadUserData();
 
 						return data;
+					} else {
+						setStore({ currentUser: null })
 					}
 				} catch (error) {
+					setStore({ currentUser: null })
 					console.log(error);
 					return error;
 				}
@@ -438,45 +445,51 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			/*send personal info cliente to API*/
 			savePersonalInfo: async (formData) => {
-				const token = localStorage.getItem("user_session"); // Assuming the token is stored here
+				const token = localStorage.getItem("user_session");
 				if (!token) {
-					console.error("No token found!");
+					console.error("❌ No token found!");
 					return false;
 				}
+
+				console.log("🚀 Sending updated info to backend:", formData); // ✅ Debugging log
+
+				if (!formData.profile_image) {
+					console.warn("⚠️ WARNING: profile_image is missing before sending request!");
+				}
+
 				try {
-					const response = await fetch(`${process.env.BACKEND_URL}/api/personal-info`, {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/user/update`, {
 						method: "PUT",
 						headers: {
 							"Content-Type": "application/json",
-							Authorization: `Bearer ${token}`
+							Authorization: `Bearer ${token}`,
 						},
-						body: JSON.stringify(formData)
+						body: JSON.stringify(formData),
 					});
 
 					if (!response.ok) {
-						throw new Error("Failed to update personal info");
+						throw new Error("❌ Failed to update personal info");
 					}
 
 					const data = await response.json();
-					console.log("Personal info updated successfully:", data);
+					console.log("✅ Personal info updated successfully:", data); // ✅ Debugging log
 
-					// Update the personalInfo in the store
-					setStore({ personalInfo: data });
+					setStore({ personalInfo: { ...getStore().personalInfo, ...data } });
 
 					return true;
 				} catch (error) {
-					console.error("Error updating personal info:", error);
+					console.error("❌ Error updating personal info:", error);
 					return false;
 				}
 			},
 
+
+
+
 			// Obtener las reservas de los usuarios en el carrito
 			getUserReservations: async () => {
+				const actions = getActions()
 				const token = localStorage.getItem("user_session"); // Assuming the token is stored here
-				if (!token) {
-					console.error("No token found!");
-					return false;
-				}
 				try {
 					const response = await fetch(process.env.BACKEND_URL + "api/user/reservations", {
 						method: "GET",
@@ -485,7 +498,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 							Authorization: `Bearer ${token}`
 						},
 					});
-
+					if (response.status == 401) {
+						actions.logOutAccount()
+						return null
+					}
 					const data = await response.json();
 					console.log('Datos de reservas:', data);  // Para depurar la respuesta
 					console.log('Usuario:', token);
@@ -1314,9 +1330,45 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				}
 			}
-		}
-	};
+		},
+
+		/*getting the paid reservations only */
+
+		getPaidReservations: async () => {
+			const token = localStorage.getItem("user_session");
+			if (!token) {
+				console.error("No token found!");
+				return false;
+			}
+			try {
+				// Fetch all reservations (pending + paid)
+				const response = await fetch(`${process.env.BACKEND_URL}api/user/reservations`, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`
+					},
+				});
+
+				const data = await response.json();
+				console.log('📌 All User Reservations:', data);
+
+				if (response.ok) {
+					// ✅ Filter out only PAID reservations
+					const paidReservations = data.reservations.filter(reservation => reservation.is_paid);
+					setStore({ paidReservations });
+					console.log("✅ Stored only PAID reservations in Flux:", paidReservations);
+				} else {
+					console.error("❌ Error fetching reservations:", data.error || 'Unknown error');
+				}
+			} catch (error) {
+				console.error("❌ Error in request:", error);
+			}
+		},
+
+	}
 };
+
 
 
 export default getState;
