@@ -1,5 +1,6 @@
 
 import React, { useContext, useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 import { Context } from "../../store/appContext";
 import moment from "moment";
 import '../../../styles/userProfile.css';
@@ -28,6 +29,10 @@ export const StayHistory = () => {
     if (loading) {
         return <div className="loading-container"><p><i className="fas fa-spinner fa-spin"></i> Loading stay history...</p></div>;
     }
+
+    if (!store.currentUser || store.currentUser.user_type != "cliente") {
+        return <Navigate to={"/login"} />
+      }
 
     return (
         <div className="stay-history-container">

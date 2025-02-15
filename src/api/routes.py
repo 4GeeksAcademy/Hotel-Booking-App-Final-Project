@@ -393,20 +393,35 @@ def upload_image():
 #paquetes en ventana de busqueda
 @api.route('/hotel_packages', methods=['GET'])
 def get_hotel_stay_packages():
-    hotel_packages = Stay_Package.query.all()
-    print (hotel_packages)
 
+    active_hotels = Hotel.query.with_entities(Hotel).filter(Hotel.is_active.is_(True))
+    hotel_packages = Stay_Package.query.all()
+    print(active_hotels)
+    
+
+    hotel_packages_copy = []
     serialized_hotels = []
 
     if not hotel_packages:
         print("Packages not found")
         return jsonify({"message": "Packages not found"}), 404
     
-    serialized_hotels = [package.serialize() for package in hotel_packages]
 
-    print(serialized_hotels)
+    serialized_packages = [package.serialize() for package in hotel_packages]
+    serialized_hotels = [hotels.serialize() for hotels in active_hotels]
 
-    return jsonify({"hotel_packages": serialized_hotels}), 200
+    
+    
+
+    for packages in serialized_packages:
+        print(packages.get("id_hotel"))
+        if(any(hotel.get("id_hotel") == packages.get("id_hotel") for hotel in serialized_hotels)):
+            hotel_packages_copy.append(packages)
+        
+
+    
+
+    return jsonify({"hotel_packages": hotel_packages_copy}), 200
     
 
 

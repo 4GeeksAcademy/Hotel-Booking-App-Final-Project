@@ -223,8 +223,8 @@ export const PasswordReset = () => {
                                             }/>
                                 </div>   
 
-                                <button className='bg-primary mt-5 mb-2' onClick={handlePassChange}>
-                                    <div className='text-light fw-bold'>Reset Password</div>
+                                <button className=' mt-5 mb-2 custom-btn' onClick={handlePassChange}>
+                                    Reset Password
                                 </button>
                             </div>
                         </div>

@@ -101,7 +101,7 @@ const PersonalInfo = () => {
       setIsEditable(false);
     }
   };
-  if (!store.currentUser) {
+  if (!store.currentUser || store.currentUser.user_type != "cliente") {
     return <Navigate to={"/login"} />
   }
   return (

@@ -5,9 +5,10 @@ import Header from './Header';
 import HotelSidebar from './HotelSidebar';
 import { Context } from '../../store/appContext';
 import "./hotelProfile.css";
+import { Navigate } from "react-router-dom";
 
 const Packages = () => {
-  const { actions } = useContext(Context);
+  const { actions, store } = useContext(Context);
   const navigate = useNavigate();
   const [packages, setPackages] = useState([]);
   const [editingPackageId, setEditingPackageId] = useState(null);
@@ -57,6 +58,10 @@ const Packages = () => {
       Swal.fire("Error!", "Failed to update package. Please try again.", "error");
     }
   };
+
+  if (!store.currentUser || store.currentUser.user_type != "hotel") {
+    return <Navigate to={"/login"} />
+  }
 
   return (
     <div className="FontDesign hotel-container">

@@ -3,15 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import Swal from "sweetalert2";
 import { Context } from "../../store/appContext";
 import "./hotelProfile.css";
+import { Navigate } from "react-router-dom";
 
 const AddHotel = () => {
   const navigate = useNavigate();
-
   const [hotelName, setHotelName] = useState('');
   const [hotelLocation, setHotelLocation] = useState('');
   const [hotelCountry, setHotelCountry] = useState('');
   const [hotelDescription, setHotelDescription] = useState('');
-  const { actions } = useContext(Context);
+  const { actions, store } = useContext(Context);
   const [myImage, setMyImage] = useState(null);
 
   const handleSubmit = async (event) => {
@@ -73,6 +73,10 @@ const AddHotel = () => {
       Swal.fire("Error!", "Error uploading image.", "error");
     }
   };
+
+  if (!store.currentUser || store.currentUser.user_type != "hotel") {
+        return <Navigate to={"/login"} />
+      }
 
   return (
     <div className="container FontDesign">
