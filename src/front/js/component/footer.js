@@ -2,7 +2,7 @@ import React from "react";
 import "../../styles/footer.css";
 
 export const Footer = () => (
-	<footer className="navBarfooterConfig footer mt-2 text-center sticky-bottom mt-5">
+	<footer className="navBarfooterConfig footer text-center sticky-bottom mt-5">
 		<div className="footer-content">
 			<p className="mb-3 fw-bold FontDesign text-warning">Contact Us</p>
 			<p className="mb-3 FontDesign">
