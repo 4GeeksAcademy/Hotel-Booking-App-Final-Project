@@ -83,6 +83,7 @@ const Packages = () => {
             {packages.map((pkg, index) => (
               <div key={pkg.id_hotel_package || index} className="hotel-item">
                 <h5>{pkg.hotel_package_name || "No Name"}</h5>
+                <img className="card-img-top hotel-img" src={pkg.hotel.image_url || "Unknown"}/>
                 <p className="hotel-info text-dark fs-6"><strong>Hotel:</strong> {pkg.hotel.name || "Unknown"}</p>
                 <p className="hotel-info text-dark"><strong>Country:</strong> {pkg.hotel.country || "Unknown"}</p>
                 <p className="hotel-info text-dark"><strong>Location:</strong> {pkg.hotel.location || "Unknown"}</p>
