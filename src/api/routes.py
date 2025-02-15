@@ -418,9 +418,6 @@ def get_hotel_stay_packages():
         if(any(hotel.get("id_hotel") == packages.get("id_hotel") for hotel in serialized_hotels)):
             hotel_packages_copy.append(packages)
         
-
-    
-
     return jsonify({"hotel_packages": hotel_packages_copy}), 200
     
 
@@ -580,29 +577,29 @@ def select_hotel_plan():
         return jsonify({"message": f"Error selecting plan: {str(e)}"}), 500
 
 #Hoteles de la busqueda
-@api.route('/hotel-packages', methods=['GET'])
-def get_all_packages():
-    try:
-        packages = db.session.query(
-            Stay_Package,
-            User_Hotel_Admin_Package.id_hotel_Admin_Package
-        ).join(Hotel, Stay_Package.id_hotel == Hotel.id_hotel) \
-         .join(User_Hotel_Admin_Package, User_Hotel_Admin_Package.id_user == Hotel.id_user) \
-         .all()
+# @api.route('/hotel-packages', methods=['GET'])
+# def get_all_packages():
+#     try:
+#         packages = db.session.query(
+#             Stay_Package,
+#             User_Hotel_Admin_Package.id_hotel_Admin_Package
+#         ).join(Hotel, Stay_Package.id_hotel == Hotel.id_hotel) \
+#          .join(User_Hotel_Admin_Package, User_Hotel_Admin_Package.id_user == Hotel.id_user) \
+#          .all()
 
-        result = [
-            {
-                "package": package.serialize(),
-                "plan": "priority" if plan_id == 1 else "basic"
-            }
-            for package, plan_id in packages
-        ]
+#         result = [
+#             {
+#                 "package": package.serialize(),
+#                 "plan": "priority" if plan_id == 1 else "basic"
+#             }
+#             for package, plan_id in packages
+#         ]
 
-        print("📥 API Response:", result)  # Debugging
-        return jsonify(result), 200
-    except Exception as e:
-        print(f"❌ Error fetching hotel packages: {str(e)}")  # Debugging
-        return jsonify({"message": f"Error fetching hotel packages: {str(e)}"}), 500
+#         print("📥 API Response:", result)  # Debugging
+#         return jsonify(result), 200
+#     except Exception as e:
+#         print(f"❌ Error fetching hotel packages: {str(e)}")  # Debugging
+#         return jsonify({"message": f"Error fetching hotel packages: {str(e)}"}), 500
 
 
 
@@ -686,30 +683,33 @@ def get_user_packages():
     try:
         current_user = get_jwt_identity()
         user = User.query.filter_by(username=current_user).first()
+        active_hotels = Hotel.query.with_entities(Hotel).filter((Hotel.is_active.is_(True)) & (Hotel.id_user == user.id_user)).all()
+        hotel_packages = Stay_Package.query.all()
 
-        if not user or user.user_type != 'hotel':
-            print(f"🚨 Access denied for user: {current_user}")
-            return jsonify({"message": "Access denied"}), 403
+        print(active_hotels)
+        
 
-        # Find hotels owned by the logged-in user
-        hotels = Hotel.query.filter_by(id_user=user.id_user).all()
-        if not hotels:
-            print(f"🚨 No hotels found for user: {user.username}")
-            return jsonify({"message": "No hotels found"}), 404
+        hotel_packages_copy = []
+        serialized_hotels = []
 
-        hotel_ids = [hotel.id_hotel for hotel in hotels]
-        print(f"🔹 Found hotels: {hotel_ids}")
+        if not hotel_packages:
+            print("Packages not found")
+            return jsonify({"message": "Packages not found"}), 404
+        
 
-        # Fetch only the packages for those hotels
-        packages = Stay_Package.query.filter(Stay_Package.id_hotel.in_(hotel_ids)).all()
-        if not packages:
-            print(f"🚨 No packages found for these hotels: {hotel_ids}")
-            return jsonify({"message": "No packages found"}), 404
+        serialized_packages = [package.serialize() for package in hotel_packages]
+        serialized_hotels = [hotels.serialize() for hotels in active_hotels]
 
-        # Serialize and return the packages
-        serialized_packages = [p.serialize() for p in packages]
-        print(f"✅ Returning packages: {serialized_packages}")
-        return jsonify(serialized_packages), 200
+        
+        
+
+        for packages in serialized_packages:
+            if(any(hotel.get("id_hotel") == packages.get("id_hotel") for hotel in serialized_hotels)):
+                hotel_packages_copy.append(packages)
+
+        print(hotel_packages_copy)
+
+        return jsonify({"message": hotel_packages_copy})
 
     except Exception as e:
         print(f"❌ Error fetching hotel packages: {str(e)}")
