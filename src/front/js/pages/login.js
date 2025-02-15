@@ -83,7 +83,7 @@ export const LoginAccount = () => {
 
     return (
         <>
-            <GoogleOAuthProvider clientId="168580669100-kncvlspb1adg5clh58ne7if2sbo1ocrm.apps.googleusercontent.com">
+            <GoogleOAuthProvider clientId={process.env.GOOGLE_CLIENT_ID}>
                 <div className='col-xs-auto container-fluid mt-0'>
                     <div className="row d-flex justify-content-center mt-5 mb-0 pb-0">
 
