@@ -3,9 +3,10 @@ import Header from "./Header";
 import HotelSidebar from "./HotelSidebar";
 import { Context } from "../../store/appContext";
 import "./hotelProfile.css";
+import { Navigate } from "react-router-dom";
 
 const HotelPersonalInfo = () => {
-  const { actions } = useContext(Context);
+  const { actions, store } = useContext(Context);
   const [isEditable, setIsEditable] = useState(false);
   const [showPlanSelection, setShowPlanSelection] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -69,6 +70,10 @@ const HotelPersonalInfo = () => {
       alert("❌ Failed to update plan. Please try again.");
     }
   };
+
+  if (!store.currentUser || store.currentUser.user_type != "hotel") {
+    return <Navigate to={"/login"} />
+  }
 
   return (
     <div className="hotel-container FontDesign">

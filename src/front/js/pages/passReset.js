@@ -85,7 +85,7 @@ export const PasswordReset = () => {
             Swal.fire({
                         icon: 'warning',
                         title: 'Password reset error',
-                        text: checkCode,
+                        text: checkCode.message,
                         confirmButtonText: 'OK'
                     });
         }
@@ -151,7 +151,7 @@ export const PasswordReset = () => {
                                     <div class="invalid-feedback"></div>
                             </div>
                         </form>
-                        <button className='w-100 bg-primary custom-btn' onClick={resetPasswordHandle}
+                        <button className='w-100 custom-btn' onClick={resetPasswordHandle}
                             ><div className='text-light fw-bold'>Send Request</div></button>
                         <p onClick={(e) => {
                             setAlreadyCode(true)
@@ -195,7 +195,7 @@ export const PasswordReset = () => {
                         </form>
                         <p className="col-12 mt-2 text-center ">Please input the confirmation code sent to your email.</p>
                         <div className="d-flex justify-content-center">   
-                            <button className="btn btn-success custom-btn" onClick={acceptPassReset}>Reset Password</button>
+                            <button className="custom-btn" onClick={acceptPassReset}>Reset Password</button>
                         </div>
                         
                     </div>
@@ -223,8 +223,8 @@ export const PasswordReset = () => {
                                             }/>
                                 </div>   
 
-                                <button className='bg-primary mt-5 mb-2' onClick={handlePassChange}>
-                                    <div className='text-light fw-bold'>Reset Password</div>
+                                <button className=' mt-5 mb-2 custom-btn' onClick={handlePassChange}>
+                                    Reset Password
                                 </button>
                             </div>
                         </div>

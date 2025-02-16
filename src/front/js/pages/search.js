@@ -144,7 +144,7 @@ export const Search = () => {
 	}
 
 	const handleAddToCart = async (package_info) => {
-		//console.log('entered')
+		console.log(package_info)
 		await actions.addToCart(package_info)
 		Swal.fire({
 			icon: 'success',
@@ -337,7 +337,7 @@ export const Search = () => {
 															<div className="d-inline-flex flex-column">
 																<button className="w-100 btn custom-btn detailsButton mb-2 me-2" onClick={() => {
 																	if (store.currentUser) {
-																		store.currentUser.user_type == "cliente" ? handleAddToCart(store.hotelDetails) : showLoginAlert()
+																		store.currentUser.user_type == "cliente" ? handleAddToCart(item) : showLoginAlert()
 																	}
 																	else {
 																		showLoginAlert()

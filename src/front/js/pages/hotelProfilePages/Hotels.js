@@ -5,6 +5,7 @@ import HotelSidebar from './HotelSidebar';
 import { Context } from '../../store/appContext';
 import "./hotelProfile.css";
 import Swal from 'sweetalert2';
+import { Navigate } from "react-router-dom";
 
 const Hotels = () => {
     const { store, actions } = useContext(Context);
@@ -126,6 +127,10 @@ const Hotels = () => {
     const goToAddHotel = () => {
         navigate('/hotel-profile/add-hotel');
     };
+
+    if (!store.currentUser || store.currentUser.user_type != "hotel") {
+        return <Navigate to={"/login"} />
+      }
 
     return (
         <div className="FontDesign hotel-container">

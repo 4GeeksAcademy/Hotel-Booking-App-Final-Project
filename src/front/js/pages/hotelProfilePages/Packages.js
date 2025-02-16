@@ -5,9 +5,10 @@ import Header from './Header';
 import HotelSidebar from './HotelSidebar';
 import { Context } from '../../store/appContext';
 import "./hotelProfile.css";
+import { Navigate } from "react-router-dom";
 
 const Packages = () => {
-  const { actions } = useContext(Context);
+  const { actions, store } = useContext(Context);
   const navigate = useNavigate();
   const [packages, setPackages] = useState([]);
   const [editingPackageId, setEditingPackageId] = useState(null);
@@ -58,6 +59,11 @@ const Packages = () => {
     }
   };
 
+  if (!store.currentUser || store.currentUser.user_type != "hotel") {
+    return <Navigate to={"/login"} />
+  }
+
+  console.log(packages)
   return (
     <div className="FontDesign hotel-container">
       <HotelSidebar />
@@ -76,14 +82,15 @@ const Packages = () => {
           <div className="hotel-list">
             {packages.map((pkg, index) => (
               <div key={pkg.id_hotel_package || index} className="hotel-item">
-                <h5>{pkg.package?.hotel_package_name || "No Name"}</h5>
-                <p className="hotel-info text-dark fs-6"><strong>Hotel:</strong> {pkg.package?.hotel.name || "Unknown"}</p>
-                <p className="hotel-info text-dark"><strong>Country:</strong> {pkg.package?.hotel.country || "Unknown"}</p>
-                <p className="hotel-info text-dark"><strong>Location:</strong> {pkg.package?.hotel.location || "Unknown"}</p>
-                <p className="hotel-info text-dark"><strong>Price:</strong> ${pkg.package?.price || "N/A"}</p>
-                <p className="hotel-info text-dark"><strong>Start Date:</strong> {pkg.package?.start_date || "N/A"}</p>
-                <p className="hotel-info text-dark"><strong>End Date:</strong> {pkg.package?.end_date || "N/A"}</p>
-                <p className="hotel-info text-dark"><strong>Description:</strong> {pkg.package?.description || "No Description"}</p>
+                <h5>{pkg.hotel_package_name || "No Name"}</h5>
+                <img className="card-img-top hotel-img" src={pkg.hotel.image_url || "Unknown"}/>
+                <p className="hotel-info text-dark fs-6"><strong>Hotel:</strong> {pkg.hotel.name || "Unknown"}</p>
+                <p className="hotel-info text-dark"><strong>Country:</strong> {pkg.hotel.country || "Unknown"}</p>
+                <p className="hotel-info text-dark"><strong>Location:</strong> {pkg.hotel.location || "Unknown"}</p>
+                <p className="hotel-info text-dark"><strong>Price:</strong> ${pkg.price || "N/A"}</p>
+                <p className="hotel-info text-dark"><strong>Start Date:</strong> {pkg.start_date || "N/A"}</p>
+                <p className="hotel-info text-dark"><strong>End Date:</strong> {pkg.end_date || "N/A"}</p>
+                <p className="hotel-info text-dark"><strong>Description:</strong> {pkg.description || "No Description"}</p>
                 {/* <button className="custom-btn mt-2" onClick={() => handleEditClick(pkg)}>Edit</button> */}
               </div>
             ))}

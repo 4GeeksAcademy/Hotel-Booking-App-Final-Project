@@ -59,6 +59,10 @@ const FavoriteHotels = () => {
     });
   };
 
+  if (!store.currentUser || store.currentUser.user_type != "cliente") {
+      return <Navigate to={"/login"} />
+    }
+
   return (
     <div className="content-container">
       <h2 className="section-title">Favorite Hotels</h2>

@@ -665,7 +665,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					const data = await response.json();
 
-					return data;
+					return data.message;
 				} catch (error) {
 					console.error("❌ Error fetching hotel packages:", error);
 					return null;

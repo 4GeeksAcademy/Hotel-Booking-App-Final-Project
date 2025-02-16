@@ -1,5 +1,6 @@
 
 import React, { useContext, useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 import { Context } from "../../store/appContext";
 import moment from "moment";
 import '../../../styles/userProfile.css';
@@ -29,6 +30,10 @@ export const StayHistory = () => {
         return <div className="loading-container"><p><i className="fas fa-spinner fa-spin"></i> Loading stay history...</p></div>;
     }
 
+    if (!store.currentUser || store.currentUser.user_type != "cliente") {
+        return <Navigate to={"/login"} />
+      }
+
     return (
         <div className="stay-history-container">
             <h2 className="section-title">Stay History</h2>
@@ -41,10 +46,10 @@ export const StayHistory = () => {
                             <p className="stay-info"><strong>Reservation Date:</strong> {moment(reservation.reservation_date).format("YYYY-MM-DD HH:mm:ss")}</p>
                             <p className="stay-info"><strong>Package Name:</strong> {reservation.stay_package.hotel_package_name}</p>
                             <p className="stay-info"><strong>Amount Paid:</strong> ${reservation.stay_package.price}</p>
-                            <div className="stay-contact">
+                            <div className="stay-contact w-50">
                                 {reservation.phone_number ? (
-                                    <a href={`https://wa.me/${reservation.phone_number}`} target="_blank" rel="noopener noreferrer" className="custom-btn-green">
-                                        <i className="fab fa-whatsapp"></i> Contact via WhatsApp
+                                    <a href={`https://wa.me/${reservation.phone_number}`} target="_blank" rel="noopener noreferrer" className="custom-btn-green  ">
+                                        <i className="fab fa-whatsapp "></i> Contact via WhatsApp
                                     </a>
                                 ) : (
                                     <span className="no-contact">No contact available</span>

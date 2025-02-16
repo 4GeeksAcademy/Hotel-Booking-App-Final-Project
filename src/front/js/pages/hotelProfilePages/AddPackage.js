@@ -4,6 +4,7 @@ import Header from "./Header";
 import HotelSidebar from "./HotelSidebar";
 import { Context } from "../../store/appContext";
 import "./hotelProfile.css";
+import { Navigate } from "react-router-dom";
 
 const AddPackage = () => {
     const { actions, store } = useContext(Context);
@@ -67,6 +68,10 @@ const AddPackage = () => {
             alert("Failed to add package. Try again.");
         }
     };
+
+    if (!store.currentUser || store.currentUser.user_type != "hotel") {
+        return <Navigate to={"/login"} />
+      }
 
     return (
         <div className="container FontDesign d-flex">
