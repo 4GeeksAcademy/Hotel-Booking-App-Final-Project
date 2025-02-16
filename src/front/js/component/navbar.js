@@ -144,7 +144,7 @@ export const Navbar = () => {
 						{/* Mostrar las opciones del sidebar solo en pantallas pequeñas */}
 						{isMobileMenuOpen && store.currentUser?.user_type === "hotel" && shouldDisplayMenu && (
 							<>
-								<Link to="/hotel-profile/personal-info d-md-none" className="nav-link text-light">
+								<Link to="/hotel-profile/personal-info" className="nav-link text-light">
 									Personal Info
 								</Link>
 								<Link to="/hotel-profile/hotels" className="nav-link text-light">
@@ -157,7 +157,7 @@ export const Navbar = () => {
 						)}
 						{isMobileMenuOpen && store.currentUser?.user_type === "cliente" && shouldDisplayMenu && (
 							<>
-								<Link to="/profile/personal-info d-md-none" className="nav-link text-light">
+								<Link to="/profile/personal-info" className="nav-link text-light">
 									Personal Information
 								</Link>
 								<Link to="/profile/favorite-hotels" className="nav-link text-light">

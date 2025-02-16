@@ -19,7 +19,7 @@ const UserProfile = () => {
       <div className="d-flex">
         {/* Sidebar */}
         <Sidebar />
-        <div className="content flex-grow-1 p-4">
+        <div className="content flex-grow-1 p-2">
           <Outlet />
         </div>
       </div>
