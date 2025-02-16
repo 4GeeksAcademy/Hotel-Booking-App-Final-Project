@@ -40,16 +40,16 @@ export const StayHistory = () => {
 
             {paidReservations.length > 0 ? (
                 paidReservations.map((reservation, index) => (
-                    <div key={index} className="stay-card">
-                        <div className="stay-card-body">
+                    <div key={index} className="stay-card ps-0">
+                        <div className="stay-card-body ms-1">
                             <h5 className="stay-card-title">Stay #{index + 1}</h5>
                             <p className="stay-info"><strong>Reservation Date:</strong> {moment(reservation.reservation_date).format("YYYY-MM-DD HH:mm:ss")}</p>
                             <p className="stay-info"><strong>Package Name:</strong> {reservation.stay_package.hotel_package_name}</p>
                             <p className="stay-info"><strong>Amount Paid:</strong> ${reservation.stay_package.price}</p>
-                            <div className="stay-contact w-50">
+                            <div className="stay-contact">
                                 {reservation.phone_number ? (
-                                    <a href={`https://wa.me/${reservation.phone_number}`} target="_blank" rel="noopener noreferrer" className="custom-btn-green  ">
-                                        <i className="fab fa-whatsapp "></i> Contact via WhatsApp
+                                    <a href={`https://wa.me/${reservation.phone_number}`} target="_blank" rel="noopener noreferrer" className="custom-btn-green text-nowrap">
+                                        <i className=" fab fa-whatsapp "></i> Contact via WhatsApp
                                     </a>
                                 ) : (
                                     <span className="no-contact">No contact available</span>
